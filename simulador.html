@@ -12,183 +12,252 @@
 <meta property="og:url" content="https://cleitonfranco74.github.io/boibolsa/simulador.html">
 <meta property="og:type" content="website">
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🐂</text></svg>">
-<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Bricolage+Grotesque:wght@400;600;700;800&display=swap" rel="stylesheet">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Anek+Latin:wght@500;600;700;800&family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
 <style>
 :root{
-  color-scheme:dark;
-  --bg:#080808;--bg2:#0f0f0f;--bg3:#141414;--bg4:#1a1a1a;
-  --green:#00e676;--green2:#00c853;--green-a10:rgba(0,230,118,.1);--green-a20:rgba(0,230,118,.2);
-  --text:#f0f0f0;--text2:#9a9a9a;--text3:#5a5a5a;
-  --border:rgba(255,255,255,.06);--border2:rgba(255,255,255,.12);
-  --input:#fff5c2;--input-bg:rgba(255,213,79,.08);--input-bd:rgba(255,213,79,.35);
-  --good:#00e676;--warn:#ffc53d;--bad:#ff5c5c;
+  color-scheme:light;
+  --bg:#f5f7f6;--bg2:#ffffff;--bg3:#ffffff;--bg4:#eef4f0;
+  --green:#154736;--green2:#012516;--green-a10:#eef4f0;--green-a20:rgba(21,71,54,.22);
+  --text:#12241c;--text2:#4d5e57;--text3:#7f8c86;
+  --border:#e4eae7;--border2:#d2dcd7;
+  --input:#3d2f05;--input-bg:#fff9e6;--input-bd:#e2c566;
+  --good:#1d7a4b;--warn:#9a6a00;--bad:#b83232;
   --s1:#3987e5;--s2:#d95926;
-  --r:14px;--r2:20px;
+  --mint:#79a18c;
+  --m-green:#154736;--m-blue:#14507e;--m-gold:#8a6a14;--m-wine:#8c2a5c;
+  --r:12px;--r2:18px;
+  --shadow:0 1px 2px rgba(16,36,28,.05),0 6px 20px rgba(16,36,28,.05);
 }
 *{box-sizing:border-box;margin:0;padding:0}
 html{scroll-behavior:smooth}
-body{background:var(--bg);color:var(--text);font-family:'Plus Jakarta Sans',sans-serif;line-height:1.55;overflow-x:hidden}
+body{background:var(--bg);color:var(--text);font-family:'Roboto',sans-serif;line-height:1.6;overflow-x:hidden}
 a{color:inherit;text-decoration:none}
-h1,h2,h3{font-family:'Bricolage Grotesque',sans-serif;letter-spacing:-.02em}
+h1,h2,h3,h4{font-family:'Anek Latin',sans-serif;letter-spacing:-.01em}
 .num{font-variant-numeric:tabular-nums}
 
-/* nav */
-nav{position:sticky;top:0;z-index:50;display:flex;align-items:center;justify-content:space-between;gap:16px;
-  padding:0 32px;height:60px;background:rgba(8,8,8,.85);backdrop-filter:blur(16px);border-bottom:1px solid var(--border)}
-.logo{font-family:'Bricolage Grotesque',sans-serif;font-weight:800;font-size:20px}
-.logo em{color:var(--green);font-style:normal}
-.nav-back{font-size:13px;color:var(--text2);padding:7px 14px;border:1px solid var(--border2);border-radius:50px}
+/* ── topo escuro ── */
+.top{position:relative;background:#0b100e;color:#f2f5f3;overflow:hidden}
+.top::before{content:"";position:absolute;inset:0;pointer-events:none;opacity:.55;
+  background-image:radial-gradient(1px 1px at 12% 18%,#fff 50%,transparent 51%),radial-gradient(1px 1px at 28% 62%,#fff 50%,transparent 51%),
+  radial-gradient(1.4px 1.4px at 44% 30%,#fff 50%,transparent 51%),radial-gradient(1px 1px at 63% 12%,#fff 50%,transparent 51%),
+  radial-gradient(1px 1px at 71% 55%,#fff 50%,transparent 51%),radial-gradient(1.4px 1.4px at 86% 28%,#fff 50%,transparent 51%),
+  radial-gradient(1px 1px at 92% 70%,#fff 50%,transparent 51%),radial-gradient(1px 1px at 55% 80%,#fff 50%,transparent 51%),
+  radial-gradient(1px 1px at 6% 78%,#fff 50%,transparent 51%),radial-gradient(1px 1px at 37% 8%,#fff 50%,transparent 51%);
+  background-size:520px 360px}
+.top::after{content:"";position:absolute;inset:0;pointer-events:none;background:radial-gradient(70% 90% at 80% 0%,rgba(121,161,140,.16),transparent 60%),linear-gradient(180deg,transparent 60%,rgba(0,0,0,.35))}
+.top nav,.hero,.mods{position:relative;z-index:1}
+nav{max-width:1180px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;gap:16px;padding:22px 32px}
+.logo{font-family:'Anek Latin',sans-serif;font-weight:800;font-size:22px;letter-spacing:-.01em;display:flex;align-items:center;gap:10px;line-height:1.1}
+.logo small{display:block;font-size:10px;font-weight:600;letter-spacing:.18em;text-transform:uppercase;color:var(--mint)}
+.nav-links{display:flex;gap:26px;font-size:14px;color:#cfd8d3}
+.nav-links a:hover{color:#fff}
+.nav-links a.hi{color:#fff;font-weight:500}
+.hero{max-width:1180px;margin:0 auto;padding:44px 32px 34px}
+.eyebrow{font-size:11.5px;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:#cfd8d3;margin-bottom:14px}
+.hero h1{font-size:clamp(36px,5.4vw,60px);line-height:1.02;font-weight:800;max-width:760px;margin-bottom:16px}
+.hero p{color:#c5cfca;max-width:640px;font-size:16px}
+.hero p b{color:#f2d88a}
+.mods{max-width:1180px;margin:0 auto;padding:10px 32px 48px;display:grid;grid-template-columns:repeat(6,1fr);gap:12px}
+.mod{display:flex;flex-direction:column;gap:6px;text-align:left;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.12);border-radius:12px;
+  padding:16px;color:#f2f5f3;cursor:pointer;font:inherit;transition:background .15s,border-color .15s}
+.mod:hover{background:rgba(255,255,255,.08);border-color:rgba(255,255,255,.25)}
+.mod b{font-family:'Anek Latin',sans-serif;font-size:15.5px;font-weight:700;display:flex;gap:8px;align-items:center}
+.mod span{font-size:12.5px;color:#aab6b0;line-height:1.45;flex:1}
+.mod i{font-style:normal;align-self:flex-start;margin-top:6px;font-size:12px;font-weight:600;padding:5px 12px;border:1px solid rgba(255,255,255,.25);border-radius:50px}
 
-/* hero */
-.hero{max-width:1120px;margin:0 auto;padding:56px 32px 24px}
-.eyebrow{display:inline-flex;gap:8px;align-items:center;background:var(--green-a10);border:1px solid var(--green-a20);
-  color:var(--green);padding:5px 14px;border-radius:50px;font-size:12px;font-weight:600;letter-spacing:.04em;margin-bottom:20px}
-.hero h1{font-size:clamp(34px,5vw,58px);line-height:1.02;font-weight:800;margin-bottom:14px}
-.hero h1 span{color:var(--green)}
-.hero p{color:var(--text2);max-width:680px;font-size:16px}
-
-/* tabs */
-.tabs-wrap{position:sticky;top:60px;z-index:40;background:rgba(8,8,8,.92);backdrop-filter:blur(12px);border-bottom:1px solid var(--border)}
-.tabs{max-width:1120px;margin:0 auto;padding:0 32px;display:flex;gap:4px;overflow-x:auto;scrollbar-width:none}
+/* ── abas ── */
+.tabs-wrap{position:sticky;top:0;z-index:40;background:rgba(255,255,255,.96);backdrop-filter:blur(10px);border-bottom:1px solid var(--border)}
+.tabs{max-width:1180px;margin:0 auto;padding:0 32px;display:flex;gap:6px;overflow-x:auto;scrollbar-width:none}
 .tabs::-webkit-scrollbar{display:none}
-.tab{flex:none;background:none;border:0;color:var(--text2);font:500 14px 'Plus Jakarta Sans',sans-serif;padding:14px 14px;
-  cursor:pointer;border-bottom:2px solid transparent;white-space:nowrap}
-.tab:hover{color:var(--text)}
-.tab[aria-selected="true"]{color:var(--text);border-bottom-color:var(--green)}
+.tab{flex:none;background:none;border:0;color:var(--text2);font:inherit;padding:12px 14px 10px;cursor:pointer;border-bottom:2px solid transparent;text-align:left;white-space:nowrap}
+.tab b{display:block;font-family:'Anek Latin',sans-serif;font-size:15px;font-weight:700;color:var(--text)}
+.tab small{display:block;font-size:11.5px;color:var(--text3)}
+.tab:hover b{color:var(--green)}
+.tab[aria-selected="true"]{border-bottom-color:var(--green)}
+.tab[aria-selected="true"] b{color:var(--green)}
 
-main{max-width:1120px;margin:0 auto;padding:28px 32px 80px}
+main{max-width:1180px;margin:0 auto;padding:32px 32px 80px}
 .panel{display:none}
 .panel.active{display:block}
-.section{margin-bottom:36px}
-.section h2{font-size:24px;font-weight:700;margin-bottom:6px}
-.section > .lead{color:var(--text2);font-size:14px;margin-bottom:18px;max-width:760px}
-h3{font-size:16px;font-weight:700;margin-bottom:12px}
+.panel{scroll-margin-top:100px}
+
+/* faixa de abertura de cada aba */
+.banner{--c:var(--m-green);position:relative;overflow:hidden;border-radius:var(--r2);padding:34px 36px;margin-bottom:40px;color:#fff;
+  background:linear-gradient(120deg,color-mix(in srgb,var(--c) 65%,#000) 0%,var(--c) 60%,color-mix(in srgb,var(--c) 85%,#fff) 130%);box-shadow:var(--shadow)}
+.banner::after{content:"";position:absolute;right:-80px;top:-80px;width:320px;height:320px;border-radius:50%;background:radial-gradient(circle,rgba(255,255,255,.14),transparent 70%)}
+.banner .ico{width:40px;height:40px;border-radius:10px;border:1px solid rgba(255,255,255,.3);display:inline-grid;place-items:center;font-size:19px;margin-right:12px;vertical-align:middle}
+.banner .tag{display:inline-block;vertical-align:middle;font-size:11px;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:rgba(255,255,255,.75)}
+.banner h2{font-size:clamp(30px,4vw,44px);font-weight:800;line-height:1.05;margin:18px 0 6px}
+.banner .sub{font-size:13.5px;color:rgba(255,255,255,.72);margin-bottom:14px}
+.banner p{max-width:900px;font-size:15px;color:rgba(255,255,255,.92)}
+.banner p em{font-style:normal;color:#f2d88a;font-weight:500}
+.b-blue{--c:var(--m-blue)} .b-gold{--c:var(--m-gold)} .b-wine{--c:var(--m-wine)} .b-ink{--c:#1f3a30}
+
+.section{margin-bottom:44px}
+.section h2{font-size:28px;font-weight:800;color:var(--green);margin-bottom:6px;line-height:1.15}
+.section > .lead{color:var(--text2);font-size:15px;margin-bottom:20px;max-width:820px}
+h3{font-size:17px;font-weight:700;margin-bottom:12px;color:var(--text)}
 
 .grid{display:grid;gap:16px}
 .g2{grid-template-columns:repeat(2,minmax(0,1fr))}
 .g3{grid-template-columns:repeat(3,minmax(0,1fr))}
 @media(max-width:860px){.g2,.g3{grid-template-columns:1fr}}
 
-.card{background:var(--bg3);border:1px solid var(--border);border-radius:var(--r);padding:20px}
+.card{background:var(--bg2);border:1px solid var(--border);border-radius:var(--r);padding:22px;box-shadow:var(--shadow)}
 
-/* forms */
+/* formulários */
 .fields{display:grid;gap:10px}
 .field{display:flex;align-items:center;justify-content:space-between;gap:12px}
-.field label{font-size:13.5px;color:var(--text2);flex:1}
-.field input{width:128px;flex:none;background:var(--input-bg);border:1px solid var(--input-bd);color:var(--input);
-  font:600 14px 'Plus Jakarta Sans',sans-serif;padding:7px 10px;border-radius:8px;text-align:right;font-variant-numeric:tabular-nums}
-.field input:focus{outline:2px solid var(--warn);outline-offset:1px}
+.field label{font-size:14px;color:var(--text2);flex:1}
+.field input{width:132px;flex:none;background:var(--input-bg);border:1px solid var(--input-bd);color:var(--input);
+  font:500 14.5px 'Roboto',sans-serif;padding:7px 10px;border-radius:8px;text-align:right;font-variant-numeric:tabular-nums}
+.field input:focus{outline:2px solid var(--green);outline-offset:1px}
 .field input[type=text]{text-align:center}
-.hint{font-size:12px;color:var(--text3);margin-top:10px}
-.kv{display:flex;justify-content:space-between;gap:12px;padding:8px 0;border-bottom:1px solid var(--border);font-size:14px}
+.hint{font-size:12.5px;color:var(--text3);margin-top:10px}
+.kv{display:flex;justify-content:space-between;gap:12px;padding:9px 0;border-bottom:1px solid var(--border);font-size:14px}
 .kv:last-child{border-bottom:0}
 .kv span:first-child{color:var(--text2)}
 .kv b{font-weight:700;font-variant-numeric:tabular-nums;text-align:right}
-.kv.total b{color:var(--green);font-size:15px}
+.kv.total b{color:var(--green);font-size:15.5px}
 
 /* KPIs */
-.kpi{background:var(--bg3);border:1px solid var(--border);border-radius:var(--r);padding:18px 20px}
-.kpi .k-lab{font-size:11.5px;font-weight:700;letter-spacing:.06em;color:var(--text2);text-transform:uppercase}
-.kpi .k-val{font-family:'Bricolage Grotesque',sans-serif;font-size:32px;font-weight:800;margin:6px 0 2px;font-variant-numeric:tabular-nums}
-.kpi .k-sub{font-size:12.5px;color:var(--text3)}
+.kpi{background:var(--bg2);border:1px solid var(--border);border-radius:var(--r);padding:20px 22px;box-shadow:var(--shadow);position:relative}
+.kpi::before{content:"";position:absolute;left:0;top:18px;bottom:18px;width:3px;border-radius:0 3px 3px 0;background:var(--mint)}
+.kpi .k-lab{font-size:11.5px;font-weight:700;letter-spacing:.1em;color:var(--text3);text-transform:uppercase}
+.kpi .k-val{font-family:'Anek Latin',sans-serif;font-size:34px;font-weight:800;margin:6px 0 2px;font-variant-numeric:tabular-nums;color:var(--text)}
+.kpi .k-sub{font-size:12.5px;color:var(--text2)}
 
-/* verdict */
-.verdict{border-radius:var(--r2);padding:22px 24px;border:1px solid var(--border2);background:var(--bg3)}
-.verdict .v-title{font-family:'Bricolage Grotesque',sans-serif;font-size:clamp(20px,3vw,28px);font-weight:800;line-height:1.2}
-.verdict .v-sub{color:var(--text2);font-size:13.5px;margin-top:8px}
-.verdict.good{border-color:rgba(0,230,118,.4);background:linear-gradient(135deg,rgba(0,230,118,.10),var(--bg3))}
-.verdict.warn{border-color:rgba(255,197,61,.4);background:linear-gradient(135deg,rgba(255,197,61,.10),var(--bg3))}
-.verdict.bad{border-color:rgba(255,92,92,.45);background:linear-gradient(135deg,rgba(255,92,92,.10),var(--bg3))}
+/* cotação B3 */
+.quote{display:grid;grid-template-columns:1.2fr 1fr auto;gap:24px;align-items:center;border-radius:var(--r2);padding:24px 28px;color:#eef2f0;
+  background:linear-gradient(120deg,#26323a,#3a4a55);box-shadow:var(--shadow);margin-bottom:44px}
+.quote .ql{font-size:11px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:#aebbc4}
+.quote .qv{font-family:'Anek Latin',sans-serif;font-size:40px;font-weight:800;line-height:1.1;font-variant-numeric:tabular-nums}
+.quote .qv small{font-size:15px;font-weight:600;color:#aebbc4;margin-right:4px}
+.quote .qs{font-size:12.5px;color:#aebbc4}
+.quote .qs b{color:#fff;font-weight:500}
+.quote .pos{color:#7fe0a8} .quote .neg{color:#ff9d9d}
+.btn-q{background:#3f7de0;color:#fff;border:0;border-radius:50px;padding:11px 20px;font:600 14px 'Roboto',sans-serif;cursor:pointer;white-space:nowrap}
+.btn-q:hover{background:#2f6bcc}
+.btn-q:disabled{opacity:.5;cursor:default}
+.quote .qmsg{font-size:12px;color:#aebbc4;margin-top:8px;text-align:center}
 
-.pill{display:inline-flex;align-items:center;gap:6px;font-size:12.5px;font-weight:600;padding:3px 10px;border-radius:50px;white-space:nowrap}
-.pill.good{background:rgba(0,230,118,.12);color:var(--good)}
-.pill.warn{background:rgba(255,197,61,.12);color:var(--warn)}
-.pill.bad{background:rgba(255,92,92,.12);color:var(--bad)}
-.pill.neu{background:rgba(255,255,255,.06);color:var(--text2)}
+/* veredito */
+.verdict{border-radius:var(--r2);padding:24px 26px;border:1px solid var(--border2);background:var(--bg2);box-shadow:var(--shadow)}
+.verdict .v-title{font-family:'Anek Latin',sans-serif;font-size:clamp(21px,3vw,29px);font-weight:800;line-height:1.2}
+.verdict .v-sub{color:var(--text2);font-size:14px;margin-top:8px}
+.verdict.good{border-color:rgba(29,122,75,.35);background:linear-gradient(135deg,#e7f4ec,#fff)}
+.verdict.warn{border-color:rgba(154,106,0,.35);background:linear-gradient(135deg,#fbf3dc,#fff)}
+.verdict.bad{border-color:rgba(184,50,50,.35);background:linear-gradient(135deg,#fbe7e7,#fff)}
 
-/* tables */
-.tbl-wrap{overflow-x:auto;border:1px solid var(--border);border-radius:var(--r);background:var(--bg3)}
-table{width:100%;border-collapse:collapse;font-size:13.5px}
-th{font-size:11.5px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;color:var(--text2);text-align:right;
-  padding:11px 12px;border-bottom:1px solid var(--border2);white-space:nowrap;background:var(--bg4)}
-td{padding:9px 12px;border-bottom:1px solid var(--border);text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap}
+.pill{display:inline-flex;align-items:center;gap:6px;font-size:12.5px;font-weight:700;padding:3px 10px;border-radius:50px;white-space:nowrap}
+.pill.good{background:#e2f2e8;color:var(--good)}
+.pill.warn{background:#faefcf;color:var(--warn)}
+.pill.bad{background:#f9e0e0;color:var(--bad)}
+.pill.neu{background:var(--bg4);color:var(--text2)}
+
+/* tabelas */
+.tbl-wrap{overflow-x:auto;border:1px solid var(--border);border-radius:var(--r);background:var(--bg2);box-shadow:var(--shadow)}
+table{width:100%;border-collapse:collapse;font-size:14px}
+th{font-size:11.5px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--green);text-align:right;
+  padding:12px 12px;border-bottom:1px solid var(--border2);white-space:nowrap;background:var(--bg4)}
+td{padding:10px 12px;border-bottom:1px solid var(--border);text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap}
 tr:last-child td{border-bottom:0}
 th:first-child,td:first-child{text-align:left}
 td.l,th.l{text-align:left}
-tr.hl td{background:rgba(255,213,79,.07)}
-tr.hl td:first-child{box-shadow:inset 3px 0 0 var(--warn)}
+tr.hl td{background:#fdf6de}
+tr.hl td:first-child{box-shadow:inset 3px 0 0 var(--input-bd)}
 .pos{color:var(--good)}
 .neg{color:var(--bad)}
 td input{width:90px;background:var(--input-bg);border:1px solid var(--input-bd);color:var(--input);
-  font:600 13px 'Plus Jakarta Sans',sans-serif;padding:4px 8px;border-radius:6px;text-align:right}
+  font:500 13.5px 'Roboto',sans-serif;padding:4px 8px;border-radius:6px;text-align:right}
 .heat td{text-align:center;font-weight:600}
 .heat th{text-align:center}
 
-/* charts */
+/* gráficos */
 .chart{position:relative}
 .chart svg{display:block;width:100%;height:auto;overflow:visible}
-.chart .grid-l{stroke:rgba(255,255,255,.07)}
-.chart .axis-t{fill:var(--text2);font-size:11px;font-family:'Plus Jakarta Sans',sans-serif}
-.legend{display:flex;flex-wrap:wrap;gap:16px;font-size:12.5px;color:var(--text2);margin-bottom:10px}
+.chart .grid-l{stroke:#e6ece9}
+.chart .axis-t{fill:var(--text2);font-size:11px;font-family:'Roboto',sans-serif}
+.legend{display:flex;flex-wrap:wrap;gap:16px;font-size:13px;color:var(--text2);margin-bottom:10px}
 .legend i{display:inline-block;width:14px;height:3px;border-radius:2px;vertical-align:middle;margin-right:6px}
 .legend i.dash{background:repeating-linear-gradient(90deg,currentColor 0 4px,transparent 4px 7px)!important}
-.tip{position:absolute;pointer-events:none;background:#202020;border:1px solid var(--border2);border-radius:10px;padding:8px 11px;
-  font-size:12.5px;line-height:1.5;opacity:0;transition:opacity .1s;white-space:nowrap;z-index:5;box-shadow:0 6px 24px rgba(0,0,0,.5)}
+.tip{position:absolute;pointer-events:none;background:#fff;border:1px solid var(--border2);border-radius:10px;padding:8px 11px;color:var(--text);
+  font-size:12.5px;line-height:1.5;opacity:0;transition:opacity .1s;white-space:nowrap;z-index:5;box-shadow:0 8px 24px rgba(16,36,28,.14)}
 .tip b{font-variant-numeric:tabular-nums}
 
-.note{border-left:3px solid var(--green);background:var(--green-a10);padding:12px 16px;border-radius:0 10px 10px 0;font-size:13.5px;color:#cfe;margin-top:14px}
-.note.warn{border-left-color:var(--warn);background:rgba(255,197,61,.08);color:#f3e3b8}
+.note{border-left:3px solid var(--mint);background:var(--green-a10);padding:12px 16px;border-radius:0 10px 10px 0;font-size:14px;color:var(--text2);margin-top:14px}
+.note.warn{border-left-color:var(--input-bd);background:#fdf7e4;color:#5d4a14}
 
-/* learn */
+/* aprenda */
 .steps{display:grid;gap:12px}
-.step{display:grid;grid-template-columns:44px 1fr;gap:14px;background:var(--bg3);border:1px solid var(--border);border-radius:var(--r);padding:18px}
-.step .n{width:44px;height:44px;border-radius:12px;background:var(--green-a10);color:var(--green);display:grid;place-items:center;
-  font-family:'Bricolage Grotesque',sans-serif;font-weight:800;font-size:20px}
-.step h4{font-size:15px;margin-bottom:4px}
-.step p{font-size:13.5px;color:var(--text2)}
-.step .danger{margin-top:8px;font-size:13px;color:#f3c7c7}
-details{background:var(--bg3);border:1px solid var(--border);border-radius:12px;margin-bottom:8px}
-summary{cursor:pointer;padding:14px 16px;font-weight:600;font-size:14px;list-style:none;display:flex;justify-content:space-between;gap:12px;align-items:center}
+.step{display:grid;grid-template-columns:46px 1fr;gap:16px;background:var(--bg2);border:1px solid var(--border);border-radius:var(--r);padding:20px;box-shadow:var(--shadow)}
+.step .n{width:46px;height:46px;border-radius:12px;background:var(--green-a10);color:var(--green);display:grid;place-items:center;
+  font-family:'Anek Latin',sans-serif;font-weight:800;font-size:21px;border:1px solid var(--green-a20)}
+.step h4{font-size:16.5px;margin-bottom:4px;color:var(--text)}
+.step p{font-size:14px;color:var(--text2)}
+.step .danger{margin-top:8px;font-size:13.5px;color:var(--bad)}
+details{background:var(--bg2);border:1px solid var(--border);border-radius:12px;margin-bottom:8px}
+summary{cursor:pointer;padding:14px 18px;font-weight:600;font-size:14.5px;list-style:none;display:flex;justify-content:space-between;gap:12px;align-items:center}
 summary::-webkit-details-marker{display:none}
-summary::after{content:'+';color:var(--green);font-size:18px}
+summary::after{content:'+';color:var(--green);font-size:20px;font-weight:700}
 details[open] summary::after{content:'–'}
-details .body{padding:0 16px 16px;font-size:13.5px;color:var(--text2)}
+details .body{padding:0 18px 16px;font-size:14px;color:var(--text2)}
 details .body p+p{margin-top:8px}
-.story{font-size:14.5px;color:var(--text2)}
+.story{font-size:15px;color:var(--text2)}
 .story p+p{margin-top:8px}
 
-footer{border-top:1px solid var(--border);padding:28px 32px;text-align:center;color:var(--text3);font-size:12.5px}
-footer b{color:var(--text2)}
+footer{background:#0b100e;color:#8e9c95;padding:36px 32px;text-align:center;font-size:13px}
+footer b{color:#e8eeeb}
 
+@media(max-width:1000px){.mods{grid-template-columns:repeat(3,1fr)}}
+@media(max-width:760px){.quote{grid-template-columns:1fr}.nav-links a:not(.hi){display:none}}
 @media(max-width:640px){
-  nav,.hero,.tabs,main{padding-left:16px;padding-right:16px}
+  nav,.hero,.mods,.tabs,main{padding-left:16px;padding-right:16px}
+  .mods{grid-template-columns:1fr 1fr}
+  .banner{padding:26px 22px}
   .field input{width:112px}
-  .kpi .k-val{font-size:26px}
+  .kpi .k-val{font-size:28px}
 }
-@media print{nav,.tabs-wrap{display:none}.panel{display:block!important}}
+@media print{.top,.tabs-wrap{display:none}.panel{display:block!important}}
 </style>
 </head>
 <body>
 
+<div class="top">
 <nav>
-  <a href="./" class="logo">🐂 Boi na <em>Bolsa</em></a>
-  <a class="nav-back" href="cotacoes.html" style="color:var(--green);border-color:var(--green-a20)">📡 Cotações ao vivo</a>
+  <a href="./" class="logo">🐂 <span>Boi na Bolsa<small>Simulador de hedge</small></span></a>
+  <div class="nav-links">
+    <a href="./">Início</a>
+    <a href="simulador.html" class="hi">Simulador</a>
+    <a href="cotacoes.html">Cotações ao vivo</a>
+  </div>
 </nav>
 
 <header class="hero">
-  <div class="eyebrow">🐂 Gestão e Risco no Agronegócio</div>
-  <h1>Boi na <span>Bolsa</span></h1>
-  <p>Kit de gestão e risco no mercado futuro: simulador de hedge BGI/B3, margem de garantia, futuro × put, confinamento de 90 dias, trava do milho, histórico CEPEA e previsão de preços. Mude os campos <b style="color:var(--input)">amarelos</b> — todo o resto recalcula na hora.</p>
+  <div class="eyebrow">Gestão e risco no agronegócio</div>
+  <h1>Trave o preço com método. Não com achismo.</h1>
+  <p>Simulador de hedge do boi gordo e do milho na B3: margem de garantia, futuro × put, confinamento de 90 dias, trava do milho, histórico CEPEA e previsão de preços. Mude os campos <b>amarelos</b> — todo o resto recalcula na hora.</p>
 </header>
+
+<div class="mods">
+  <button class="mod" data-go="painel"><b>🖥️ Painel</b><span>Os 6 números que decidem e o veredito do lote.</span><i>Abrir →</i></button>
+  <button class="mod" data-go="hedge"><b>🎯 Hedge BGI</b><span>Cenários, quanto travar e margem de garantia.</span><i>Abrir →</i></button>
+  <button class="mod" data-go="estrategias"><b>🛡️ Futuro × Put</b><span>Trava de preço ou seguro de preço.</span><i>Abrir →</i></button>
+  <button class="mod" data-go="confinamento"><b>🐄 Confinamento</b><span>90 dias de custos, ROI e trava do milho.</span><i>Abrir →</i></button>
+  <button class="mod" data-go="mercado"><b>📊 Mercado</b><span>CEPEA, previsão e risco de base.</span><i>Abrir →</i></button>
+  <button class="mod" data-go="aprenda"><b>🎓 Aprenda</b><span>Passo a passo, mitos e exercícios.</span><i>Abrir →</i></button>
+</div>
+</div>
 
 <div class="tabs-wrap">
   <div class="tabs" role="tablist">
-    <button class="tab" role="tab" data-tab="painel" aria-selected="true">🖥️ Painel do Lote</button>
-    <button class="tab" role="tab" data-tab="hedge" aria-selected="false">🎯 Hedge BGI</button>
-    <button class="tab" role="tab" data-tab="estrategias" aria-selected="false">🛡️ Futuro × Put</button>
-    <button class="tab" role="tab" data-tab="confinamento" aria-selected="false">🐄 Confinamento</button>
-    <button class="tab" role="tab" data-tab="mercado" aria-selected="false">📊 Mercado</button>
-    <button class="tab" role="tab" data-tab="aprenda" aria-selected="false">🎓 Aprenda</button>
+    <button class="tab" role="tab" data-tab="painel" aria-selected="true"><b>🖥️ Painel do Lote</b><small>Veredito · 6 números</small></button>
+    <button class="tab" role="tab" data-tab="hedge" aria-selected="false"><b>🎯 Hedge BGI</b><small>Boi gordo · B3</small></button>
+    <button class="tab" role="tab" data-tab="estrategias" aria-selected="false"><b>🛡️ Futuro × Put</b><small>Trava · Seguro</small></button>
+    <button class="tab" role="tab" data-tab="confinamento" aria-selected="false"><b>🐄 Confinamento</b><small>90 dias · Milho CCM</small></button>
+    <button class="tab" role="tab" data-tab="mercado" aria-selected="false"><b>📊 Mercado</b><small>CEPEA · Base MT</small></button>
+    <button class="tab" role="tab" data-tab="aprenda" aria-selected="false"><b>🎓 Aprenda</b><small>Passo a passo · Exercícios</small></button>
   </div>
 </div>
 
@@ -196,6 +265,28 @@ footer b{color:var(--text2)}
 
 <!-- ═══════════════ PAINEL ═══════════════ -->
 <section class="panel active" id="painel">
+  <div class="banner ">
+    <span class="ico">🖥️</span><span class="tag">Visão geral</span>
+    <h2>Painel do Lote</h2>
+    <div class="sub">Resumo da operação de hedge e do confinamento</div>
+    <p>Uma tela só, com tudo puxado das abas <b>Hedge BGI</b> e <b>Confinamento</b>: custo por arroba, preço na bolsa, margem travável, relação boi/milho, caixa necessário e folga. <em>Altere os dados lá e o veredito muda aqui.</em></p>
+  </div>
+  <div class="quote" id="quote">
+    <div>
+      <div class="ql" id="qLab">Cotação B3 · boi gordo</div>
+      <div class="qv"><small>R$</small><span id="qBoi">—</span></div>
+      <div class="qs" id="qBoiS">buscando na B3…</div>
+    </div>
+    <div>
+      <div class="ql" id="qLab2">Milho</div>
+      <div class="qv"><small>R$</small><span id="qMil">—</span></div>
+      <div class="qs" id="qMilS"></div>
+    </div>
+    <div>
+      <button class="btn-q" id="qUse" disabled>Usar no simulador →</button>
+      <div class="qmsg" id="qMsg">vencimentos das abas Hedge e Confinamento</div>
+    </div>
+  </div>
   <div class="section">
     <h2>Os 6 números que decidem</h2>
     <p class="lead">Uma tela, tudo puxado das abas Confinamento e Hedge. Altere os dados lá e o veredito muda aqui.</p>
@@ -251,6 +342,12 @@ footer b{color:var(--text2)}
 
 <!-- ═══════════════ HEDGE ═══════════════ -->
 <section class="panel" id="hedge">
+  <div class="banner b-ink">
+    <span class="ico">🎯</span><span class="tag">Boi gordo · BGI/B3</span>
+    <h2>Hedge BGI</h2>
+    <div class="sub">Contrato de 330 arrobas · referência Indicador do Boi Gordo CEPEA/B3</div>
+    <p>Compare o resultado vendendo contratos futuros com a venda sem proteção. <em>Se o preço de hedge está acima do seu custo mínimo, o hedge é recomendado.</em> Veja também quanto travar, a margem de garantia e o extrato dos ajustes diários.</p>
+  </div>
   <div class="section">
     <h2>Simulador de hedge — boi gordo na bolsa (BGI/B3)</h2>
     <p class="lead">Compara o resultado vendendo contratos futuros BGI com a venda sem proteção. Use antes de fechar qualquer contrato: se o preço de hedge está acima do seu custo mínimo, o hedge é recomendado.</p>
@@ -351,6 +448,12 @@ footer b{color:var(--text2)}
 
 <!-- ═══════════════ ESTRATÉGIAS ═══════════════ -->
 <section class="panel" id="estrategias">
+  <div class="banner b-blue">
+    <span class="ico">🛡️</span><span class="tag">Trava × seguro de preço</span>
+    <h2>Futuro × Put</h2>
+    <div class="sub">Vender futuro ou comprar opção de venda</div>
+    <p>O futuro trava o preço — para cima e para baixo. A put funciona como seguro: <em>garante o piso e deixa a alta respirar</em>, em troca do prêmio. Compare capital exigido e resultado, e entenda quem ganha como vendido e como comprado.</p>
+  </div>
   <div class="section">
     <h2>🛡️ Futuro × Put — duas formas de proteger o preço</h2>
     <p class="lead">Trava de preço (vender futuro) ou seguro de preço (comprar opção de venda). Usa o lote e o preço do simulador de hedge; o preço do futuro é o strike da put.</p>
@@ -397,6 +500,12 @@ footer b{color:var(--text2)}
 
 <!-- ═══════════════ CONFINAMENTO ═══════════════ -->
 <section class="panel" id="confinamento">
+  <div class="banner b-gold">
+    <span class="ico">🐄</span><span class="tag">Ciclo de 90 dias · Milho CCM</span>
+    <h2>Confinamento</h2>
+    <div class="sub">Custos, ganho de peso, ROI e trava do milho</div>
+    <p>Preencha todos os custos antes de decidir — <em>um custo esquecido muda a decisão de confinar.</em> A necessidade de milho sai dos parâmetros do lote e alimenta a trava em contratos CCM de 450 sacas.</p>
+  </div>
   <div class="section">
     <h2>🐄 Confinamento — ciclo de 90 dias</h2>
     <p class="lead">Custos, ganho de peso, receita, ROI e integração com o hedge. Preencha TODOS os campos antes de analisar — um custo esquecido muda a decisão de confinar.</p>
@@ -540,6 +649,12 @@ footer b{color:var(--text2)}
 
 <!-- ═══════════════ MERCADO ═══════════════ -->
 <section class="panel" id="mercado">
+  <div class="banner b-wine">
+    <span class="ico">📊</span><span class="tag">Histórico e previsão</span>
+    <h2>Mercado</h2>
+    <div class="sub">CEPEA · relação boi/milho · risco de base MT × B3</div>
+    <p>Onde o preço esteve e para onde a estatística aponta. <em>A trava garante o preço da referência</em>; o frigorífico paga a referência menos a base da sua praça — o risco que o hedge não elimina.</p>
+  </div>
   <div class="section">
     <h2>📊 Histórico CEPEA e previsão de preços</h2>
     <p class="lead">Médias mensais de boi gordo (R$/@) e milho (R$/sc 60 kg), jan/2022–nov/2025, e previsão de 12 meses (média de Holt-Winters e ARIMA(2,1,2), IC 95%).</p>
@@ -597,6 +712,12 @@ footer b{color:var(--text2)}
 
 <!-- ═══════════════ APRENDA ═══════════════ -->
 <section class="panel" id="aprenda">
+  <div class="banner ">
+    <span class="ico">🎓</span><span class="tag">Do zero à primeira trava</span>
+    <h2>Aprenda</h2>
+    <div class="sub">Passo a passo · mitos e verdades · dicionário · exercícios</div>
+    <p>Tudo o que o pecuarista precisa para dar a primeira ordem com segurança. <em>Regra de ouro: só se trava lucro, nunca prejuízo.</em></p>
+  </div>
   <div class="section">
     <h2>🧭 Passo a passo — como travar</h2>
     <p class="lead">As 6 etapas da conta à venda do boi, com os perigos de cada uma.</p>
@@ -671,17 +792,17 @@ function lineChart(el, {xs, series, bands=[], yFmt=v=>nf0.format(v), refLines=[]
   const path=d=>{let s='',on=false; d.forEach((v,i)=>{ if(v==null){on=false;return;} s+=(on?'L':'M')+X(i).toFixed(1)+' '+Y(v).toFixed(1); on=true;}); return s;};
   let svg=`<svg viewBox="0 0 ${W} ${H}" role="img">`;
   ticks.forEach(v=>{svg+=`<line class="grid-l" x1="${m.l}" x2="${W-m.r}" y1="${Y(v)}" y2="${Y(v)}"/><text class="axis-t" x="${m.l-8}" y="${Y(v)+4}" text-anchor="end">${yFmt(v)}</text>`;});
-  if(lo<0&&hi>0) svg+=`<line x1="${m.l}" x2="${W-m.r}" y1="${Y(0)}" y2="${Y(0)}" stroke="rgba(255,255,255,.35)"/>`;
+  if(lo<0&&hi>0) svg+=`<line x1="${m.l}" x2="${W-m.r}" y1="${Y(0)}" y2="${Y(0)}" stroke="#b9c6c0"/>`;
   const every=Math.max(1,Math.ceil(n/8));
   xs.forEach((x,i)=>{ if(i%every===0||i===n-1&&n<=12) svg+=`<text class="axis-t" x="${X(i)}" y="${H-8}" text-anchor="middle">${x}</text>`;});
   bands.forEach(b=>{ const idx=b.lo.map((v,i)=>v==null?null:i).filter(i=>i!=null);
     if(!idx.length) return;
     svg+=`<path d="M${idx.map(i=>X(i)+' '+Y(b.hi[i])).join('L')}L${idx.slice().reverse().map(i=>X(i)+' '+Y(b.lo[i])).join('L')}Z" fill="${b.color}" opacity=".18"/>`;});
   refLines.forEach(r=>{svg+=`<line x1="${m.l}" x2="${W-m.r}" y1="${Y(r.y)}" y2="${Y(r.y)}" stroke="${r.color}" stroke-width="1.5" stroke-dasharray="5 4"/>`;});
-  if(markX!=null) svg+=`<line x1="${X(markX)}" x2="${X(markX)}" y1="${m.t}" y2="${m.t+ih}" stroke="rgba(255,213,79,.5)" stroke-dasharray="3 3"/>`;
+  if(markX!=null) svg+=`<line x1="${X(markX)}" x2="${X(markX)}" y1="${m.t}" y2="${m.t+ih}" stroke="#c9a53a" stroke-dasharray="3 3"/>`;
   series.forEach(s=>{svg+=`<path d="${path(s.data)}" fill="none" stroke="${s.color}" stroke-width="2" stroke-linejoin="round" stroke-linecap="round" ${s.dash?'stroke-dasharray="6 5"':''}/>`;});
-  svg+=`<line class="xh" x1="0" x2="0" y1="${m.t}" y2="${m.t+ih}" stroke="rgba(255,255,255,.3)" opacity="0"/>`;
-  series.forEach((s,k)=>{svg+=`<circle class="dot${k}" r="4.5" fill="${s.color}" stroke="#141414" stroke-width="2" opacity="0"/>`;});
+  svg+=`<line class="xh" x1="0" x2="0" y1="${m.t}" y2="${m.t+ih}" stroke="#9aa9a2" opacity="0"/>`;
+  series.forEach((s,k)=>{svg+=`<circle class="dot${k}" r="4.5" fill="${s.color}" stroke="#fff" stroke-width="2" opacity="0"/>`;});
   svg+=`<rect x="${m.l}" y="${m.t}" width="${iw}" height="${ih}" fill="transparent" class="hit"/></svg><div class="tip"></div>`;
   el.innerHTML=svg;
   const sv=el.querySelector('svg'), tip=el.querySelector('.tip'), xh=el.querySelector('.xh');
@@ -919,6 +1040,35 @@ tabs.forEach(t=>t.addEventListener('click',()=>{show(t.dataset.tab,true); window
 document.addEventListener('input',e=>{ if(e.target.matches('input')) calc(); });
 let rw=0; addEventListener('resize',()=>{clearTimeout(rw); rw=setTimeout(calc,150);});
 const h=location.hash.slice(1); show(tabs.some(t=>t.dataset.tab===h)?h:'painel',false);
+
+/* módulos do topo */
+document.querySelectorAll('.mod').forEach(b=>b.addEventListener('click',()=>{show(b.dataset.go,true); document.querySelector('.tabs-wrap').scrollIntoView({behavior:'smooth'});}));
+
+/* cotação ao vivo da B3 para os vencimentos escolhidos */
+const B3='https://cotacao.b3.com.br/mds/api/v1/DerivativeQuotation/';
+let q={};
+async function cotar(){
+  const tb=ticker('BGI',$('h_venc').value), tm=ticker('CCM',$('m_venc').value);
+  $('qLab').textContent=`Cotação B3 · boi gordo ${tb}`; $('qLab2').textContent=`Milho ${tm}`;
+  try{
+    const [b,c]=await Promise.all(['BGI','CCM'].map(k=>fetch(B3+k,{cache:'no-store'}).then(r=>{ if(!r.ok) throw 0; return r.json(); })));
+    const pega=(j,t)=>{ const x=(j.Scty||[]).find(s=>s.mkt&&s.mkt.cd==='FUT'&&s.symb===t); if(!x) return null; const qq=x.SctyQtn||{};
+      const ult=qq.curPrc!=null; return {p:ult?qq.curPrc:qq.prvsDayAdjstmntPric, ult, v:ult&&qq.prvsDayAdjstmntPric?qq.curPrc/qq.prvsDayAdjstmntPric-1:null}; };
+    q={boi:pega(b,tb), mil:pega(c,tm)};
+    const t=/(\d{4})-(\d{2})-(\d{2})[ T](\d{2}):(\d{2})/.exec((b.Msg&&b.Msg.dtTm)||''), quando=t?`${t[3]}/${t[2]} às ${t[4]}:${t[5]}`:'';
+    const txt=x=>!x?'vencimento não encontrado na B3':(x.ult?'último negócio':'ajuste anterior')+(x.v!=null?` · <span class="${x.v>=0?'pos':'neg'}">${x.v>=0?'▲':'▼'} ${nf2.format(Math.abs(x.v*100))}%</span>`:'')+(quando?` · <b>${quando}</b>`:'');
+    $('qBoi').textContent=q.boi&&q.boi.p!=null?nf2.format(q.boi.p):'—'; $('qBoiS').innerHTML=txt(q.boi);
+    $('qMil').textContent=q.mil&&q.mil.p!=null?nf2.format(q.mil.p):'—'; $('qMilS').innerHTML=txt(q.mil);
+    $('qUse').disabled=!(q.boi||q.mil);
+  }catch(e){ $('qBoiS').textContent='B3 indisponível agora — use os valores digitados.'; $('qUse').disabled=true; }
+}
+$('qUse').addEventListener('click',()=>{
+  if(q.boi&&q.boi.p!=null) $('h_preco').value=q.boi.p;
+  if(q.mil&&q.mil.p!=null) $('m_fut').value=q.mil.p;
+  $('qMsg').textContent='✓ preços da B3 aplicados'; calc();
+});
+['h_venc','m_venc'].forEach(id=>$(id).addEventListener('change',cotar));
+cotar(); setInterval(()=>{ if(!document.hidden) cotar(); },120000);
 })();
 </script>
 </body>
