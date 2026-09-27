@@ -1,8 +1,8 @@
 # Boi na Bolsa — Simulador de Hedge BGI/B3
 
-Kit de gestão e risco no mercado futuro do boi gordo (SENAR-MT · FAMATO · instrutor Cleiton Franco), em versão web interativa da planilha *Simulador Boi na Bolsa*.
+Kit de gestão e risco no mercado futuro do boi gordo, em versão web interativa da planilha *Simulador Boi na Bolsa*.
 
-**Acesse:** https://cleitonfranco74.github.io/boibolsa/
+**Acesse:** https://cleitonfranco74.github.io/boibolsa/ (capa) · [simulador](https://cleitonfranco74.github.io/boibolsa/simulador.html) · [cotações ao vivo](https://cleitonfranco74.github.io/boibolsa/cotacoes.html)
 
 ## O que tem
 
@@ -18,4 +18,8 @@ Página única em HTML/CSS/JavaScript puro, sem dependências — publicada via 
 
 Ferramenta educativa — não é recomendação de investimento.
 
-© 2026 Cleiton Franco / SENAR-MT
+## Autor
+
+Desenvolvido por **Prof. Dr. Cleiton Franco** · Doutor em Economia · Professor Adjunto da UNEMAT, Câmpus de Sinop.
+
+© 2026 Cleiton Franco
