@@ -6,6 +6,7 @@ Kit de gestão e risco no mercado futuro do boi gordo (SENAR-MT · FAMATO · ins
 
 ## O que tem
 
+- **Cotações ao vivo** ([cotacoes.html](https://cleitonfranco74.github.io/boibolsa/cotacoes.html)) — curva BGI e CCM buscada direto da B3 a cada minuto, com semáforo de trava para o seu custo
 - **Painel do Lote** — os 6 números que decidem e o veredito 🟢/🟡/🔴
 - **Hedge BGI** — cenários de preço no abate, ponto de equilíbrio, quanto travar, margem de garantia e diário de ajustes
 - **Futuro × Put** — trava de preço vs. seguro de preço, comprado × vendido

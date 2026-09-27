@@ -1,0 +1,453 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Boi na Bolsa — Cotações ao Vivo</title>
+<meta name="description" content="Cotações dos contratos futuros de boi gordo (BGI) e milho (CCM) da B3, atualizadas automaticamente, com recomendação de trava para o seu lote.">
+<meta property="og:title" content="Boi na Bolsa — Cotações ao Vivo BGI/CCM">
+<meta property="og:description" content="Curva de futuros do boi e do milho direto da B3 e semáforo de trava para o seu custo.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Bricolage+Grotesque:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{
+  color-scheme:dark;
+  --bg:#080808;--bg2:#0f0f0f;--bg3:#141414;--bg4:#1a1a1a;
+  --green:#00e676;--green-a10:rgba(0,230,118,.1);--green-a20:rgba(0,230,118,.2);
+  --text:#f0f0f0;--text2:#9a9a9a;--text3:#5a5a5a;
+  --border:rgba(255,255,255,.06);--border2:rgba(255,255,255,.12);
+  --input:#fff5c2;--input-bg:rgba(255,213,79,.08);--input-bd:rgba(255,213,79,.35);
+  --good:#00e676;--warn:#ffc53d;--bad:#ff5c5c;
+  --s1:#3987e5;--s2:#d95926;
+  --r:14px;--r2:20px;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--bg);color:var(--text);font-family:'Plus Jakarta Sans',sans-serif;line-height:1.55;overflow-x:hidden}
+a{color:inherit;text-decoration:none}
+h1,h2,h3{font-family:'Bricolage Grotesque',sans-serif;letter-spacing:-.02em}
+
+nav{position:sticky;top:0;z-index:50;display:flex;align-items:center;justify-content:space-between;gap:16px;
+  padding:0 32px;height:60px;background:rgba(8,8,8,.85);backdrop-filter:blur(16px);border-bottom:1px solid var(--border)}
+.logo{font-family:'Bricolage Grotesque',sans-serif;font-weight:800;font-size:20px}
+.logo em{color:var(--green);font-style:normal}
+.nav-back{font-size:13px;color:var(--text2);padding:7px 14px;border:1px solid var(--border2);border-radius:50px}
+.nav-back:hover{color:var(--text)}
+
+.hero{max-width:1120px;margin:0 auto;padding:48px 32px 12px}
+.eyebrow{display:inline-flex;gap:8px;align-items:center;background:var(--green-a10);border:1px solid var(--green-a20);
+  color:var(--green);padding:5px 14px;border-radius:50px;font-size:12px;font-weight:600;letter-spacing:.04em;margin-bottom:20px}
+.eyebrow .dot{width:8px;height:8px;border-radius:50%;background:var(--green);animation:pulse 2s infinite}
+.eyebrow.off{color:var(--warn);background:rgba(255,197,61,.08);border-color:rgba(255,197,61,.3)}
+.eyebrow.off .dot{background:var(--warn);animation:none}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.3}}
+.hero h1{font-size:clamp(32px,5vw,54px);line-height:1.04;font-weight:800;margin-bottom:14px}
+.hero h1 span{color:var(--green)}
+.hero p{color:var(--text2);max-width:720px;font-size:16px}
+.status{display:flex;flex-wrap:wrap;align-items:center;gap:10px 16px;margin-top:18px;font-size:13px;color:var(--text2)}
+.status b{color:var(--text)}
+.btn{background:var(--green);color:#04130a;border:0;border-radius:50px;padding:8px 16px;font:700 13px 'Plus Jakarta Sans',sans-serif;cursor:pointer}
+.btn:disabled{opacity:.5;cursor:wait}
+
+main{max-width:1120px;margin:0 auto;padding:20px 32px 80px}
+.card{background:var(--bg2);border:1px solid var(--border);border-radius:var(--r2);padding:24px;margin-bottom:20px}
+.card h2{font-size:22px;margin-bottom:6px}
+.lead{color:var(--text2);font-size:14px;margin-bottom:18px;max-width:820px}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:20px}
+.kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:20px}
+.kpi{background:var(--bg3);border:1px solid var(--border);border-radius:var(--r);padding:16px 18px}
+.k-lab{font-size:12px;color:var(--text2);font-weight:600}
+.k-val{font-family:'Bricolage Grotesque',sans-serif;font-size:28px;font-weight:800;margin:4px 0 2px;font-variant-numeric:tabular-nums}
+.k-sub{font-size:12px;color:var(--text3)}
+.pos{color:var(--good)} .neg{color:var(--bad)}
+
+.fields{display:grid;grid-template-columns:repeat(3,1fr);gap:12px 16px}
+.field label{display:block;font-size:12px;color:var(--text2);margin-bottom:5px;font-weight:600}
+.field input,.field select{width:100%;background:var(--input-bg);border:1px solid var(--input-bd);color:var(--input);border-radius:10px;
+  padding:9px 12px;font:600 15px 'Plus Jakarta Sans',sans-serif;font-variant-numeric:tabular-nums}
+.field select option{background:var(--bg3);color:var(--text)}
+.hint{font-size:12px;color:var(--text3);margin-top:10px}
+
+.verdict{border-radius:var(--r2);padding:20px 22px;border:1px solid var(--border2);background:var(--bg3);margin-top:20px}
+.verdict .v-title{font-family:'Bricolage Grotesque',sans-serif;font-size:clamp(19px,2.6vw,26px);font-weight:800;line-height:1.2}
+.verdict .v-sub{color:var(--text2);font-size:13.5px;margin-top:8px}
+.verdict.good{border-color:rgba(0,230,118,.4);background:linear-gradient(135deg,rgba(0,230,118,.10),var(--bg3))}
+.verdict.warn{border-color:rgba(255,197,61,.4);background:linear-gradient(135deg,rgba(255,197,61,.10),var(--bg3))}
+.verdict.bad{border-color:rgba(255,92,92,.45);background:linear-gradient(135deg,rgba(255,92,92,.10),var(--bg3))}
+.kv{display:flex;justify-content:space-between;gap:12px;padding:8px 0;border-bottom:1px solid var(--border);font-size:14px}
+.kv span{color:var(--text2)} .kv b{font-variant-numeric:tabular-nums;text-align:right;white-space:nowrap}
+
+.tbl-wrap{overflow-x:auto;border:1px solid var(--border);border-radius:var(--r)}
+table{width:100%;border-collapse:collapse;font-size:13.5px;font-variant-numeric:tabular-nums}
+th,td{padding:9px 12px;text-align:right;white-space:nowrap;border-bottom:1px solid var(--border)}
+th{background:var(--bg3);color:var(--text2);font-weight:600;font-size:12px}
+th.l,td.l{text-align:left}
+tbody tr:hover{background:var(--bg4)}
+tr.sel{background:var(--green-a10)}
+.pill{display:inline-block;padding:3px 10px;border-radius:50px;font-size:12px;font-weight:700}
+.pill.good{background:rgba(0,230,118,.12);color:var(--good)}
+.pill.warn{background:rgba(255,197,61,.12);color:var(--warn)}
+.pill.bad{background:rgba(255,92,92,.12);color:var(--bad)}
+.muted{color:var(--text3)}
+
+.chart{position:relative;width:100%}
+.chart svg{display:block;width:100%;height:auto}
+.chart .tip{position:absolute;top:8px;pointer-events:none;opacity:0;background:var(--bg4);border:1px solid var(--border2);border-radius:10px;
+  padding:8px 11px;font-size:12.5px;white-space:nowrap;transition:opacity .12s;color:var(--text)}
+.chart .tip b{font-variant-numeric:tabular-nums}
+.chart-title{font-size:15px;font-weight:700;margin-bottom:2px}
+.chart-sub{font-size:12px;color:var(--text3);margin-bottom:10px}
+
+.note{border-left:3px solid var(--green);background:var(--bg3);padding:12px 16px;border-radius:0 10px 10px 0;font-size:13.5px;color:var(--text2);margin-top:16px}
+.note.warn{border-left-color:var(--warn)}
+footer{border-top:1px solid var(--border);padding:28px 32px;text-align:center;color:var(--text3);font-size:12.5px}
+footer b{color:var(--text2)}
+footer a{text-decoration:underline}
+
+@media (max-width:860px){
+  .kpis{grid-template-columns:1fr 1fr}
+  .grid2,.fields{grid-template-columns:1fr}
+}
+@media (max-width:560px){
+  nav,.hero,main{padding-left:16px;padding-right:16px}
+  .kpis{grid-template-columns:1fr}
+  .card{padding:18px}
+}
+</style>
+</head>
+<body>
+
+<nav>
+  <a class="logo" href="./">🐂 Boi na <em>Bolsa</em></a>
+  <a class="nav-back" href="./">← Simulador de hedge</a>
+</nav>
+
+<header class="hero">
+  <div class="eyebrow" id="eyebrow"><span class="dot"></span><span id="eyeTxt">Conectando à B3…</span></div>
+  <h1>Cotações do <span>boi e do milho</span> na B3</h1>
+  <p>Curva completa dos contratos futuros de boi gordo (BGI) e milho (CCM), buscada direto da B3 e atualizada a cada minuto. Informe seu custo e veja, vencimento a vencimento, se vale travar.</p>
+  <div class="status">
+    <span>Cotação B3: <b id="stTime">—</b></span>
+    <span id="stNext"></span>
+    <button class="btn" id="btnRefresh">↻ Atualizar agora</button>
+  </div>
+</header>
+
+<main>
+  <div class="kpis">
+    <div class="kpi"><div class="k-lab" id="kl1">Boi gordo · 1º vencimento</div><div class="k-val" id="kv1">—</div><div class="k-sub" id="ks1"></div></div>
+    <div class="kpi"><div class="k-lab" id="kl2">Milho · 1º vencimento</div><div class="k-val" id="kv2">—</div><div class="k-sub" id="ks2"></div></div>
+    <div class="kpi"><div class="k-lab">Relação boi/milho (vencimentos escolhidos)</div><div class="k-val" id="kv3">—</div><div class="k-sub">sacas de milho por arroba · ref. 4,94</div></div>
+    <div class="kpi"><div class="k-lab">Contratos BGI em aberto</div><div class="k-val" id="kv4">—</div><div class="k-sub">soma de todos os vencimentos</div></div>
+  </div>
+
+  <section class="card">
+    <h2>🎯 Vale travar agora?</h2>
+    <p class="lead">Preencha os campos amarelos com os números do seu lote. A página compara o preço de cada vencimento BGI com o seu custo e aplica o semáforo do simulador: folga ≥ R$ 5/@ = trava; folga curta = trava com opção (put); bolsa abaixo do custo = não trava.</p>
+    <div class="fields">
+      <div class="field"><label for="i_custo">Custo mínimo p/ lucro (R$/@)</label><input id="i_custo" type="number" step="0.01" value="331.38"></div>
+      <div class="field"><label for="i_cab">Número de cabeças</label><input id="i_cab" type="number" step="1" value="200"></div>
+      <div class="field"><label for="i_arr">Arrobas por cabeça (@)</label><input id="i_arr" type="number" step="0.1" value="16.5"></div>
+      <div class="field"><label for="i_venc">Vencimento do boi (mês do abate)</label><select id="i_venc"></select></div>
+      <div class="field"><label for="i_milho">Vencimento do milho (compra da ração)</label><select id="i_milho"></select></div>
+      <div class="field"><label for="i_base">Base da sua praça (R$/@, físico − B3)</label><input id="i_base" type="number" step="0.5" value="0"></div>
+    </div>
+    <p class="hint">Preço usado = último negócio do dia; sem negócio, o ajuste do pregão anterior. A base desconta a diferença entre o frigorífico da sua região e a referência da B3 (em MT costuma ficar entre −R$ 10 e −R$ 16/@) — deixe 0 para comparar só com a bolsa, como no simulador.</p>
+
+    <div class="verdict" id="verdict"><div class="v-title" id="vTitle">Aguardando cotações…</div><div class="v-sub" id="vSub"></div></div>
+
+    <div class="grid2" style="margin-top:20px">
+      <div>
+        <div class="kv"><span>Ticker a vender</span><b id="r1">—</b></div>
+        <div class="kv"><span>Preço na bolsa (R$/@)</span><b id="r2">—</b></div>
+        <div class="kv"><span>Preço esperado no físico (bolsa + base)</span><b id="r3">—</b></div>
+        <div class="kv"><span>Folga sobre o custo (R$/@)</span><b id="r4">—</b></div>
+      </div>
+      <div>
+        <div class="kv"><span>Contratos a vender (330 @ cada)</span><b id="r5">—</b></div>
+        <div class="kv"><span>Arrobas cobertas / produzidas</span><b id="r6">—</b></div>
+        <div class="kv"><span>Lucro travado no lote</span><b id="r7">—</b></div>
+        <div class="kv"><span>Lucro travado por cabeça</span><b id="r8">—</b></div>
+      </div>
+    </div>
+
+    <h3 style="font-size:16px;margin:24px 0 10px">Semáforo em todos os vencimentos</h3>
+    <div class="tbl-wrap"><table id="tSem">
+      <thead><tr><th class="l">Vencimento</th><th class="l">Ticker</th><th>Preço B3</th><th>Físico esperado</th><th>Folga (R$/@)</th><th>Lucro no lote</th><th>Boi/milho (sc/@)</th><th class="l">Recomendação</th></tr></thead>
+      <tbody></tbody>
+    </table></div>
+  </section>
+
+  <section class="card">
+    <h2>📈 Curva de futuros</h2>
+    <p class="lead">Preço de cada vencimento hoje. Curva subindo = mercado paga mais pelo boi no futuro (entressafra); a linha tracejada é o seu custo.</p>
+    <div class="grid2">
+      <div>
+        <div class="chart-title">Boi gordo — BGI (R$/@)</div>
+        <div class="chart-sub">Ponto destacado = vencimento escolhido</div>
+        <div class="chart" id="chBGI"></div>
+      </div>
+      <div>
+        <div class="chart-title">Milho — CCM (R$/saca de 60 kg)</div>
+        <div class="chart-sub">Ponto destacado = vencimento escolhido</div>
+        <div class="chart" id="chCCM"></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="card">
+    <h2>🐂 Boi gordo — BGI</h2>
+    <p class="lead">Contrato de 330 arrobas, referência Indicador do Boi Gordo CEPEA/B3 (SP).</p>
+    <div class="tbl-wrap"><table id="tBGI"></table></div>
+  </section>
+
+  <section class="card">
+    <h2>🌽 Milho — CCM</h2>
+    <p class="lead">Contrato de 450 sacas de 60 kg, referência Campinas (SP).</p>
+    <div class="tbl-wrap"><table id="tCCM"></table></div>
+    <div class="note warn" id="noteErr" style="display:none"></div>
+    <div class="note">Os dados vêm do serviço público de cotações da B3 e podem ter atraso de alguns minutos. Pregão do boi e do milho: dias úteis, 9h–16h30 (Brasília). Fora do pregão, vale o ajuste do último dia. Antes de dar a ordem, confirme o preço com a mesa da sua corretora.</div>
+  </section>
+</main>
+
+<footer>
+  <p><b>Boi na Bolsa — Cotações ao Vivo</b> · Prof. Dr. Cleiton Franco · SENAR-MT · FAMATO</p>
+  <p style="margin-top:6px">Fonte: <a href="https://www.b3.com.br" target="_blank" rel="noopener">B3</a>. Ferramenta educativa — não é recomendação de investimento.</p>
+  <p style="margin-top:6px">© 2026 Cleiton Franco / SENAR-MT</p>
+</footer>
+
+<script>
+const API = 'https://cotacao.b3.com.br/mds/api/v1/DerivativeQuotation/';
+const REFRESH_S = 60, BGI_SIZE = 330, REF_BM = 4.94, FOLGA_MIN = 5;
+const MESES = {F:'jan',G:'fev',H:'mar',J:'abr',K:'mai',M:'jun',N:'jul',Q:'ago',U:'set',V:'out',X:'nov',Z:'dez'};
+const $ = id => document.getElementById(id);
+const nf0 = new Intl.NumberFormat('pt-BR',{maximumFractionDigits:0});
+const nf2 = new Intl.NumberFormat('pt-BR',{minimumFractionDigits:2,maximumFractionDigits:2});
+const brl = v => (v<0?'−':'')+'R$ '+nf0.format(Math.abs(Math.round(v)));
+const brl2 = v => (v<0?'−':'')+'R$ '+nf2.format(Math.abs(v));
+const sgn = (v,f=brl) => `<span class="${v>0?'pos':v<0?'neg':''}">${f(v)}</span>`;
+const pill = (c,t) => `<span class="pill ${c}">${t}</span>`;
+const store = {
+  get(k){ try{ return JSON.parse(localStorage.getItem(k)); }catch(e){ return null; } },
+  set(k,v){ try{ localStorage.setItem(k,JSON.stringify(v)); }catch(e){} }
+};
+
+let data = {BGI:[], CCM:[]}, stamp = null, countdown = REFRESH_S, loading = false;
+
+// ---------- busca ----------
+function parse(json, code){
+  const hoje = new Date().toISOString().slice(0,10);
+  return (json.Scty||[])
+    .filter(s => s.mkt && s.mkt.cd==='FUT' && s.asset.AsstSummry.mtrtyCode >= hoje)
+    .map(s => {
+      const q = s.SctyQtn||{}, a = s.asset.AsstSummry||{};
+      const m = /^[A-Z]{3}([A-Z])(\d{2})$/.exec(s.symb);
+      const ultimo = q.curPrc ?? null, ajuste = q.prvsDayAdjstmntPric ?? null;
+      return {
+        symb: s.symb, venc: a.mtrtyCode, mes: m ? `${MESES[m[1]]}/${m[2]}` : s.symb,
+        ultimo, ajuste, preco: ultimo ?? ajuste,
+        var: (ultimo!=null && ajuste) ? ultimo/ajuste-1 : null,
+        compra: s.buyOffer?.price ?? null, venda: s.sellOffer?.price ?? null,
+        min: q.minPric ?? null, max: q.maxPric ?? null,
+        aberto: a.opnCtrcts ?? 0, negociados: a.traddCtrctsQty ?? 0
+      };
+    })
+    .filter(r => r.preco!=null)
+    .sort((x,y) => x.venc.localeCompare(y.venc));
+}
+
+async function carregar(){
+  if(loading) return;
+  loading = true; $('btnRefresh').disabled = true;
+  try{
+    const [b,c] = await Promise.all(['BGI','CCM'].map(k => fetch(API+k,{cache:'no-store'}).then(r => { if(!r.ok) throw new Error('HTTP '+r.status); return r.json(); })));
+    const nb = parse(b,'BGI'), nc = parse(c,'CCM');
+    if(!nb.length) throw new Error('resposta sem contratos BGI');
+    data = {BGI:nb, CCM:nc}; stamp = b.Msg?.dtTm || new Date().toISOString();
+    store.set('bb_cotacoes',{data,stamp});
+    setOnline(true);
+  }catch(e){
+    const cache = store.get('bb_cotacoes');
+    if(cache && !data.BGI.length){ data = cache.data; stamp = cache.stamp; }
+    setOnline(false, e.message);
+  }finally{
+    loading = false; $('btnRefresh').disabled = false; countdown = REFRESH_S;
+    render();
+  }
+}
+
+function setOnline(ok, msg){
+  $('eyebrow').classList.toggle('off', !ok);
+  $('eyeTxt').textContent = ok ? 'Ao vivo · B3' : 'Sem conexão com a B3';
+  const n = $('noteErr');
+  n.style.display = ok ? 'none' : 'block';
+  if(!ok) n.textContent = `⚠️ Não foi possível buscar as cotações agora (${msg}). ${data.BGI.length ? 'Mostrando a última cotação salva neste navegador.' : 'Tente novamente em instantes.'}`;
+}
+
+function fmtStamp(s){
+  if(!s) return '—';
+  const m = /(\d{4})-(\d{2})-(\d{2})[ T](\d{2}):(\d{2})/.exec(s);
+  return m ? `${m[3]}/${m[2]}/${m[1]} às ${m[4]}:${m[5]}` : s;
+}
+
+// ---------- entradas ----------
+const INPUTS = ['i_custo','i_cab','i_arr','i_base'];
+function num(id){ const v = parseFloat($(id).value); return isFinite(v) ? v : 0; }
+
+function fillSelect(sel, rows, key, auto){
+  const saved = store.get(key), cur = sel.value || saved;
+  sel.innerHTML = (auto ? `<option value="auto">${auto}</option>` : '') + rows.map(r => `<option value="${r.symb}">${r.mes} · ${r.symb}</option>`).join('');
+  if(cur==='auto' && auto) sel.value = 'auto';
+  else if(rows.some(r => r.symb===cur)) sel.value = cur;
+  else if(auto) sel.value = 'auto';
+  else if(rows.length) sel.value = rows[Math.min(1,rows.length-1)].symb; // pula o vencimento do mês corrente
+}
+const maisProximo = (rows, venc) => rows.reduce((best,r) => !best || Math.abs(new Date(r.venc)-new Date(venc)) < Math.abs(new Date(best.venc)-new Date(venc)) ? r : best, null);
+
+function precoMilho(bgi){
+  // milho do vencimento escolhido; se não houver, o CCM mais próximo da data do boi
+  return data.CCM.find(r => r.symb===$('i_milho').value) || maisProximo(data.CCM, bgi.venc);
+}
+
+function classifica(ph, custo, bm){
+  if(ph <= custo) return ['bad','🔴 NÃO TRAVA','a bolsa não cobre seu custo'];
+  if(bm!=null && bm < REF_BM) return ['warn','🟡 ATENÇÃO','trava o boi, mas o milho está caro'];
+  if(ph - custo < FOLGA_MIN) return ['warn','🟡 TRAVA C/ PUT','folga curta: garanta o piso e deixe a alta respirar'];
+  return ['good','🟢 TRAVA','o futuro paga seu custo com folga'];
+}
+
+// ---------- render ----------
+function render(){
+  $('stTime').textContent = fmtStamp(stamp);
+  if(!data.BGI.length) return;
+  fillSelect($('i_venc'), data.BGI, 'bb_venc');
+  fillSelect($('i_milho'), data.CCM, 'bb_milho', 'Automático — o mais próximo do boi');
+
+  const custo = num('i_custo'), cab = num('i_cab'), arr = num('i_arr'), base = num('i_base');
+  const arrobas = cab*arr, ctr = Math.max(0, Math.round(arrobas/BGI_SIZE));
+  const sel = data.BGI.find(r => r.symb===$('i_venc').value) || data.BGI[0];
+  const mil = precoMilho(sel);
+  const bm = mil ? sel.preco/mil.preco : null;
+
+  // KPIs
+  const b0 = data.BGI[0], c0 = data.CCM[0];
+  $('kl1').textContent = `Boi gordo · ${b0.symb}`;
+  $('kv1').textContent = brl2(b0.preco);
+  $('ks1').innerHTML = varTxt(b0) + ' · R$/@';
+  if(c0){ $('kl2').textContent = `Milho · ${c0.symb}`; $('kv2').textContent = brl2(c0.preco); $('ks2').innerHTML = varTxt(c0) + ' · R$/sc'; }
+  $('kv3').innerHTML = bm ? `<span class="${bm>=REF_BM?'pos':'neg'}">${nf2.format(bm)}</span>` : '—';
+  $('kv4').textContent = nf0.format(data.BGI.reduce((s,r) => s+r.aberto, 0));
+
+  // veredito
+  const fis = sel.preco + base, folga = fis - custo;
+  const [vc, vt, vs] = classifica(fis, custo, bm);
+  $('verdict').className = 'verdict '+vc;
+  $('vTitle').textContent = `${vt} ${sel.symb} — ${vs}`;
+  $('vSub').textContent = `Custo ${brl2(custo)}/@ · Bolsa paga ${brl2(sel.preco)}/@ (${sel.mes})` + (base ? ` · Base ${brl2(base)}` : '') +
+    ` · Folga de ${brl2(folga)}/@` + (bm ? ` · Boi/milho ${nf2.format(bm)} sc/@ com ${mil.symb} (ref. 4,94)` : '');
+  const lucro = folga*arrobas;
+  $('r1').textContent = sel.symb;
+  $('r2').textContent = brl2(sel.preco);
+  $('r3').textContent = brl2(fis);
+  $('r4').innerHTML = sgn(folga, brl2);
+  $('r5').textContent = nf0.format(ctr);
+  $('r6').textContent = `${nf0.format(ctr*BGI_SIZE)} / ${nf0.format(arrobas)} @`;
+  $('r7').innerHTML = sgn(lucro);
+  $('r8').innerHTML = cab ? sgn(lucro/cab) : '—';
+
+  // semáforo por vencimento
+  $('tSem').tBodies[0].innerHTML = data.BGI.map(r => {
+    const m = $('i_milho').value==='auto' ? maisProximo(data.CCM, r.venc) : mil;
+    const b = m ? r.preco/m.preco : null, f = r.preco + base - custo;
+    const [c, t] = classifica(r.preco+base, custo, b);
+    return `<tr class="${r.symb===sel.symb?'sel':''}"><td class="l">${r.mes}</td><td class="l">${r.symb}</td><td>${brl2(r.preco)}</td><td>${brl2(r.preco+base)}</td>
+      <td>${sgn(f,brl2)}</td><td>${sgn(f*arrobas)}</td><td>${b?nf2.format(b):'—'}</td><td class="l">${pill(c,t)}</td></tr>`;
+  }).join('');
+
+  // tabelas completas
+  $('tBGI').innerHTML = tabela(data.BGI, sel.symb);
+  $('tCCM').innerHTML = tabela(data.CCM, mil?.symb);
+
+  // gráficos
+  chart($('chBGI'), data.BGI, 'var(--s1)', sel.symb, {y:custo-base, label:`Seu custo ${brl2(custo)}`+(base?' (na bolsa)':'')}, 'R$/@');
+  chart($('chCCM'), data.CCM, 'var(--s2)', mil?.symb, null, 'R$/sc');
+}
+
+function varTxt(r){
+  if(r.var==null) return `<span class="muted">ajuste anterior</span>`;
+  return `<span class="${r.var>0?'pos':r.var<0?'neg':''}">${r.var>0?'▲':r.var<0?'▼':''} ${nf2.format(r.var*100)}%</span> hoje`;
+}
+
+function tabela(rows, selSymb){
+  const f = v => v==null ? '<span class="muted">—</span>' : nf2.format(v);
+  return `<thead><tr><th class="l">Vencimento</th><th class="l">Ticker</th><th>Último</th><th>Ajuste anterior</th><th>Variação</th><th>Compra</th><th>Venda</th><th>Mín.</th><th>Máx.</th><th>Negociados hoje</th><th>Em aberto</th></tr></thead><tbody>` +
+    rows.map(r => `<tr class="${r.symb===selSymb?'sel':''}"><td class="l">${r.mes} <span class="muted">(${r.venc.split('-').reverse().join('/')})</span></td><td class="l"><b>${r.symb}</b></td>
+      <td>${f(r.ultimo)}</td><td>${f(r.ajuste)}</td><td>${r.var==null?'<span class="muted">—</span>':sgn(r.var,v=>nf2.format(v*100)+'%')}</td>
+      <td>${f(r.compra)}</td><td>${f(r.venda)}</td><td>${f(r.min)}</td><td>${f(r.max)}</td><td>${nf0.format(r.negociados)}</td><td>${nf0.format(r.aberto)}</td></tr>`).join('') + '</tbody>';
+}
+
+// ---------- gráfico de linha (curva) ----------
+function niceStep(raw){ const p = Math.pow(10,Math.floor(Math.log10(raw||1))), f = raw/p; return (f<1.5?1:f<3?2:f<7?5:10)*p; }
+function chart(el, rows, color, selSymb, ref, unit){
+  if(!rows.length){ el.innerHTML = '<p class="muted">Sem dados.</p>'; return; }
+  const W = 560, H = 300, m = {t:16, r:28, b:30, l:58}, iw = W-m.l-m.r, ih = H-m.t-m.b;
+  const ys = rows.map(r => r.preco).concat(ref ? [ref.y] : []);
+  let lo = Math.min(...ys), hi = Math.max(...ys); const pad = (hi-lo)*.12 || 2; lo -= pad; hi += pad;
+  const n = rows.length, X = i => m.l + (n<=1 ? iw/2 : i*iw/(n-1)), Y = v => m.t + ih - (v-lo)/(hi-lo)*ih;
+  const step = niceStep((hi-lo)/5), ticks = [];
+  for(let v = Math.ceil(lo/step)*step; v <= hi; v += step) ticks.push(v);
+  const every = Math.max(1, Math.ceil(n/7));
+  let s = `<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="Curva de preços futuros por vencimento">`;
+  ticks.forEach(v => s += `<line x1="${m.l}" x2="${W-m.r}" y1="${Y(v)}" y2="${Y(v)}" stroke="rgba(255,255,255,.06)"/>
+    <text x="${m.l-8}" y="${Y(v)+4}" text-anchor="end" font-size="11" fill="#9a9a9a">${nf0.format(v)}</text>`);
+  rows.forEach((r,i) => { if(i%every===0 || i===n-1) s += `<text x="${X(i)}" y="${H-8}" text-anchor="middle" font-size="11" fill="#9a9a9a">${r.mes}</text>`; });
+  if(ref){
+    s += `<line x1="${m.l}" x2="${W-m.r}" y1="${Y(ref.y)}" y2="${Y(ref.y)}" stroke="#ffc53d" stroke-width="1.5" stroke-dasharray="5 4"/>
+      <text x="${W-m.r}" y="${Y(ref.y)-6}" text-anchor="end" font-size="11" font-weight="600" fill="#f0f0f0">${ref.label}</text>`;
+  }
+  s += `<path d="${rows.map((r,i) => (i?'L':'M')+X(i).toFixed(1)+' '+Y(r.preco).toFixed(1)).join('')}" fill="none" stroke="${color}" stroke-width="2" stroke-linejoin="round"/>`;
+  rows.forEach((r,i) => {
+    const on = r.symb===selSymb;
+    s += `<circle cx="${X(i)}" cy="${Y(r.preco)}" r="${on?6:4}" fill="${on?color:'#0f0f0f'}" stroke="${on?'#0f0f0f':color}" stroke-width="2"/>`;
+    if(on) s += `<text x="${X(i)}" y="${Y(r.preco)-12}" text-anchor="middle" font-size="12" font-weight="700" fill="#f0f0f0">${nf2.format(r.preco)}</text>`;
+  });
+  s += `<line class="xh" x1="0" x2="0" y1="${m.t}" y2="${m.t+ih}" stroke="rgba(255,255,255,.25)" opacity="0"/>
+    <rect x="${m.l-10}" y="${m.t}" width="${iw+20}" height="${ih}" fill="transparent" class="hit"/></svg><div class="tip"></div>`;
+  el.innerHTML = s;
+  const sv = el.querySelector('svg'), tip = el.querySelector('.tip'), xh = el.querySelector('.xh');
+  const move = e => {
+    const b = sv.getBoundingClientRect(), px = ((e.touches?e.touches[0].clientX:e.clientX) - b.left) * W / b.width;
+    const i = Math.max(0, Math.min(n-1, Math.round((px-m.l)/iw*(n-1)))), r = rows[i];
+    xh.setAttribute('x1',X(i)); xh.setAttribute('x2',X(i)); xh.setAttribute('opacity',1);
+    tip.innerHTML = `<b>${r.symb}</b> · ${r.mes}<br>${unit} <b>${nf2.format(r.preco)}</b>${r.var!=null?` · ${r.var>=0?'+':''}${nf2.format(r.var*100)}%`:''}<br><span class="muted">${nf0.format(r.aberto)} contratos em aberto</span>`;
+    tip.style.opacity = 1;
+    const tx = X(i)*b.width/W, tw = tip.offsetWidth;
+    tip.style.left = Math.max(0, Math.min(b.width-tw, tx - tw/2)) + 'px';
+  };
+  const leave = () => { tip.style.opacity = 0; xh.setAttribute('opacity',0); };
+  sv.addEventListener('mousemove', move); sv.addEventListener('touchstart', move, {passive:true});
+  sv.addEventListener('mouseleave', leave);
+}
+
+// ---------- eventos ----------
+INPUTS.forEach(id => {
+  const saved = store.get('bb_'+id); if(saved!=null) $(id).value = saved;
+  $(id).addEventListener('input', () => { store.set('bb_'+id, $(id).value); render(); });
+});
+$('i_venc').addEventListener('change', () => { store.set('bb_venc', $('i_venc').value); render(); });
+$('i_milho').addEventListener('change', () => { store.set('bb_milho', $('i_milho').value); render(); });
+$('btnRefresh').addEventListener('click', carregar);
+
+setInterval(() => {
+  if(document.hidden) return;
+  countdown--;
+  $('stNext').textContent = loading ? 'buscando…' : `próxima atualização em ${countdown}s`;
+  if(countdown <= 0) carregar();
+}, 1000);
+document.addEventListener('visibilitychange', () => { if(!document.hidden && countdown < REFRESH_S-10) carregar(); });
+
+const cache = store.get('bb_cotacoes');
+if(cache){ data = cache.data; stamp = cache.stamp; render(); }
+carregar();
+</script>
+</body>
+</html>
