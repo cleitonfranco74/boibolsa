@@ -215,6 +215,7 @@ footer a{text-decoration:underline}
   <p style="margin-top:6px">Desenvolvido por <b>Prof. Dr. Cleiton Franco</b> · Doutor em Economia · Professor Adjunto da UNEMAT, Câmpus de Sinop</p>
   <p style="margin-top:6px">Fonte: <a href="https://www.b3.com.br" target="_blank" rel="noopener">B3</a>. Ferramenta educativa — não é recomendação de investimento.</p>
   <p style="margin-top:6px">© 2026 Cleiton Franco</p>
+  <p id="contador" style="margin-top:6px" hidden></p>
 </footer>
 
 <script>
@@ -451,5 +452,6 @@ const cache = store.get('bb_cotacoes');
 if(cache){ data = cache.data; stamp = cache.stamp; render(); }
 carregar();
 </script>
+<script src="contador.js" defer></script>
 </body>
 </html>

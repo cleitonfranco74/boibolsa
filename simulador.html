@@ -750,6 +750,7 @@ footer b{color:#e8eeeb}
   <p style="margin-top:6px">“Conhecimento + Disciplina + Gestão de Risco = Sucesso”</p>
   <p style="margin-top:6px">Ferramenta educativa — não é recomendação de investimento. Margens, preços e bases são ilustrativos; confirme com sua corretora e com as cotações oficiais.</p>
   <p style="margin-top:6px">© 2026 Cleiton Franco</p>
+  <p id="contador" style="margin-top:6px" hidden></p>
 </footer>
 
 <script>
@@ -1071,5 +1072,6 @@ $('qUse').addEventListener('click',()=>{
 cotar(); setInterval(()=>{ if(!document.hidden) cotar(); },120000);
 })();
 </script>
+<script src="contador.js" defer></script>
 </body>
 </html>
