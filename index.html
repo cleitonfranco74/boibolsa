@@ -208,6 +208,7 @@ footer b{color:var(--text2)}
   <p style="margin-top:6px">Desenvolvido por <b>Prof. Dr. Cleiton Franco</b> · Doutor em Economia · Professor Adjunto da UNEMAT, Câmpus de Sinop</p>
   <p style="margin-top:6px">Cotações: B3. Ferramenta educativa — não é recomendação de investimento.</p>
   <p style="margin-top:6px">© 2026 Cleiton Franco</p>
+  <p id="contador" style="margin-top:6px" hidden></p>
 </footer>
 
 <script>
@@ -271,5 +272,6 @@ async function carregar(){
 carregar();
 setInterval(() => { if(!document.hidden) carregar(); }, 60000);
 </script>
+<script src="contador.js" defer></script>
 </body>
 </html>
