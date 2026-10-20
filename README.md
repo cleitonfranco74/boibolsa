@@ -14,7 +14,7 @@ Kit de gestão e risco no mercado futuro do boi gordo, em versão web interativa
 - **Mercado** — histórico CEPEA, previsão (Holt-Winters + ARIMA), taxa de conversão milho × boi e risco de base MT × B3
 - **Aprenda** — passo a passo, mitos e verdades, dicionário do pecuarista e exercícios
 
-Páginas em HTML/CSS/JavaScript puro, sem dependências — publicadas via GitHub Pages. O rodapé de todas as páginas mostra um contador de visitas (`contador.js`, via serviço gratuito [Abacus](https://abacus.jasoncameron.dev); cada visita conta uma vez por sessão do navegador). O Painel do simulador busca a cotação do dia na B3 e aplica nos campos com um clique.
+Páginas em HTML/CSS/JavaScript puro, sem dependências — publicadas via GitHub Pages. O rodapé de todas as páginas mostra um contador de visitas (`contador.js`, via serviço gratuito [Abacus](https://abacus.jasoncameron.dev); cada visita conta uma vez por sessão do navegador). Todas as páginas têm também o botão **💬 Dê sua opinião** (`feedback.js`): nota de 1 a 5 estrelas, perfil de quem usa e comentário livre, enviados de forma anônima por e-mail ao autor pelo [FormSubmit](https://formsubmit.co). O Painel do simulador busca a cotação do dia na B3 e aplica nos campos com um clique.
 
 Ferramenta educativa — não é recomendação de investimento.
 
