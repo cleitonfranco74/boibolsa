@@ -297,12 +297,38 @@ footer b{color:#e8eeeb}
     </div>
     <div class="qnote" id="qNote">O exemplo de todas as abas é montado com a cotação atual e o preço futuro da @. Ao digitar um valor num campo amarelo, o seu valor prevalece.</div>
   </div>
+  <div class="section" id="mtBox">
+    <h2>📍 Sua praça: Mato Grosso</h2>
+    <p class="lead">Digite os preços de Mato Grosso (boletins do IMEA, frigorífico ou cooperativa da sua região). <b>Campo vazio = a simulação usa a B3.</b> Os valores ficam salvos neste navegador.</p>
+    <div class="grid g2">
+      <div class="card">
+        <div class="fields">
+          <div class="field"><label for="mt_boi">Boi gordo MT — à vista (R$/@)</label><input id="mt_boi" type="number" step="0.5" min="0" placeholder="vazio = B3"></div>
+          <div class="field"><label for="mt_milho">Milho disponível MT (R$/sc 60 kg)</label><input id="mt_milho" type="number" step="0.5" min="0" placeholder="vazio = B3"></div>
+          <div class="field"><label for="mt_magro">Reposição MT — boi magro (R$/@)</label><input id="mt_magro" type="number" step="0.5" min="0" placeholder="vazio = B3"></div>
+          <div class="field"><label for="mt_custo">Custo de produção IMEA (R$/@)</label><input id="mt_custo" type="number" step="0.5" min="0" placeholder="opcional"></div>
+          <div class="field"><label for="mt_ref">Fonte e data</label><input id="mt_ref" type="text" placeholder="IMEA · dd/mm/aaaa" style="width:190px;text-align:left"></div>
+        </div>
+        <p class="hint">O preço do boi MT define a <b>base da sua praça</b> (MT − B3 hoje); a trava continua na B3, e a venda física passa a ser futuro + base. O milho MT entra na dieta e o magro MT na compra da reposição. O custo do IMEA é só referência, para comparar com o custo calculado.</p>
+        <button class="btn-q" id="mtClear" type="button" style="margin-top:12px">Limpar preços de MT</button>
+      </div>
+      <div class="card">
+        <h3>O que muda na simulação</h3>
+        <div class="kv"><span>Base do boi (MT − B3 hoje)</span><b id="mtO1">—</b></div>
+        <div class="kv"><span>Preço esperado no físico no vencimento</span><b id="mtO2">—</b></div>
+        <div class="kv"><span>Base do milho (MT − CCM hoje)</span><b id="mtO3">—</b></div>
+        <div class="kv"><span>Compra do magro usada</span><b id="mtO4">—</b></div>
+        <div class="kv"><span>Custo IMEA × seu custo calculado</span><b id="mtO5">—</b></div>
+        <p class="hint" id="mtFonte"></p>
+      </div>
+    </div>
+  </div>
   <div class="section">
     <h2>Os 6 números que decidem</h2>
     <p class="lead">Uma tela, tudo puxado das abas Confinamento e Hedge. Altere os dados lá e o veredito muda aqui.</p>
     <div class="grid g3">
-      <div class="kpi"><div class="k-lab">1 · Custo por arroba</div><div class="k-val" id="k1"></div><div class="k-sub">Quanto custa produzir cada @ neste lote</div></div>
-      <div class="kpi"><div class="k-lab">2 · Preço futuro disponível</div><div class="k-val" id="k2"></div><div class="k-sub">O que a bolsa paga hoje pelo seu vencimento</div></div>
+      <div class="kpi"><div class="k-lab">1 · Custo por arroba</div><div class="k-val" id="k1"></div><div class="k-sub" id="k1s">Quanto custa produzir cada @ neste lote</div></div>
+      <div class="kpi"><div class="k-lab">2 · Preço futuro disponível</div><div class="k-val" id="k2"></div><div class="k-sub" id="k2s">O que a bolsa paga hoje pelo seu vencimento</div></div>
       <div class="kpi"><div class="k-lab">3 · Margem travável / cabeça</div><div class="k-val" id="k3"></div><div class="k-sub">Lucro por cabeça se travar agora</div></div>
       <div class="kpi"><div class="k-lab">4 · Relação boi/milho</div><div class="k-val" id="k4"></div><div class="k-sub">Sacas de milho por arroba · referência: 5,0</div></div>
       <div class="kpi"><div class="k-lab">5 · Caixa necessário</div><div class="k-val" id="k5"></div><div class="k-sub">Margem de garantia + 20% de folga p/ ajustes</div></div>
@@ -581,6 +607,7 @@ footer b{color:#e8eeeb}
       <div class="card">
         <h3>🔒 Análise com hedge</h3>
         <div class="kv"><span>Preço hedge na bolsa (aba Hedge)</span><b id="ch1"></b></div>
+        <div class="kv"><span>Base da praça (boi MT − B3 hoje)</span><b id="ch8"></b></div>
         <div class="kv"><span>Contratos BGI necessários</span><b id="ch2"></b></div>
         <div class="kv"><span>Margem de garantia total</span><b id="ch3"></b></div>
         <div class="kv"><span>Receita c/ hedge</span><b id="ch4"></b></div>
@@ -896,19 +923,19 @@ const DIC=[["HEDGE","É vender o boi antes de engordar. Você combina hoje o pre
 ["ALAVANCAGEM","É vender mais boi do que tem no pasto. Aí não é seguro — é aposta.","O ÚNICO jeito de o hedge virar risco de verdade. Trave só o que você produz."]];
 $('dic').innerHTML=DIC.map(d=>`<details><summary>${d[0]}</summary><div class="body"><p>🐄 <b style="color:var(--text)">É como se fosse…</b> ${d[1]}</p><p>✅ <b style="color:var(--text)">Na prática:</b> ${d[2]}</p></div></details>`).join('');
 
-function deveres(o,ph,venda,bm,venc){
+function deveres(o,ph,venda,bm,venc,base=0){
   const b0=conf(o), r5=x=>Math.round(x/5)*5;
   const f1=+(o.fut*1.2).toFixed(1), c1=conf({...o,fut:f1});
   const p2=Math.round(ph*QUEDA_K);
   const m3=Math.round(o.magro*380/348), c3=conf({...o,magro:m3});
-  const v=(p,c)=>veredito(p,c,bm)[1].split(' — ')[0];
+  const v=(p,c)=>veredito(p+base,c,bm)[1].split(' — ')[0];
   const lc=c=>venda*c.aS-c.cCab;
   const D=[["🌽 O milho subiu 20%",`A entressafra apertou e o milho futuro foi de ${brl2(o.fut)} para ${brl2(f1)} a saca.`,`Aba Confinamento → “Preço futuro travado CCM”: troque ${nf1.format(o.fut)} por ${nf1.format(f1)}.`,
       `Veja a dieta por dia subir, o preço de equilíbrio subir e a folga encolher. Com milho a ${brl2(f1)}, o boi a ${brl2(ph)} ainda paga o confinamento?`,
-      `Dieta sobe de ${brl2(b0.dieta)} para ${brl2(c1.dieta)}/dia · custo/@ vai de ${brl2(b0.cArr)} para ${brl2(c1.cArr)} · folga vai de ${brl2(ph-b0.cArr)} para ${brl2(ph-c1.cArr)} — Painel: ${v(ph,c1.cArr)}. Lição: o cocho corrói a margem; acompanhe o número, não só a cor.`],
+      `Dieta sobe de ${brl2(b0.dieta)} para ${brl2(c1.dieta)}/dia · custo/@ vai de ${brl2(b0.cArr)} para ${brl2(c1.cArr)} · folga vai de ${brl2(ph+base-b0.cArr)} para ${brl2(ph+base-c1.cArr)} — Painel: ${v(ph,c1.cArr)}. Lição: o cocho corrói a margem; acompanhe o número, não só a cor.`],
     [`🐂 O boi caiu para ${brl(p2)}`,`A China segurou a compra e o vencimento ${venc} despencou de ${brl2(ph)} para ${brl2(p2)} (−11%).`,`Aba Hedge → “Preço futuro da @”: troque ${nf2.format(ph)} por ${p2}.`,
       "O semáforo dos cenários muda e o Painel reage. Se a bolsa paga menos que seu custo, travar resolve?",
-      `Folga vai de ${brl2(ph-b0.cArr)} para ${brl2(p2-b0.cArr)}/@ e o lucro travado por cabeça vai a ${brl((p2-b0.cArr)*b0.aS)} — Painel: ${v(p2,b0.cArr)}. Lição: hedge não conserta custo ruim — só trava a margem que existe no dia.`],
+      `Folga vai de ${brl2(ph+base-b0.cArr)} para ${brl2(p2+base-b0.cArr)}/@ e o lucro travado por cabeça vai a ${brl((p2+base-b0.cArr)*b0.aS)} — Painel: ${v(p2,b0.cArr)}. Lição: hedge não conserta custo ruim — só trava a margem que existe no dia.`],
     ["💸 Reposição mais cara",`O boi magro encareceu: a arroba de reposição foi de ${brl2(o.magro)} para ${brl2(m3)} (+9%).`,`Aba Confinamento → “Compra do boi magro”: troque ${nf0.format(o.magro)} por ${m3}.`,
       `O custo de compra por cabeça vai a ~${brl(r5(m3*b0.aE))}; lucro e breakeven se movem juntos. A que preço de reposição o confinamento deixa de fechar com o boi a ${brl2(ph)}?`,
       `Custo/@ sobe de ${brl2(b0.cArr)} para ${brl2(c3.cArr)} · lucro por cabeça vai de ${brl(lc(b0))} para ${brl(lc(c3))} — Painel: ${v(ph,c3.cArr)}. Lição: o preço da reposição é o maior risco do confinador, maior que o preço do boi gordo.`]];
@@ -919,14 +946,14 @@ function deveres(o,ph,venda,bm,venc){
 function conf(o){
   const meses=o.dias/30, aE=o.pe/15, aS=o.ps/15, totArr=o.cab*aS;
   const consTot=o.cab*o.dias*o.cons, sacas=consTot/60, ctrM=Math.round(sacas*o.mpct/450), cobM=ctrM*450;
-  const cTrav=cobM*o.fut, cSpot=(sacas-cobM)*o.milho, cMil=cTrav+cSpot, medio=sacas>0?cMil/sacas:0;
+  const cTrav=cobM*(o.fut+(o.mbase||0)), cSpot=(sacas-cobM)*o.milho, cMil=cTrav+cSpot, medio=sacas>0?cMil/sacas:0;
   const dieta=o.cons*medio/60+o.outros;
   const cCompra=o.magro*aE, cDieta=dieta*o.dias, cFixos=o.san+o.mo+o.dep, cFin=(cCompra+cDieta+cFixos)*o.fin*meses;
   const cCab=cCompra+cDieta+cFixos+cFin, cLote=cCab*o.cab, cArr=totArr>0?cLote/totArr:0;
   return {meses,aE,aS,totArr,consTot,sacas,ctrM,cobM,cTrav,cSpot,cMil,medio,dieta,cCompra,cDieta,cFixos,cFin,cCab,cLote,cArr};
 }
 const confInputs=()=>({cab:val('c_cab'),pe:val('c_pe'),ps:val('c_ps'),dias:val('c_dias'),magro:val('c_magro'),outros:val('c_outros'),san:val('c_san'),mo:val('c_mo'),dep:val('c_dep'),
-  fin:val('c_fin')/100,cons:val('c_cons'),milho:val('c_milho'),fut:val('m_fut'),mpct:val('m_pct')/100});
+  fin:val('c_fin')/100,cons:val('c_cons'),milho:val('c_milho'),fut:val('m_fut'),mpct:val('m_pct')/100,mbase:mtBaseMilho()});
 function veredito(ph,cArr,bm){
   if(ph<=cArr) return ['bad','🔴 NÃO TRAVA — a bolsa não cobre seu custo'];
   if(bm<4.94) return ['warn','🟡 ATENÇÃO — trava o boi, mas o milho está caro (boi/milho abaixo da referência)'];
@@ -936,6 +963,12 @@ function veredito(ph,cArr,bm){
 
 /* ── exemplo: campos que seguem a cotação até o usuário digitar ── */
 const touched=new Set();
+let SEL={}, B3MS=FALLBACK.mspot;   // contratos escolhidos e milho spot da B3
+const MT_IDS=['mt_boi','mt_milho','mt_magro','mt_custo','mt_ref'];
+const mtv=id=>{ const v=parseFloat($(id).value); return isFinite(v)&&v>0?v:null; };
+const mtBaseMilho=()=>{ const m=mtv('mt_milho'); return m!=null&&B3MS?m-B3MS:0; };
+try{ const sv=JSON.parse(localStorage.getItem('bb_mt')||'{}'); MT_IDS.forEach(id=>{ if(sv[id]!=null) $(id).value=sv[id]; }); }catch(e){}
+const mtSalvar=()=>{ try{ localStorage.setItem('bb_mt',JSON.stringify(Object.fromEntries(MT_IDS.map(id=>[id,$(id).value])))); }catch(e){} };
 const fieldKey=el=>el.id||(el.dataset.d!=null?'d'+el.dataset.d:el.dataset.br!=null?'br'+el.dataset.br:el.dataset.bf!=null?'bf'+el.dataset.bf:'');
 function setAuto(el,v,dec){
   if(!el||touched.has(fieldKey(el))) return;
@@ -975,8 +1008,11 @@ function market(){
 function calc(){
   // exemplo derivado da cotação atual e do preço futuro (só onde o usuário não digitou)
   const spot=val('r_spot');
-  auto('c_magro',spot*MAGRO_K,0);
-  auto('c_venda',val('h_preco'),2);
+  const mtBoi=mtv('mt_boi'), mtMil=mtv('mt_milho'), mtMag=mtv('mt_magro'), mtCus=mtv('mt_custo');
+  const base=mtBoi!=null&&spot>0?mtBoi-spot:0, mbase=mtBaseMilho();
+  auto('c_milho',mtMil!=null?mtMil:B3MS,2);
+  auto('c_magro',mtMag!=null?mtMag:spot*MAGRO_K,mtMag!=null?2:0);
+  auto('c_venda',val('h_preco')+base,2);
   const C0=conf(confInputs());
   auto('h_cmin',C0.cArr,2);
   auto('h_custo',C0.cArr*val('h_cab')*val('h_arr'),0);
@@ -994,7 +1030,7 @@ function calc(){
   $('h_o7').innerHTML=spot>0?`${sgn(ph-spot,brl2)}/@ · ${sgn((ph-spot)/spot,pct)}`:'—';
   const c5=r5(ph), c10=r10(ph), now=p=>Math.abs(p-spot)<2.5?'<span class="tag-now">📍 hoje</span>':'', lock=p=>Math.abs(p-ph)<2.5?'<span class="tag-now">🔒 futuro</span>':'';
 
-  const pe=cob>0?custo/cob:0, seg=ph-pe, lucroEsp=pe>0?seg*cob:0;
+  const pe=cob>0?custo/cob:0, seg=ph+base-pe, lucroEsp=pe>0?seg*cob:0;
   $('pe1').textContent=brl2(pe); $('pe2').textContent=brl2(ph); $('pe3').innerHTML=sgn(seg,brl2); $('pe4').innerHTML=sgn(pe>0?seg/pe:0,pct); $('pe5').innerHTML=sgn(lucroEsp);
   const peC=seg>5?'good':seg>0?'warn':'bad';
   $('peV').className='verdict '+peC;
@@ -1002,7 +1038,7 @@ function calc(){
 
   const P=range(c5-60,c5+50,5), com=[], sem=[];
   $('tHedge').tBodies[0].innerHTML=P.map(p=>{
-    const rf=p*arrLote, rb=(ph-p)*cob, rc=rf+rb, lc=rc-custo, ls=rf-custo, d=lc-ls; com.push(lc); sem.push(ls);
+    const rf=(p+base)*arrLote, rb=(ph-p)*cob, rc=rf+rb, lc=rc-custo, ls=rf-custo, d=lc-ls; com.push(lc); sem.push(ls);
     const s=lc>0?(ls<0?pill('good','✅ Hedge salvou operação'):p<ph?pill('good','✅ Hedge vantajoso'):pill('neu','⚖️ Mercado subiu – custo do seguro')):pill('bad','🔴 Prejuízo mesmo c/ hedge');
     return `<tr class="${Math.abs(p-ph)<2.5?'hl':''}"><td>${nf0.format(p)}${lock(p)}${now(p)}</td><td>${brl(rf)}</td><td>${sgn(rb)}</td><td>${brl(rc)}</td><td>${sgn(lc)}</td><td>${sgn(ls)}</td><td>${sgn(d)}</td><td class="l">${s}</td></tr>`;}).join('');
   lineChart($('chHedge'),{xs:P.map(p=>'R$ '+p),series:[{name:'Lucro c/ hedge',data:com,color:'var(--s1)',fmt:brl},{name:'Lucro s/ hedge',data:sem,color:'var(--s2)',fmt:brl}],yFmt:kfmt});
@@ -1010,7 +1046,7 @@ function calc(){
   const qLo=r5(ph*0.75), qHi=r5(ph*1.055);
   $('qtLo').textContent=`Se cair p/ R$ ${qLo}/@`; $('qtHi').textContent=`Se subir p/ R$ ${qHi}/@`;
   $('tQuanto').tBodies[0].innerHTML=[0,.25,.5,.75,1].map(c=>{
-    const f=x=>x*arrLote-custo+c*(ph-x)*arrLote;
+    const f=x=>(x+base)*arrLote-custo+c*(ph-x)*arrLote;
     return `<tr><td>${pct(c).replace(',0','')}</td><td>${sgn(f(qLo))}</td><td>${sgn(f(ph))}</td><td>${sgn(f(qHi))}</td></tr>`;}).join('');
 
   $('thMg').textContent='Margem '+nf1.format(mg*100).replace(',0','')+'%';
@@ -1048,7 +1084,7 @@ function calc(){
   $('m3').textContent=`${ctrM} (${ticker('CCM',$('m_venc').value)})`; $('m4').textContent=`${nf0.format(cobM)} sc · ${sacas>0?pct(cobM/sacas):'—'}`;
   $('m5').textContent=brl(mMarg); $('m6').textContent=brl(cTrav); $('m7').textContent=brl(cSpot); $('m8').textContent=brl(cMil); $('m9').textContent=brl2(medio);
   const m5=r5(fut);
-  $('tMilho').tBodies[0].innerHTML=range(Math.max(5,m5-20),m5+25,5).map(p=>{const fis=p*sacas, bol=(p-fut)*cobM, ef=fis-bol, eco=fis-ef;
+  $('tMilho').tBodies[0].innerHTML=range(Math.max(5,m5-20),m5+25,5).map(p=>{const fis=(p+mbase)*sacas, bol=(p-fut)*cobM, ef=fis-bol, eco=fis-ef;
     return `<tr><td>${nf0.format(p)}</td><td>${brl(fis)}</td><td>${sgn(bol)}</td><td>${brl(ef)}</td><td>${brl(fis)}</td><td>${sgn(eco)}</td><td>${sacas>0?nf2.format(ef/sacas):'—'}</td><td class="l">${eco>0?pill('good','✅ Trava vantajosa'):Math.abs(eco)<.5?pill('neu','⚖️ Neutro'):pill('neu','⚖️ Custo do seguro')}</td></tr>`;}).join('');
 
   const {dieta,cCompra,cDieta,cFixos,cFin,cCab,cLote,cArr}=CO;
@@ -1058,10 +1094,10 @@ function calc(){
   $('co7').innerHTML=`${sgn(lCab)} · ${sgn(totArr>0?lucro/totArr:0,brl2)}`; $('co8').innerHTML=sgn(rec>0?lucro/rec:0,pct);
   $('co9').innerHTML=`${sgn(cLote>0?lucro/cLote:0,pct)} · ${sgn(cLote>0&&meses>0?lucro/cLote/meses:0,pct)}/mês`;
   $('ccd').textContent=brl2(dieta); $('cc1').textContent=brl2(cCompra); $('cc2').textContent=brl2(cDieta); $('cc3').textContent=brl2(cFixos); $('cc4').textContent=brl2(cFin);
-  $('cc5').textContent=brl2(cCab); $('cc6').textContent=brl2(cArr)+'/@';
+  $('cc5').textContent=brl2(cCab); $('cc6').textContent=brl2(cArr)+'/@'+(mtCus!=null?` · IMEA ${brl2(mtCus)}/@`:'');
 
-  const ctrC=Math.round(totArr/330), margC=ctrC*330*ph*mg, recH=ph*totArr, lucH=recH-cLote, folga=ph-cArr;
-  $('ch1').textContent=brl2(ph); $('ch2').textContent=ctrC; $('ch3').textContent=brl(margC); $('ch4').textContent=brl(recH); $('ch5').innerHTML=sgn(lucH);
+  const phF=ph+base, ctrC=Math.round(totArr/330), margC=ctrC*330*ph*mg, recH=phF*totArr, lucH=recH-cLote, folga=phF-cArr;
+  $('ch1').textContent=brl2(ph); $('ch8').innerHTML=mtBoi!=null?sgn(base,brl2)+'/@':'— (sem preço MT)'; $('ch2').textContent=ctrC; $('ch3').textContent=brl(margC); $('ch4').textContent=brl(recH); $('ch5').innerHTML=sgn(lucH);
   $('ch6').textContent=brl2(cArr)+'/@'; $('ch7').innerHTML=sgn(folga,brl2);
   const bm=milho>0?venda/milho:0;
   $('bm1').textContent=nf2.format(bm); $('bm2').textContent=gpd>0?nf2.format(cons*1000/gpd):'—'; $('bm3').textContent=brl2(medio*cons*dias/60);
@@ -1078,17 +1114,17 @@ function calc(){
   document.querySelectorAll('.stA').forEach(e=>e.textContent=e.classList.contains('up')?mesA.toUpperCase():mesA);
   $('st_hint').textContent=`Coloque ${brl(r10(sm*1.11))} em ${mesA} e veja a história virar: Seu João passa na frente.`;
   $('st_cab').textContent=nf0.format(cc); $('st_m').textContent=brl2(sm)+'/@'; $('st_o').textContent=brl2(so)+'/@'; $('st_ct').textContent=ctrC;
-  const recF=so*totArr, bolsa=(sm-so)*330*ctrC, sobraJ=recF-cLote, sobraP=recF+bolsa-cLote;
+  const recF=(so+base)*totArr, bolsa=(sm-so)*330*ctrC, sobraJ=recF-cLote, sobraP=recF+bolsa-cLote;
   const SR=[["Cabeças no confinamento",nf0.format(cc),nf0.format(cc)],["Arrobas produzidas",nf0.format(totArr),nf0.format(totArr)],[`Travou na bolsa em ${mesL}?`,"NÃO — ficou no risco",`SIM — vendeu ${ctrC} contratos`],
     ["(A) Recebeu do frigorífico",brl(recF),brl(recF)],["(B) Resultado na bolsa",brl(0),sgn(bolsa)],["(C) Receita total (A+B)",brl(recF),brl(recF+bolsa)],["(D) Custo do confinamento",brl(cLote),brl(cLote)],
     ["💵 O que sobrou no bolso (C−D)",`<b>${sgn(sobraJ)}</b>`,`<b>${sgn(sobraP)}</b>`]];
   $('tStory').tBodies[0].innerHTML=SR.map(r=>`<tr><td class="l">${r[0]}</td><td>${r[1]}</td><td>${r[2]}</td></tr>`).join('')+`<tr class="hl"><td class="l">Diferença entre os dois compadres</td><td colspan="2" style="text-align:center">${sgn(sobraP-sobraJ)}</td></tr>`;
 
   // conversion table
-  const conv=milho>0?spot/milho:0;
+  const boiC=mtBoi!=null?mtBoi:spot, conv=milho>0?boiC/milho:0;
   $('convV').className='verdict '+(conv>=6?'good':conv>=5?'warn':'bad');
   $('convT').textContent=`${nf2.format(conv)} sc/@ — `+(conv>=6?'✅ VIÁVEL — taxa excelente p/ confinar':conv>=5?'🟡 VIÁVEL — margem apertada, avaliar':'🔴 NÃO VIÁVEL — milho caro demais para confinar');
-  $('convS').textContent=`Boi a ${brl2(spot)}/@ (cotação atual) ÷ milho a ${brl2(milho)}/sc (spot). Diferença para o limiar de 5,0: ${nf2.format(conv-5)} sc/@.`;
+  $('convS').textContent=`Boi a ${brl2(boiC)}/@ (${mtBoi!=null?'boi MT':'cotação atual B3'}) ÷ milho a ${brl2(milho)}/sc (${mtMil!=null?'milho MT':'spot B3'}). Diferença para o limiar de 5,0: ${nf2.format(conv-5)} sc/@.`;
   const s10=r10(spot), m10=r10(milho), BC=range(s10-80,s10+30,10), MC=range(Math.max(10,m10-30),m10+50,10);
   const nearB=BC.reduce((a,b)=>Math.abs(b-spot)<Math.abs(a-spot)?b:a), nearM=MC.reduce((a,b)=>Math.abs(b-milho)<Math.abs(a-milho)?b:a);
   $('tConv').tHead.innerHTML=`<tr><th class="l">Milho ↓ · Boi →</th>${BC.map(b=>`<th>${b===nearB?'⭐ ':''}R$ ${b}</th>`).join('')}</tr>`;
@@ -1101,16 +1137,23 @@ function calc(){
   const bm_=bs/br.length; $('b1').textContent=brl2(ph); $('b2').innerHTML=sgn(bm_,brl2); $('b3').textContent=brl2(ph+bm_)+'/@';
 
   // Painel
-  $('k1').textContent=brl2(cArr); $('k2').textContent=brl2(ph); $('k3').innerHTML=sgn(lCab); $('k4').textContent=nf2.format(bm)+' sc/@'; $('k5').textContent=brl(margC*1.2); $('k6').innerHTML=sgn(folga,brl2);
-  const [vc,vt]=veredito(ph,cArr,bm);
+  $('k1').textContent=brl2(cArr); $('k2').textContent=brl2(ph); $('k2s').textContent=mtBoi!=null?`Com a base MT, o físico fica em ${brl2(phF)}/@`:'O que a bolsa paga hoje pelo seu vencimento';
+  $('k1s').textContent=mtCus!=null?`IMEA: ${brl2(mtCus)}/@ · diferença ${cArr-mtCus>=0?'+':'−'}${brl2(Math.abs(cArr-mtCus))}`:'Quanto custa produzir cada @ neste lote'; $('k3').innerHTML=sgn(lCab); $('k4').textContent=nf2.format(bm)+' sc/@'; $('k5').textContent=brl(margC*1.2); $('k6').innerHTML=sgn(folga,brl2);
+  const [vc,vt]=veredito(phF,cArr,bm);
   $('verdict').className='verdict '+vc; $('vTitle').textContent=vt;
-  $('vSub').textContent=`Custo ${brl2(cArr)}/@ · Bolsa paga ${brl2(ph)}/@ · Folga de ${brl2(folga)}/@ · Boi/milho ${nf2.format(bm)} sc/@ (ref. 4,94) · Caixa: ${brl(margC*1.2)}`;
+  $('vSub').textContent=`Custo ${brl2(cArr)}/@ · Bolsa paga ${brl2(ph)}/@`+(mtBoi!=null?` (físico MT ≈ ${brl2(phF)}/@)`:'')+` · Folga de ${brl2(folga)}/@ · Boi/milho ${nf2.format(bm)} sc/@ (ref. 4,94) · Caixa: ${brl(margC*1.2)}`;
   $('pr1').textContent=brl2(cmin); $('pr2').textContent=brl2(ph); $('pr3').textContent=ctr; $('pr4').innerHTML=sgn(lucroEsp); $('pr5').textContent=brl(margem); $('pr6').textContent=brl(margem*1.2);
-  $('pr7').innerHTML=ph>cmin?pill('good','✅ Travado com lucro'):pill('bad','🔴 Hedge abaixo do custo');
+  $('pr7').innerHTML=ph+base>cmin?pill('good','✅ Travado com lucro'):pill('bad','🔴 Hedge abaixo do custo');
   $('pr8').innerHTML=sgn(lCab); $('pr9').textContent=brl2(cArr); $('pr10').innerHTML=sgn(folga,brl2); $('pr11').textContent=brl2(medio);
 
+  $('mtO1').innerHTML=mtBoi!=null?`${sgn(base,brl2)}/@ <span style="color:var(--text2);font-weight:400">(${brl2(mtBoi)} − ${brl2(spot)})</span>`:'— usando B3';
+  $('mtO2').textContent=`${brl2(phF)}/@`+(mtBoi!=null?` (futuro ${brl2(ph)} + base)`:' (= futuro B3)');
+  $('mtO3').innerHTML=mtMil!=null&&B3MS?`${sgn(mbase,brl2)}/sc <span style="color:var(--text2);font-weight:400">(${brl2(mtMil)} − ${brl2(B3MS)})</span>`:'— usando B3';
+  $('mtO4').textContent=`${brl2(val('c_magro'))}/@`+(touched.has('c_magro')?' (digitado na aba Confinamento)':mtMag!=null?' (MT)':' (cotação B3 +0,6%)');
+  $('mtO5').innerHTML=mtCus!=null?`${brl2(mtCus)} × ${brl2(cArr)}/@ · ${sgn(mtCus-cArr,brl2)}`:'—';
+  $('mtFonte').textContent=$('mt_ref').value?`Fonte: ${$('mt_ref').value}`:'';
   market();
-  deveres(confInputs(),ph,venda,bm,venc);
+  deveres(confInputs(),ph,venda,bm,venc,base);
   $('frase').textContent=`“Quero VENDER ${ctr} contratos de boi gordo ${ticker('BGI',venc)}, vencimento ${venc}, a ${brl2(ph)} por arroba, para hedge de produção.”`;
 }
 function heatPL(v){ const a=Math.min(1,Math.abs(v)/1500)*.22+.04; return v>=0?`color:var(--good);background:rgba(0,230,118,${a.toFixed(3)})`:`color:var(--bad);background:rgba(255,92,92,${a.toFixed(3)})`; }
@@ -1137,7 +1180,7 @@ const iso=d=>d.toISOString().slice(0,10), maisDias=n=>{const d=new Date(); d.set
 const mesLab=isoD=>{const [y,m]=isoD.split('-'); return MES3[+m-1]+'/'+y.slice(2);};
 const normMes=t=>{const m=/^(\w{3})\w*\s*\/?\s*(\d{2,4})$/i.exec((t||'').trim().toLowerCase()); return m?m[1]+'/'+m[2].slice(-2):'';};
 const proximo=(rows,d)=>rows.reduce((b,r)=>!b||Math.abs(new Date(r.venc)-new Date(d))<Math.abs(new Date(b.venc)-new Date(d))?r:b,null);
-let ROWS={BGI:[],CCM:[]}, STAMP=null, ONLINE=false, SEL={};
+let ROWS={BGI:[],CCM:[]}, STAMP=null, ONLINE=false;
 
 function parseB3(j){
   const hoje=iso(new Date());
@@ -1178,7 +1221,7 @@ function escolher(){
   const temB=B.length>0, temC=C.length>0;
   auto('r_spot',spot?spot.preco:(temB?NaN:FALLBACK.spot),2);
   auto('h_preco',fut?fut.preco:(temB?NaN:FALLBACK.fut),2);
-  auto('c_milho',ms?ms.preco:(temC?NaN:FALLBACK.mspot),2);
+  B3MS=ms?ms.preco:(temC?null:FALLBACK.mspot);
   auto('m_fut',mf?mf.preco:(temC?NaN:FALLBACK.mfut),2);
   painelCotacao(); calc();
 }
@@ -1209,10 +1252,12 @@ function painelCotacao(){
 document.addEventListener('input',e=>{
   const el=e.target; if(!el.matches||!el.matches('input')||!e.isTrusted) return;
   const k=fieldKey(el); if(k) touched.add(k);
+  if(MT_IDS.includes(k)) mtSalvar();
   if(k==='c_dias'||k==='h_venc'||k==='m_venc') escolher();
   else if(['r_spot','h_preco','c_milho','m_fut'].includes(k)) painelCotacao();
 },true);
 const PRECO=/^(r_spot|h_preco|h_venc|m_venc|c_magro|c_venda|c_milho|m_fut|h_custo|h_cmin|s_mar|s_out|d\d+|br\d+|bf\d+)$/;
+$('mtClear').addEventListener('click',()=>{ MT_IDS.forEach(id=>$(id).value=''); mtSalvar(); calc(); });
 $('qUse').addEventListener('click',()=>{
   [...touched].forEach(k=>{ if(PRECO.test(k)) touched.delete(k); });
   $('qMsg').textContent='✓ exemplo refeito com a cotação de hoje';
