@@ -260,11 +260,20 @@ footer b{color:#e8eeeb}
   nav,.hero,.mods,.tabs,main{padding-left:16px;padding-right:16px}
   .mods{grid-template-columns:1fr 1fr}
   .banner{padding:26px 22px}
-  .field input{width:112px}
+  body{font-size:16.5px}
+  .field label{font-size:15px}
+  .field input{width:120px;font-size:16px;padding:9px 10px}
+  .kv{font-size:15px}
+  .lead,.story,.hint{font-size:15px}
+  .btn-q{padding:12px 20px;font-size:15px}
   .kpi .k-val{font-size:28px}
 }
+textarea#cepeaTxt{width:100%;min-height:110px;margin-top:10px;font:14px/1.5 ui-monospace,Menlo,Consolas,monospace;padding:10px 12px;border-radius:10px;border:1px solid var(--input-bd);background:var(--input-bg);color:var(--input)}
 @media print{.top,.tabs-wrap{display:none}.panel{display:block!important}}
 </style>
+<link rel="manifest" href="manifest.webmanifest">
+<meta name="theme-color" content="#154736">
+<link rel="apple-touch-icon" href="icon.svg">
 </head>
 <body>
 
@@ -456,7 +465,11 @@ footer b{color:#e8eeeb}
           <div class="field"><label for="h_preco">Preço futuro da @ na bolsa — hedge (R$/@)</label><input id="h_preco" type="number" step="0.5" value="360"></div>
           <div class="field"><label for="h_venc">Mês vencimento contrato (após o abate)</label><input id="h_venc" type="text" value="out/26"></div>
           <div class="field"><label for="h_mg">Margem de garantia (% do montante)</label><input id="h_mg" type="number" step="0.5" value="10"></div>
+          <div class="field"><label for="h_mgc">Margem por contrato informada pela corretora (R$)</label><input id="h_mgc" type="number" step="100" min="0" placeholder="vazio = usa o %"></div>
+          <div class="field"><label for="h_ccus">Custos de bolsa por contrato — corretagem + emolumentos, ida e volta (R$)</label><input id="h_ccus" type="number" step="1" min="0" value="20"></div>
+          <div class="field"><label for="h_ir">IR sobre o ganho na bolsa (%)</label><input id="h_ir" type="number" step="1" min="0" value="15"></div>
         </div>
+        <p class="hint">Custos e IR: os R$ 20 por contrato são uma estimativa — peça à corretora a tabela completa (corretagem, emolumentos e registro). Pessoa física paga 15% de IR sobre o ganho líquido na bolsa (20% em day trade), por DARF até o fim do mês seguinte; prejuízo na bolsa não é devolvido, fica para abater ganhos futuros. Atenção: o IR é cobrado sobre o ganho da bolsa mesmo quando o boi físico deu prejuízo — por isso, na queda forte, o “líquido c/ hedge” fica abaixo do lucro bruto. Planeje o caixa para o DARF. Empresa (PJ) segue outra regra — confirme com o contador.</p>
         <p class="hint">Cotação atual, preço futuro e vencimento vêm da B3 (painel do topo). Custo total e custo mínimo seguem o custo por arroba do confinamento até você digitar os seus. A B3 define a margem em reais por contrato; 10% é simplificação didática — confirme com sua corretora.</p>
       </div>
       <div class="card">
@@ -484,6 +497,7 @@ footer b{color:#e8eeeb}
         <div class="kv"><span>Margem de segurança (R$/@)</span><b id="pe3"></b></div>
         <div class="kv"><span>Margem de segurança (%)</span><b id="pe4"></b></div>
         <div class="kv total"><span>Lucro esperado com hedge</span><b id="pe5"></b></div>
+        <div class="kv"><span>Líquido, após custos de bolsa</span><b id="pe6"></b></div>
       </div>
       <div class="verdict" id="peV"><div class="v-title" id="peT"></div><div class="v-sub">Semáforo: folga acima de R$ 5/@ = verde · entre 0 e 5 = amarelo · negativa = vermelho.</div></div>
     </div>
@@ -497,7 +511,7 @@ footer b{color:#e8eeeb}
       <div class="chart" id="chHedge"></div>
     </div>
     <div class="tbl-wrap" style="margin-top:16px"><table id="tHedge">
-      <thead><tr><th>Preço abate (R$/@)</th><th>Receita física</th><th>Resultado bolsa</th><th>Receita c/ hedge</th><th>Lucro c/ hedge</th><th>Lucro s/ hedge</th><th>Diferença</th><th class="l">Situação</th></tr></thead>
+      <thead><tr><th>Preço abate (R$/@)</th><th>Receita física</th><th>Resultado bolsa</th><th>Receita c/ hedge</th><th>Lucro c/ hedge</th><th>Líquido c/ hedge<br><span style="text-transform:none;font-weight:500">(− custos e IR)</span></th><th>Lucro s/ hedge</th><th>Diferença</th><th class="l">Situação</th></tr></thead>
       <tbody></tbody>
     </table></div>
   </div>
@@ -677,6 +691,7 @@ footer b{color:#e8eeeb}
         <div class="kv"><span>Margem de garantia total</span><b id="ch3"></b></div>
         <div class="kv"><span>Receita c/ hedge</span><b id="ch4"></b></div>
         <div class="kv total"><span>Lucro c/ hedge</span><b id="ch5"></b></div>
+        <div class="kv"><span>Líquido, após custos de bolsa</span><b id="ch9"></b></div>
         <div class="kv"><span>Preço mín. p/ equilíbrio</span><b id="ch6"></b></div>
         <div class="kv"><span>Folga do hedge</span><b id="ch7"></b></div>
       </div>
@@ -777,12 +792,12 @@ footer b{color:#e8eeeb}
   </div>
   <div class="section">
     <h2>📊 Histórico CEPEA e previsão de preços</h2>
-    <p class="lead">Médias mensais de boi gordo (R$/@) e milho (R$/sc 60 kg), jan/2022–nov/2025, e previsão de 12 meses (média de Holt-Winters e ARIMA(2,1,2), IC 95%).</p>
-    <div class="note warn">⚠️ A previsão foi rodada sobre a série encerrada em nov/2025 e projetou R$ 328,75/@ para nov/2026. O Indicador Cepea/B3 fechou a <b>R$ 346,00/@ em 02/09/2026</b> (milho R$ 70,00/sc) — acima do limite superior do IC 95% (R$ 337,64). Use como referência didática; previsão estatística não garante resultado.</div>
+    <p class="lead" id="mkLead">Médias mensais de boi gordo (R$/@) e milho (R$/sc 60 kg) e previsão de 12 meses.</p>
+    <div class="note warn" id="mkWarn"></div>
     <div class="grid g2" style="margin-top:16px">
       <div class="card">
         <h3>Boi gordo (R$/@)</h3>
-        <div class="legend"><span><i style="background:var(--s1)"></i>Histórico</span><span><i class="dash" style="color:var(--s1)"></i>Previsão</span><span><i style="background:rgba(57,135,229,.25);height:8px"></i>IC 95%</span></div>
+        <div class="legend"><span><i style="background:var(--s1)"></i>Histórico</span><span><i class="dash" style="color:var(--s1)"></i>Previsão</span><span><i style="background:rgba(57,135,229,.25);height:8px"></i>IC 95%</span><span><i style="background:var(--good);width:10px;height:10px;border-radius:50%"></i>Futuro B3 hoje</span></div>
         <div class="chart" id="chBoi"></div>
       </div>
       <div class="card">
@@ -792,6 +807,12 @@ footer b{color:#e8eeeb}
       </div>
     </div>
     <div class="grid g3" style="margin-top:16px" id="stats"></div>
+    <div class="card" style="margin-top:16px">
+      <h3>📥 Atualize a série com os meses novos</h3>
+      <p class="story">Copie as médias mensais do CEPEA (cepea.esalq.usp.br → Indicadores → Boi Gordo e Milho) e cole uma linha por mês: <b>mês/ano, boi (R$/@) e milho (R$/sc)</b>. Exemplo: <code>dez/25 322,50 76,00</code>. Os dados ficam salvos neste navegador e a previsão é recalculada na hora.</p>
+      <textarea id="cepeaTxt" placeholder="dez/25 322,50 76,00&#10;jan/26 325,00 77,20" aria-label="Meses novos do CEPEA"></textarea>
+      <div class="plano-btns"><button class="btn-q" id="cepeaAplicar" type="button">Aplicar à série</button><button class="btn-q btn-sec" id="cepeaLimpar" type="button">Remover meses colados</button><span class="qmsg" id="cepeaMsg" style="color:var(--text2);align-self:center"></span></div>
+    </div>
   </div>
 
   <div class="section">
@@ -821,7 +842,7 @@ footer b{color:#e8eeeb}
         <div class="card">
           <h3>🧮 Da bolsa para a sua praça</h3>
           <div class="kv"><span>Preço travado na B3 (aba Hedge)</span><b id="b1"></b></div>
-          <div class="kv"><span>(+) Base média da sua praça</span><b id="b2"></b></div>
+          <div class="kv"><span id="b2l">(+) Base média da sua praça</span><b id="b2"></b></div>
           <div class="kv total"><span>(=) Preço-alvo esperado no físico</span><b id="b3"></b></div>
         </div>
         <div class="note warn">A base também oscila: esse é o risco que o hedge NÃO elimina.</div>
@@ -929,7 +950,7 @@ function lineChart(el, {xs, series, bands=[], yFmt=v=>nf0.format(v), refLines=[]
     svg+=`<path d="M${idx.map(i=>X(i)+' '+Y(b.hi[i])).join('L')}L${idx.slice().reverse().map(i=>X(i)+' '+Y(b.lo[i])).join('L')}Z" fill="${b.color}" opacity=".18"/>`;});
   refLines.forEach(r=>{svg+=`<line x1="${m.l}" x2="${W-m.r}" y1="${Y(r.y)}" y2="${Y(r.y)}" stroke="${r.color}" stroke-width="1.5" stroke-dasharray="5 4"/>`;});
   if(markX!=null) svg+=`<line x1="${X(markX)}" x2="${X(markX)}" y1="${m.t}" y2="${m.t+ih}" stroke="#c9a53a" stroke-dasharray="3 3"/>`;
-  series.forEach(s=>{svg+=`<path d="${path(s.data)}" fill="none" stroke="${s.color}" stroke-width="2" stroke-linejoin="round" stroke-linecap="round" ${s.dash?'stroke-dasharray="6 5"':''}/>`;});
+  series.forEach(s=>{ if(s.dots){ s.data.forEach((v,i)=>{ if(v!=null) svg+=`<circle cx="${X(i)}" cy="${Y(v)}" r="5.5" fill="${s.color}" stroke="#fff" stroke-width="2"/>`; }); return; } svg+=`<path d="${path(s.data)}" fill="none" stroke="${s.color}" stroke-width="2" stroke-linejoin="round" stroke-linecap="round" ${s.dash?'stroke-dasharray="6 5"':''}/>`;});
   svg+=`<line class="xh" x1="0" x2="0" y1="${m.t}" y2="${m.t+ih}" stroke="#9aa9a2" opacity="0"/>`;
   series.forEach((s,k)=>{svg+=`<circle class="dot${k}" r="4.5" fill="${s.color}" stroke="#fff" stroke-width="2" opacity="0"/>`;});
   svg+=`<rect x="${m.l}" y="${m.t}" width="${iw}" height="${ih}" fill="transparent" class="hit"/></svg><div class="tip"></div>`;
@@ -1052,6 +1073,7 @@ function veredito(ph,cArr,bm){
 /* ── exemplo: campos que seguem a cotação até o usuário digitar ── */
 const touched=new Set();
 const CTX={};
+let ROWS={BGI:[],CCM:[]}, STAMP=null, ONLINE=false;
 let SEL={}, B3MS=FALLBACK.mspot;   // contratos escolhidos e milho spot da B3
 const MT_IDS=['mt_boi','mt_milho','mt_magro','mt_custo','mt_ref'];
 const mtv=id=>{ const v=parseFloat($(id).value); return isFinite(v)&&v>0?v:null; };
@@ -1073,8 +1095,28 @@ $('tDiario').tBodies[0].innerHTML=DIARIO.map((p,i)=>`<tr><td>${i+1}</td><td><inp
 $('tBase').tBodies[0].innerHTML=BASE.map((b,i)=>`<tr><td>${b[0]}</td><td><input type="number" step="1" data-br="${i}" value="${b[1]}" aria-label="Referência ${b[0]}"></td><td><input type="number" step="1" data-bf="${i}" value="${b[2]}" aria-label="Físico MT ${b[0]}"></td><td></td></tr>`).join('');
 
 /* ── market charts & stats (static data) ── */
+const MESU=['Jan','Fev','Mar','Abr','Mai','Jun','Jul','Ago','Set','Out','Nov','Dez'];
+const labIdx=l=>{ const m=/^(\w{3})\/(\d{2})$/.exec(l); return m?(2000+ +m[2])*12+MESU.findIndex(x=>x.toLowerCase()===m[1].toLowerCase()):NaN; };
+const idxLab=i=>MESU[i%12]+'/'+String(Math.floor(i/12)).slice(2);
+let CEPEA_EXTRA=[]; try{ CEPEA_EXTRA=JSON.parse(localStorage.getItem('bb_cepea')||'[]'); }catch(e){}
+function serieCepea(){
+  const mp=new Map(HIST.map(h=>[labIdx(h[0]),h])); CEPEA_EXTRA.forEach(h=>mp.set(labIdx(h[0]),h));
+  return [...mp.entries()].sort((a,b)=>a[0]-b[0]).map(e=>e[1]);
+}
+/* suavização exponencial de Holt (tendência), parâmetros pelo menor erro de 1 passo */
+function holt(y,h){
+  let best=null;
+  for(let a=0.1;a<0.96;a+=0.05) for(let bt=0.05;bt<0.51;bt+=0.05){
+    let L=y[0], T=y[1]-y[0], sse=0;
+    for(let t=1;t<y.length;t++){ const f=L+T, e=y[t]-f; sse+=e*e; const L2=a*y[t]+(1-a)*(L+T); T=bt*(L2-L)+(1-bt)*T; L=L2; }
+    if(!best||sse<best.sse) best={sse,L,T};
+  }
+  const se=Math.sqrt(best.sse/Math.max(1,y.length-3));
+  return [...Array(h)].map((_,k)=>{ const f=best.L+(k+1)*best.T, w=1.96*se*Math.sqrt(k+1); return [f,f-w,f+w]; });
+}
 function market(){
-  const b=HIST.map(h=>h[1]), m=HIST.map(h=>h[2]);
+  const H=serieCepea(), b=H.map(h=>h[1]), m=H.map(h=>h[2]), nH=H.length, iU=labIdx(H[nH-1][0]);
+  const ultB3=ROWS.BGI.reduce((mx,r)=>Math.max(mx,labIdx(r.mes)||0),0), H12=Math.max(12,Math.min(24,ultB3-iU));
   const avg=a=>a.reduce((s,v)=>s+v,0)/a.length;
   const ab=avg(b), am=avg(m);
   let cov=0,vb=0,vm=0; b.forEach((v,i)=>{cov+=(v-ab)*(m[i]-am);vb+=(v-ab)**2;vm+=(m[i]-am)**2;});
@@ -1083,14 +1125,26 @@ function market(){
            ["Milho — mín / máx / média",`R$ ${nf1.format(Math.min(...m))} / ${nf1.format(Math.max(...m))} / ${nf2.format(am)}`],
            ["Correlação boi × milho · taxa conv. média",`${nf2.format(corr)} · ${nf2.format(conv)} sc/@`]];
   $('stats').innerHTML=S.map(s=>`<div class="kpi"><div class="k-lab">${s[0]}</div><div class="k-sub" style="font-size:15px;color:var(--text);margin-top:8px;font-weight:600">${s[1]}</div></div>`).join('');
-  const xs=[...HIST.map(h=>h[0]),...PREV.map(p=>p[0])], nH=HIST.length;
-  const hist=(k)=>[...HIST.map(h=>h[k]),...PREV.map(()=>null)];
-  const prev=(k)=>[...HIST.map((h,i)=>i===nH-1?h[k]:null),...PREV.map(p=>p[k])];
-  const band=(k1,k2)=>({lo:[...HIST.map(()=>null),...PREV.map(p=>p[k1])],hi:[...HIST.map(()=>null),...PREV.map(p=>p[k2])]});
-  lineChart($('chBoi'),{xs,series:[{name:'Histórico',data:hist(1),color:'var(--s1)'},{name:'Previsão',data:prev(1),color:'var(--s1)',dash:true}],bands:[{...band(2,3),name:'IC 95%',color:'var(--s1)'}],yFmt:v=>'R$ '+nf0.format(v),markX:nH-1});
-  lineChart($('chMilho'),{xs,series:[{name:'Histórico',data:hist(2),color:'var(--s2)'},{name:'Previsão',data:prev(4),color:'var(--s2)',dash:true}],bands:[{...band(5,6),name:'IC 95%',color:'var(--s2)'}],yFmt:v=>'R$ '+nf0.format(v),markX:nH-1});
+  const i0=labIdx(H[nH-1][0]), FL=[...Array(H12)].map((_,k)=>idxLab(i0+k+1));
+  const PB=holt(b,H12), PM=holt(m,H12);
+  const xs=[...H.map(h=>h[0]),...FL];
+  const hist=a=>[...a,...FL.map(()=>null)];
+  const prev=(last,P)=>[...H.map((_,i)=>i===nH-1?last:null),...P.map(p=>p[0])];
+  const band=P=>({lo:[...H.map(()=>null),...P.map(p=>p[1])],hi:[...H.map(()=>null),...P.map(p=>p[2])]});
+  const b3=xs.map(x=>{ const r=ROWS.BGI.find(r=>r.mes.toLowerCase()===x.toLowerCase()); return r?r.preco:null; });
+  const temB3=b3.some(v=>v!=null);
+  lineChart($('chBoi'),{xs,series:[{name:'Histórico',data:hist(b),color:'var(--s1)'},{name:'Previsão',data:prev(b[nH-1],PB),color:'var(--s1)',dash:true},...(temB3?[{name:'Futuro B3 hoje',data:b3,color:'var(--good)',dots:true}]:[])],bands:[{...band(PB),name:'IC 95%',color:'var(--s1)'}],yFmt:v=>'R$ '+nf0.format(v),markX:nH-1});
+  lineChart($('chMilho'),{xs,series:[{name:'Histórico',data:hist(m),color:'var(--s2)'},{name:'Previsão',data:prev(m[nH-1],PM),color:'var(--s2)',dash:true}],bands:[{...band(PM),name:'IC 95%',color:'var(--s2)'}],yFmt:v=>'R$ '+nf0.format(v),markX:nH-1});
   const sig=t=>t>=6?pill('good','✅ Confinar'):t>=5?pill('warn','🟡 Avaliar'):pill('bad','🔴 Cautela');
-  $('tPrev').tBodies[0].innerHTML=PREV.map(p=>{const t=p[1]/p[4];return `<tr><td>${p[0]}</td><td>${nf2.format(p[1])}</td><td>${nf2.format(p[2])}</td><td>${nf2.format(p[3])}</td><td>${nf2.format(p[4])}</td><td>${nf2.format(p[5])}</td><td>${nf2.format(p[6])}</td><td>${nf2.format(t)}</td><td class="l">${sig(t)}</td></tr>`;}).join('');
+  $('tPrev').tBodies[0].innerHTML=FL.map((l,k)=>{const pb=PB[k], pm=PM[k], t=pb[0]/pm[0];return `<tr><td>${l}</td><td>${nf2.format(pb[0])}</td><td>${nf2.format(pb[1])}</td><td>${nf2.format(pb[2])}</td><td>${nf2.format(pm[0])}</td><td>${nf2.format(pm[1])}</td><td>${nf2.format(pm[2])}</td><td>${nf2.format(t)}</td><td class="l">${sig(t)}</td></tr>`;}).join('');
+  const hoje=new Date(), iHoje=hoje.getFullYear()*12+hoje.getMonth(), atraso=iHoje-i0-1;
+  const gaps=[]; for(let k=1;k<nH;k++){ const d=labIdx(H[k][0])-labIdx(H[k-1][0]); if(d>1) gaps.push(`${H[k-1][0]}–${H[k][0]}`); }
+  $('mkLead').textContent=`Médias mensais CEPEA/ESALQ de boi gordo (R$/@) e milho (R$/sc 60 kg), ${H[0][0].toLowerCase()} a ${H[nH-1][0].toLowerCase()}, e previsão de 12 meses por suavização exponencial (Holt), recalculada aqui a partir da série${temB3?'. Os pontos verdes são o preço que a B3 paga hoje por cada vencimento — a “previsão” do mercado.':'.'}`;
+  const w=$('mkWarn'), msgs=[];
+  if(atraso>1) msgs.push(`⚠️ A série termina em ${H[nH-1][0].toLowerCase()} — faltam ${atraso} meses até hoje. Cole os meses novos no quadro abaixo para atualizar a previsão.`);
+  if(gaps.length) msgs.push(`⚠️ Faltam meses na série (${gaps.join(', ')}): a previsão fica menos confiável.`);
+  msgs.push('Previsão estatística mostra tendência, não certeza: use junto com a curva da B3 e com a análise de mercado (câmbio, exportação, ciclo pecuário). Referência da planilha: Indicador Cepea/B3 a R$ 346,00/@ em 02/09/2026.');
+  w.innerHTML=msgs.join('<br>');
 }
 
 /* ── main recompute ── */
@@ -1108,11 +1162,15 @@ function calc(){
   auto('s_mar',val('h_preco'),0);
   auto('s_out',val('h_preco')*QUEDA_K,0);
   [...$('tDiario').tBodies[0].rows].forEach((r,i)=>setAuto(r.cells[1].firstChild,half(val('h_preco')*DIARIO[i]/DIARIO_REF),1));
-  [...$('tBase').tBodies[0].rows].forEach((r,i)=>{const ref=Math.round(spot+BASE[i][1]-BASE_REF); setAuto(r.cells[1].firstChild,ref,0); setAuto(r.cells[2].firstChild,ref+BASE[i][2]-BASE[i][1],0);});
+  const mtB0=mtv('mt_boi'), mesNow=new Date().getMonth();
+  [...$('tBase').tBodies[0].rows].forEach((r,i)=>{ const agora=i===mesNow&&mtB0!=null&&spot>0, ref=agora?Math.round(spot):Math.round(spot+BASE[i][1]-BASE_REF);
+    setAuto(r.cells[1].firstChild,ref,0); setAuto(r.cells[2].firstChild,agora?Math.round(mtB0):ref+BASE[i][2]-BASE[i][1],0); r.classList.toggle('hl',i===mesNow); });
 
   // Hedge BGI
   const cab=val('h_cab'), arr=val('h_arr'), custo=val('h_custo'), cmin=val('h_cmin'), ph=val('h_preco'), mg=val('h_mg')/100, venc=$('h_venc').value;
-  const arrLote=cab*arr, ctr=Math.round(arrLote/330), cob=ctr*330, mont=cob*ph, margem=mont*mg, receitaEsp=arrLote*ph;
+  const mgc=mtv('h_mgc'), mpc=mgc!=null?mgc:330*ph*mg, custoCtr=Math.max(0,val('h_ccus')), irR=Math.max(0,val('h_ir'))/100;
+  const liq=(res,n)=>{ const g=res-n*custoCtr; return g-(g>0?g*irR:0); };   // resultado da bolsa após custos e IR
+  const arrLote=cab*arr, ctr=Math.round(arrLote/330), cob=ctr*330, mont=cob*ph, margem=ctr*mpc, receitaEsp=arrLote*ph;
   $('h_o1').textContent=nf0.format(ctr); $('h_tk').textContent=ticker('BGI',venc);
   $('h_o2').textContent=nf0.format(cob)+' @'; $('h_o3').textContent=brl(mont); $('h_o4').textContent=brl(margem);
   $('h_o5').textContent=brl(margem*1.2); $('h_o6').textContent=receitaEsp>0?pct(margem/receitaEsp):'—';
@@ -1120,17 +1178,17 @@ function calc(){
   const c5=r5(ph), c10=r10(ph), now=p=>Math.abs(p-spot)<2.5?'<span class="tag-now">📍 hoje</span>':'', lock=p=>Math.abs(p-ph)<2.5?'<span class="tag-now">🔒 futuro</span>':'';
 
   const pe=cob>0?custo/cob:0, seg=ph+base-pe, lucroEsp=pe>0?seg*cob:0;
-  $('pe1').textContent=brl2(pe); $('pe2').textContent=brl2(ph); $('pe3').innerHTML=sgn(seg,brl2); $('pe4').innerHTML=sgn(pe>0?seg/pe:0,pct); $('pe5').innerHTML=sgn(lucroEsp);
+  $('pe1').textContent=brl2(pe); $('pe2').textContent=brl2(ph); $('pe3').innerHTML=sgn(seg,brl2); $('pe4').innerHTML=sgn(pe>0?seg/pe:0,pct); $('pe5').innerHTML=sgn(lucroEsp); $('pe6').innerHTML=sgn(lucroEsp-ctr*custoCtr);
   const peC=seg>5?'good':seg>0?'warn':'bad';
   $('peV').className='verdict '+peC;
   $('peT').textContent=seg>5?'✅ VERDE — hedge cobre custos com folga. RECOMENDADO!':seg>0?'🟡 AMARELO — hedge cobre custos no limite. Avaliar.':'🔴 VERMELHO — hedge NÃO cobre custos. Rever estratégia.';
 
   const P=range(c5-60,c5+50,5), com=[], sem=[];
   $('tHedge').tBodies[0].innerHTML=P.map(p=>{
-    const rf=(p+base)*arrLote, rb=(ph-p)*cob, rc=rf+rb, lc=rc-custo, ls=rf-custo, d=lc-ls; com.push(lc); sem.push(ls);
+    const rf=(p+base)*arrLote, rb=(ph-p)*cob, rc=rf+rb, lc=rc-custo, ln=rf+liq(rb,ctr)-custo, ls=rf-custo, d=lc-ls; com.push(ln); sem.push(ls);
     const s=lc>0?(ls<0?pill('good','✅ Hedge salvou operação'):p<ph?pill('good','✅ Hedge vantajoso'):pill('neu','⚖️ Mercado subiu – custo do seguro')):pill('bad','🔴 Prejuízo mesmo c/ hedge');
-    return `<tr class="${Math.abs(p-ph)<2.5?'hl':''}"><td>${nf0.format(p)}${lock(p)}${now(p)}</td><td>${brl(rf)}</td><td>${sgn(rb)}</td><td>${brl(rc)}</td><td>${sgn(lc)}</td><td>${sgn(ls)}</td><td>${sgn(d)}</td><td class="l">${s}</td></tr>`;}).join('');
-  lineChart($('chHedge'),{xs:P.map(p=>'R$ '+p),series:[{name:'Lucro c/ hedge',data:com,color:'var(--s1)',fmt:brl},{name:'Lucro s/ hedge',data:sem,color:'var(--s2)',fmt:brl}],yFmt:kfmt});
+    return `<tr class="${Math.abs(p-ph)<2.5?'hl':''}"><td>${nf0.format(p)}${lock(p)}${now(p)}</td><td>${brl(rf)}</td><td>${sgn(rb)}</td><td>${brl(rc)}</td><td>${sgn(lc)}</td><td>${sgn(ln)}</td><td>${sgn(ls)}</td><td>${sgn(d)}</td><td class="l">${s}</td></tr>`;}).join('');
+  lineChart($('chHedge'),{xs:P.map(p=>'R$ '+p),series:[{name:'Lucro c/ hedge (líquido)',data:com,color:'var(--s1)',fmt:brl},{name:'Lucro s/ hedge',data:sem,color:'var(--s2)',fmt:brl}],yFmt:kfmt});
 
   const qLo=r5(ph*0.75), qHi=r5(ph*1.055);
   $('qtLo').textContent=`Se cair p/ R$ ${qLo}/@`; $('qtHi').textContent=`Se subir p/ R$ ${qHi}/@`;
@@ -1139,7 +1197,7 @@ function calc(){
     return `<tr><td>${pct(c).replace(',0','')}</td><td>${sgn(f(qLo))}</td><td>${sgn(f(ph))}</td><td>${sgn(f(qHi))}</td></tr>`;}).join('');
 
   $('thMg').textContent='Margem '+nf1.format(mg*100).replace(',0','')+'%';
-  $('tMargem').tBodies[0].innerHTML=[1,3,5,10,15,20,30,50].map(n=>{const mo=n*330*ph;return `<tr class="${n===ctr?'hl':''}"><td>${n}</td><td>${brl(mo)}</td><td>${brl(mo*mg)}</td><td>${brl(mo*mg*1.2)}</td></tr>`;}).join('');
+  $('tMargem').tBodies[0].innerHTML=[1,3,5,10,15,20,30,50].map(n=>{const mo=n*330*ph, mm=n*mpc;return `<tr class="${n===ctr?'hl':''}"><td>${n}</td><td>${brl(mo)}</td><td>${brl(mm)}</td><td>${brl(mm*1.2)}</td></tr>`;}).join('');
 
   // Diário de ajustes
   const rows=[...$('tDiario').tBodies[0].rows]; let prevP=ph, acc=0; const caixa=[];
@@ -1185,8 +1243,8 @@ function calc(){
   $('ccd').textContent=brl2(dieta); $('cc1').textContent=brl2(cCompra); $('cc2').textContent=brl2(cDieta); $('cc3').textContent=brl2(cFixos); $('cc4').textContent=brl2(cFin);
   $('cc5').textContent=brl2(cCab); $('cc6').textContent=brl2(cArr)+'/@'+(mtCus!=null?` · IMEA ${brl2(mtCus)}/@`:'');
 
-  const phF=ph+base, ctrC=Math.round(totArr/330), margC=ctrC*330*ph*mg, recH=phF*totArr, lucH=recH-cLote, folga=phF-cArr;
-  $('ch1').textContent=brl2(ph); $('ch8').innerHTML=mtBoi!=null?sgn(base,brl2)+'/@':'— (sem preço MT)'; $('ch2').textContent=ctrC; $('ch3').textContent=brl(margC); $('ch4').textContent=brl(recH); $('ch5').innerHTML=sgn(lucH);
+  const phF=ph+base, ctrC=Math.round(totArr/330), margC=ctrC*mpc, recH=phF*totArr, lucH=recH-cLote, folga=phF-cArr;
+  $('ch1').textContent=brl2(ph); $('ch8').innerHTML=mtBoi!=null?sgn(base,brl2)+'/@':'— (sem preço MT)'; $('ch2').textContent=ctrC; $('ch3').textContent=brl(margC); $('ch4').textContent=brl(recH); $('ch5').innerHTML=sgn(lucH); const custosC=ctrC*custoCtr, lucHL=lucH-custosC, lCabH=cc>0?lucHL/cc:0; $('ch9').innerHTML=sgn(lucHL);
   $('ch6').textContent=brl2(cArr)+'/@'; $('ch7').innerHTML=sgn(folga,brl2);
   const bm=milho>0?venda/milho:0;
   $('bm1').textContent=nf2.format(bm); $('bm2').textContent=gpd>0?nf2.format(cons*1000/gpd):'—'; $('bm3').textContent=brl2(medio*cons*dias/60);
@@ -1203,10 +1261,10 @@ function calc(){
   document.querySelectorAll('.stA').forEach(e=>e.textContent=e.classList.contains('up')?mesA.toUpperCase():mesA);
   $('st_hint').textContent=`Coloque ${brl(r10(sm*1.11))} em ${mesA} e veja a história virar: Seu João passa na frente.`;
   $('st_cab').textContent=nf0.format(cc); $('st_m').textContent=brl2(sm)+'/@'; $('st_o').textContent=brl2(so)+'/@'; $('st_ct').textContent=ctrC;
-  const recF=(so+base)*totArr, bolsa=(sm-so)*330*ctrC, sobraJ=recF-cLote, sobraP=recF+bolsa-cLote;
+  const recF=(so+base)*totArr, bolsa=(sm-so)*330*ctrC, bolsaL=liq(bolsa,ctrC), sobraJ=recF-cLote, sobraP=recF+bolsaL-cLote;
   const SR=[["Cabeças no confinamento",nf0.format(cc),nf0.format(cc)],["Arrobas produzidas",nf0.format(totArr),nf0.format(totArr)],[`Travou na bolsa em ${mesL}?`,"NÃO — ficou no risco",`SIM — vendeu ${ctrC} contratos`],
-    ["(A) Recebeu do frigorífico",brl(recF),brl(recF)],["(B) Resultado na bolsa",brl(0),sgn(bolsa)],["(C) Receita total (A+B)",brl(recF),brl(recF+bolsa)],["(D) Custo do confinamento",brl(cLote),brl(cLote)],
-    ["💵 O que sobrou no bolso (C−D)",`<b>${sgn(sobraJ)}</b>`,`<b>${sgn(sobraP)}</b>`]];
+    ["(A) Recebeu do frigorífico",brl(recF),brl(recF)],["(B) Resultado na bolsa",brl(0),sgn(bolsa)],["(C) Custos de bolsa e IR",brl(0),sgn(bolsaL-bolsa)],["(D) Receita total (A+B+C)",brl(recF),brl(recF+bolsaL)],["(E) Custo do confinamento",brl(cLote),brl(cLote)],
+    ["💵 O que sobrou no bolso (D−E)",`<b>${sgn(sobraJ)}</b>`,`<b>${sgn(sobraP)}</b>`]];
   // controle deslizante + gráfico do bolso de cada um
   const rMin=r10(sm*0.7), rMax=r10(sm*1.3), sl=$('s_out_r');
   sl.min=rMin; sl.max=rMax; if(document.activeElement!==sl) sl.value=Math.min(rMax,Math.max(rMin,so));
@@ -1214,7 +1272,7 @@ function calc(){
   $('st_j').innerHTML=sgn(sobraJ); $('st_p').innerHTML=sgn(sobraP);
   const dif=sobraP-sobraJ;
   $('st_w').innerHTML=Math.abs(dif)<1?'🟰 Empate: o boi ficou no preço da trava.':dif>0?`🛡️ Seu Pedro ficou ${brl(dif)} na frente — a trava protegeu a queda.`:`🎲 Seu João ficou ${brl(-dif)} na frente — o boi subiu e ele ganhou a aposta. Seu Pedro ${sobraP>=0?'ainda teve lucro':'teve prejuízo'}: abriu mão da alta, não do preço combinado.`;
-  const SX=range(rMin,rMax,5), jo=SX.map(x=>(x+base)*totArr-cLote), pe2=SX.map(x=>(x+base)*totArr+(sm-x)*330*ctrC-cLote);
+  const SX=range(rMin,rMax,5), jo=SX.map(x=>(x+base)*totArr-cLote), pe2=SX.map(x=>(x+base)*totArr+liq((sm-x)*330*ctrC,ctrC)-cLote);
   const vend=ctrC*330, dh=vend-totArr;
   $('st_hint2').textContent='A linha do Seu Pedro quase não se mexe: o que ele perde no frigorífico, ganha na bolsa. A do Seu João sobe e desce com o mercado. Onde as linhas se cruzam é o preço da trava.'+
     (Math.abs(dh)>=1?` Repare que a linha do Seu Pedro inclina um pouco: como cada contrato tem 330 @, ele vendeu ${nf0.format(vend)} @ na bolsa para ${nf0.format(totArr)} @ produzidas (${dh>0?'sobra':'falta'} de ${nf0.format(Math.abs(dh))} @). `+(dh>0?'Essa sobra funciona como aposta na queda.':'Essa parte fica sem proteção.'):'');
@@ -1236,11 +1294,11 @@ function calc(){
   // risco de base
   let bs=0; const br=[...$('tBase').tBodies[0].rows];
   br.forEach(r=>{const a=parseFloat(r.cells[1].firstChild.value)||0, b=parseFloat(r.cells[2].firstChild.value)||0; r.cells[3].innerHTML=sgn(b-a,brl2); bs+=b-a;});
-  const bm_=bs/br.length; $('b1').textContent=brl2(ph); $('b2').innerHTML=sgn(bm_,brl2); $('b3').textContent=brl2(ph+bm_)+'/@';
+  const bm_=bs/br.length, bU=mtBoi!=null?base:bm_; $('b2l').textContent=mtBoi!=null?'(+) Base de hoje (seu preço MT − B3)':'(+) Base média da sua praça (tabela)'; $('b1').textContent=brl2(ph); $('b2').innerHTML=sgn(bU,brl2); $('b3').textContent=brl2(ph+bU)+'/@';
 
   // Painel
   $('k1').textContent=brl2(cArr); $('k2').textContent=brl2(ph); $('k2s').textContent=mtBoi!=null?`Com a base MT, o físico fica em ${brl2(phF)}/@`:'O que a bolsa paga hoje pelo seu vencimento';
-  $('k1s').textContent=mtCus!=null?`IMEA: ${brl2(mtCus)}/@ · diferença ${cArr-mtCus>=0?'+':'−'}${brl2(Math.abs(cArr-mtCus))}`:'Quanto custa produzir cada @ neste lote'; $('k3').innerHTML=sgn(lCab); $('k4').textContent=nf2.format(bm)+' sc/@'; $('k5').textContent=brl(margC*1.2); $('k6').innerHTML=sgn(folga,brl2);
+  $('k1s').textContent=mtCus!=null?`IMEA: ${brl2(mtCus)}/@ · diferença ${cArr-mtCus>=0?'+':'−'}${brl2(Math.abs(cArr-mtCus))}`:'Quanto custa produzir cada @ neste lote'; $('k3').innerHTML=sgn(lCabH); $('k4').textContent=nf2.format(bm)+' sc/@'; $('k5').textContent=brl(margC*1.2); $('k6').innerHTML=sgn(folga,brl2);
   const [vc,vt]=veredito(phF,cArr,bm);
   $('verdict').className='verdict '+vc; $('vTitle').textContent=vt;
   $('vSub').textContent=`Custo ${brl2(cArr)}/@ · Bolsa paga ${brl2(ph)}/@`+(mtBoi!=null?` (físico MT ≈ ${brl2(phF)}/@)`:'')+` · Folga de ${brl2(folga)}/@ · Boi/milho ${nf2.format(bm)} sc/@ (ref. 4,94) · Caixa: ${brl(margC*1.2)}`;
@@ -1256,14 +1314,14 @@ function calc(){
       `CUSTO`,`• Custo de produção: ${brl2(cArr)}/@`+(mtCus!=null?` (IMEA: ${brl2(mtCus)}/@)`:''),'',
       `PREÇO`,`• Cotação atual: ${brl2(spot)}/@`+(SEL.spot?` (${SEL.spot.symb})`:''),`• Futuro para o abate: ${brl2(ph)}/@ (${tk})`];
     if(mtBoi!=null) L.push(`• Base da praça MT: ${base>=0?'+':'−'}${brl2(Math.abs(base))}/@ → físico esperado ${brl2(phF)}/@`);
-    L.push('',`DECISÃO`,`• ${vt}`,`• Folga sobre o custo: ${folga>=0?'':'−'}${brl2(Math.abs(folga))}/@`,`• Lucro travado: ${brl(lucH)} (${brl(cc>0?lucH/cc:0)} por cabeça)`,
+    L.push('',`DECISÃO`,`• ${vt}`,`• Folga sobre o custo: ${folga>=0?'':'−'}${brl2(Math.abs(folga))}/@`,`• Lucro travado: ${brl(lucHL)} (${brl(lCabH)} por cabeça), já descontados ${brl(custosC)} de custos de bolsa`,`• Se o boi cair, o ganho na bolsa paga IR de ${nf0.format(irR*100)}% (DARF até o fim do mês seguinte)`,
       `• Contratos a vender: ${ctrC} ${tk} (330 @ cada)`,`• Escalonado: ${meio} agora, o restante perto do abate`,'',
       `CAIXA`,`• Margem de garantia: ${brl(margC)} · com reserva de 20%: ${brl(margC*1.2)}`,'',
       `FRASE PARA A CORRETORA`,`“Quero VENDER ${ctrC} contratos de boi gordo ${tk}, vencimento ${venc}, a ${brl2(ph)} por arroba, para hedge de produção.”`,'',
       `⚠️ Simulação educativa — confirme margem, custos e impostos com sua corretora.`,`Simule o seu: https://cleitonfranco74.github.io/boibolsa/simulador.html`);
     const txt=L.join('\n'); $('plano').textContent=txt; $('planoWa').href='https://wa.me/?text='+encodeURIComponent(txt);
   }
-  Object.assign(CTX,{cArr,totArr,ph,phF,base,lCab,bm,milho,venda,margC,folga,ctr,cob,arrLote,margem,ctrC,spot,mtBoi,cc,mesA:mesFull(venc),venc});
+  Object.assign(CTX,{cArr,totArr,ph,phF,base,lCab:lCabH,bm,milho,venda,margC,folga,ctr,cob,arrLote,margem,ctrC,spot,mtBoi,cc,mesA:mesFull(venc),venc});
   refreshAjuda();
   $('mtO1').innerHTML=mtBoi!=null?`${sgn(base,brl2)}/@ <span style="color:var(--text2);font-weight:400">(${brl2(mtBoi)} − ${brl2(spot)})</span>`:'— usando B3';
   $('mtO2').textContent=`${brl2(phF)}/@`+(mtBoi!=null?` (futuro ${brl2(ph)} + base)`:' (= futuro B3)');
@@ -1299,7 +1357,6 @@ const iso=d=>d.toISOString().slice(0,10), maisDias=n=>{const d=new Date(); d.set
 const mesLab=isoD=>{const [y,m]=isoD.split('-'); return MES3[+m-1]+'/'+y.slice(2);};
 const normMes=t=>{const m=/^(\w{3})\w*\s*\/?\s*(\d{2,4})$/i.exec((t||'').trim().toLowerCase()); return m?m[1]+'/'+m[2].slice(-2):'';};
 const proximo=(rows,d)=>rows.reduce((b,r)=>!b||Math.abs(new Date(r.venc)-new Date(d))<Math.abs(new Date(b.venc)-new Date(d))?r:b,null);
-let ROWS={BGI:[],CCM:[]}, STAMP=null, ONLINE=false;
 
 function parseB3(j){
   const hoje=iso(new Date());
@@ -1387,6 +1444,27 @@ $('planoImprimir').addEventListener('click',()=>{
   w.document.write('<!doctype html><html lang="pt-BR"><head><meta charset="utf-8"><title>Meu plano de hedge</title><style>body{font:15px/1.6 ui-monospace,Menlo,Consolas,monospace;padding:32px;white-space:pre-wrap;color:#111}</style></head><body></body></html>');
   w.document.body.textContent=$('plano').textContent; w.document.close(); w.focus(); w.print();
 });
+function lerCepea(txt){
+  const out=[], erros=[];
+  txt.split(/\n+/).map(l=>l.trim()).filter(Boolean).forEach(l=>{
+    const t=l.replace(/[;\t|]+/g,' ').replace(/\s+/g,' ');
+    const mm=/^([a-zç]{3})[a-zç]*\s*[\/.\- ]\s*(\d{2,4})\s+(\S+)\s+(\S+)/i.exec(t)||/^(\d{1,2})\s*[\/.\-]\s*(\d{2,4})\s+(\S+)\s+(\S+)/.exec(t);
+    const num=x=>{ x=x.replace(/[^\d.,]/g,''); if(x.includes(',')) x=x.replace(/\./g,'').replace(',','.'); return parseFloat(x); };
+    if(!mm){ erros.push(l); return; }
+    let mi=/^\d+$/.test(mm[1])?(+mm[1]-1):MES3.indexOf(mm[1].toLowerCase().replace('ç','c').slice(0,3)==='mar'?'mar':mm[1].toLowerCase().slice(0,3));
+    const ano=String(mm[2]).slice(-2), bo=num(mm[3]), mi2=num(mm[4]);
+    if(mi<0||mi>11||!(bo>100&&bo<1000)||!(mi2>10&&mi2<300)){ erros.push(l); return; }
+    out.push([MESU[mi]+'/'+ano,bo,mi2]);
+  });
+  return {out,erros};
+}
+$('cepeaAplicar').addEventListener('click',()=>{
+  const {out,erros}=lerCepea($('cepeaTxt').value);
+  if(out.length){ const mp=new Map(CEPEA_EXTRA.map(h=>[h[0],h])); out.forEach(h=>mp.set(h[0],h)); CEPEA_EXTRA=[...mp.values()]; try{ localStorage.setItem('bb_cepea',JSON.stringify(CEPEA_EXTRA)); }catch(e){} }
+  $('cepeaMsg').textContent=(out.length?`✓ ${out.length} mês(es) aplicados`:'nenhum mês reconhecido')+(erros.length?` · não entendi: ${erros.slice(0,2).join(' | ')}`:'');
+  if(out.length){ $('cepeaTxt').value=''; market(); }
+});
+$('cepeaLimpar').addEventListener('click',()=>{ CEPEA_EXTRA=[]; try{ localStorage.removeItem('bb_cepea'); }catch(e){} $('cepeaMsg').textContent='✓ série voltou à da planilha'; market(); });
 $('mtClear').addEventListener('click',()=>{ MT_IDS.forEach(id=>$(id).value=''); mtSalvar(); calc(); });
 $('qUse').addEventListener('click',()=>{
   [...touched].forEach(k=>{ if(PRECO.test(k)) touched.delete(k); });
@@ -1509,5 +1587,6 @@ buscar(); setInterval(()=>{ if(!document.hidden) buscar(); },120000);
 </script>
 <script src="contador.js" defer></script>
 <script src="feedback.js" data-site="Boi na Bolsa" data-cor="#00e676" data-perfis="Pecuarista|Opera ou quer operar no mercado futuro|Profissional do agronegócio ou corretora|Aluno(a)|Professor(a)|Outro" defer></script>
+<script>if('serviceWorker' in navigator) addEventListener('load',()=>navigator.serviceWorker.register('sw.js').catch(()=>{}));</script>
 </body>
 </html>
