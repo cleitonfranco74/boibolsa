@@ -1,0 +1,12 @@
+{
+  "name": "Boi na Bolsa — Simulador de hedge",
+  "short_name": "Boi na Bolsa",
+  "description": "Simulador de hedge do boi gordo e do milho na B3.",
+  "lang": "pt-BR",
+  "start_url": "./simulador.html",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#f5f7f6",
+  "theme_color": "#154736",
+  "icons": [{"src": "icon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any"}]
+}
