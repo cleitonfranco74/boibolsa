@@ -142,6 +142,21 @@ h3{font-size:17px;font-weight:700;margin-bottom:12px;color:var(--text)}
 .btn-q:disabled{opacity:.5;cursor:default}
 .quote .qmsg{font-size:12px;color:#aebbc4;margin-top:8px;text-align:center;max-width:220px}
 .quote .qv.sm{font-size:30px}
+.slide{margin-top:16px;background:var(--input-bg);border:1px solid var(--input-bd);border-radius:12px;padding:14px 16px}
+.slide label{display:block;font-size:13.5px;font-weight:600;margin-bottom:8px}
+.slide input[type=range]{width:100%;accent-color:#3f7de0;height:28px}
+.slide-ends{display:flex;justify-content:space-between;align-items:baseline;font-size:12px;color:var(--text2)}
+.slide-ends b{font-size:20px;color:var(--text);font-variant-numeric:tabular-nums}
+.duelo{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:14px}
+.duelo>div{border-radius:12px;padding:12px 14px;background:var(--bg4,rgba(0,0,0,.04));border:1px solid var(--border)}
+.duelo>div>span{display:block;font-size:12px;color:var(--text2);font-weight:600}
+.duelo>div>b{display:block;font-size:26px;line-height:1.3;font-variant-numeric:tabular-nums}
+.duelo .d-j{border-left:4px solid var(--s2)} .duelo .d-p{border-left:4px solid var(--s1)}
+.duelo .d-w{grid-column:1/-1;font-size:14px;font-weight:600}
+.plano{white-space:pre-wrap;font:13.5px/1.6 ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;background:var(--bg4,rgba(0,0,0,.04));border:1px solid var(--border);border-radius:12px;padding:16px;max-height:420px;overflow:auto}
+.plano-btns{display:flex;flex-wrap:wrap;gap:10px;margin-top:12px}
+.btn-wa{background:#25d366}.btn-wa:hover{background:#1ebe5a}
+.btn-sec{background:#5b6b75}.btn-sec:hover{background:#4a5962}
 .quote .qnote{grid-column:1/-1;font-size:12.5px;color:#cfd8de;border-top:1px solid rgba(255,255,255,.12);padding-top:12px;margin-top:-6px}
 .tag-now{display:inline-block;font-size:11px;font-weight:700;padding:1px 7px;border-radius:50px;margin-left:6px;background:rgba(63,125,224,.14);color:#3f7de0;vertical-align:middle}
 
@@ -338,6 +353,19 @@ footer b{color:#e8eeeb}
   <div class="section">
     <h2>🚦 O veredito</h2>
     <div class="verdict" id="verdict"><div class="v-title" id="vTitle"></div><div class="v-sub" id="vSub"></div></div>
+  </div>
+  <div class="section">
+    <h2>📄 Meu plano de hedge</h2>
+    <p class="lead">O resumo do seu lote em uma página — para mandar no WhatsApp, imprimir ou levar para a conversa com a corretora. Muda sozinho quando você mexe nos números.</p>
+    <div class="card">
+      <div class="plano" id="plano"></div>
+      <div class="plano-btns">
+        <a class="btn-q btn-wa" id="planoWa" href="#" target="_blank" rel="noopener">📲 Enviar no WhatsApp</a>
+        <button class="btn-q" id="planoCopiar" type="button">📋 Copiar texto</button>
+        <button class="btn-q btn-sec" id="planoImprimir" type="button">🖨️ Imprimir</button>
+        <span class="qmsg" id="planoMsg" style="color:var(--text2);align-self:center"></span>
+      </div>
+    </div>
   </div>
   <div class="section">
     <h3>Como ler o veredito</h3>
@@ -557,6 +585,8 @@ footer b{color:#e8eeeb}
           <div class="field"><label for="c_cab">Número de cabeças</label><input id="c_cab" type="number" step="1" value="220"></div>
           <div class="field"><label for="c_pe">Peso de entrada (kg/cab)</label><input id="c_pe" type="number" step="1" value="380"></div>
           <div class="field"><label for="c_ps">Peso de saída esperado (kg/cab)</label><input id="c_ps" type="number" step="1" value="480"></div>
+          <div class="field"><label for="c_rend">Rendimento de carcaça no abate (%)</label><input id="c_rend" type="number" step="0.5" value="54"></div>
+          <div class="field"><label for="c_rendE">Rendimento na compra do magro (%)</label><input id="c_rendE" type="number" step="0.5" value="50"></div>
           <div class="field"><label for="c_dias">Dias de confinamento</label><input id="c_dias" type="number" step="1" value="90"></div>
         </div>
         <h3 style="margin-top:18px">Custos (R$/cabeça)</h3>
@@ -574,12 +604,12 @@ footer b{color:#e8eeeb}
           <div class="field"><label for="c_milho">Preço do milho spot (R$/sc 60 kg)</label><input id="c_milho" type="number" step="0.5" value="70"></div>
           <div class="field"><label for="c_cons">Consumo de milho/cab/dia (kg)</label><input id="c_cons" type="number" step="0.1" value="7"></div>
         </div>
-        <p class="hint">Exemplo: compra do magro acompanha a cotação atual da @ (+0,6%, como na planilha), preço de venda acompanha o preço futuro e o milho spot vem da B3. Arroba = peso ÷ 15 kg, como na planilha original. A dieta por dia é calculada com o custo médio do milho após a trava CCM (abaixo).</p>
+        <p class="hint">Exemplo: compra do magro acompanha a cotação atual da @ (+0,6%, como na planilha), preço de venda acompanha o preço futuro e o milho spot vem da B3. Arroba do abate = peso vivo × rendimento de carcaça ÷ 15 kg (480 kg a 54% ≈ 17,3 @). Arroba do magro na compra = peso vivo × 50% ÷ 15, a convenção do mercado de reposição (380 kg ≈ 12,7 @). A dieta por dia é calculada com o custo médio do milho após a trava CCM (abaixo).</p>
       </div>
       <div>
         <div class="card" style="margin-bottom:16px">
           <h3>📈 Receita e resultado</h3>
-          <div class="kv"><span>Arrobas entrada / saída (@/cab)</span><b id="co1"></b></div>
+          <div class="kv"><span>Arrobas na compra / no abate (@/cab)</span><b id="co1"></b></div>
           <div class="kv"><span>Ganho de peso / GPD</span><b id="co2"></b></div>
           <div class="kv"><span>Total de arrobas vendidas</span><b id="co3"></b></div>
           <div class="kv"><span>Receita bruta</span><b id="co4"></b></div>
@@ -678,12 +708,24 @@ footer b{color:#e8eeeb}
           <div class="field"><label for="s_mar">Preço do boi em <span class="stL up">MARÇO</span> — quando travou (R$/@)</label><input id="s_mar" type="number" step="1" value="360"></div>
           <div class="field"><label for="s_out">Preço do boi em <span class="stA up">OUTUBRO</span> — no abate (R$/@)</label><input id="s_out" type="number" step="1" value="320"></div>
         </div>
+        <div class="slide">
+          <label for="s_out_r">👉 Arraste: e se o boi fosse para…</label>
+          <input id="s_out_r" type="range" min="200" max="500" step="1" value="320" aria-label="Preço do boi no abate">
+          <div class="slide-ends"><span id="st_rmin"></span><b id="st_rval"></b><span id="st_rmax"></span></div>
+        </div>
         <p class="hint" id="st_hint">Coloque R$ 400 em outubro e veja a história virar: Seu João passa na frente.</p>
       </div>
       <div class="tbl-wrap"><table id="tStory">
         <thead><tr><th class="l"></th><th>Seu João<br><span style="text-transform:none;font-weight:500">“boi bom sempre vende”</span></th><th>Seu Pedro<br><span style="text-transform:none;font-weight:500">“travei e dormi em paz”</span></th></tr></thead>
         <tbody></tbody>
       </table></div>
+    </div>
+    <div class="card" style="margin-top:16px">
+      <h3>💵 O bolso de cada um, conforme o preço no abate</h3>
+      <div class="duelo"><div class="d-j"><span>Seu João · não travou</span><b id="st_j"></b></div><div class="d-p"><span>Seu Pedro · travou</span><b id="st_p"></b></div><div class="d-w" id="st_w"></div></div>
+      <div class="legend"><span><i style="background:var(--s2)"></i>Seu João (sem hedge)</span><span><i style="background:var(--s1)"></i>Seu Pedro (com hedge)</span></div>
+      <div class="chart" id="chStory"></div>
+      <p class="hint" id="st_hint2">A linha do Seu Pedro quase não se mexe: o que ele perde no frigorífico, ganha na bolsa. A do Seu João sobe e desce com o mercado. Onde as linhas se cruzam é o preço da trava.</p>
     </div>
     <div class="note"><b>Moral:</b> Seu Pedro não adivinhou o futuro — só decidiu, em <span class="stL">março</span>, que aquele preço já pagava as contas. Se o boi subir, Seu João leva mais; Seu Pedro fica no preço dele, e ainda com lucro. Perde-se a loteria, não o lucro.</div>
   </div>
@@ -944,7 +986,7 @@ function deveres(o,ph,venda,bm,venc,base=0){
 
 /* ── modelo do confinamento (função pura, usada pela tela e pelos exercícios) ── */
 function conf(o){
-  const meses=o.dias/30, aE=o.pe/15, aS=o.ps/15, totArr=o.cab*aS;
+  const meses=o.dias/30, aE=o.pe*(o.rendE??0.5)/15, aS=o.ps*(o.rend??0.54)/15, totArr=o.cab*aS;
   const consTot=o.cab*o.dias*o.cons, sacas=consTot/60, ctrM=Math.round(sacas*o.mpct/450), cobM=ctrM*450;
   const cTrav=cobM*(o.fut+(o.mbase||0)), cSpot=(sacas-cobM)*o.milho, cMil=cTrav+cSpot, medio=sacas>0?cMil/sacas:0;
   const dieta=o.cons*medio/60+o.outros;
@@ -952,7 +994,7 @@ function conf(o){
   const cCab=cCompra+cDieta+cFixos+cFin, cLote=cCab*o.cab, cArr=totArr>0?cLote/totArr:0;
   return {meses,aE,aS,totArr,consTot,sacas,ctrM,cobM,cTrav,cSpot,cMil,medio,dieta,cCompra,cDieta,cFixos,cFin,cCab,cLote,cArr};
 }
-const confInputs=()=>({cab:val('c_cab'),pe:val('c_pe'),ps:val('c_ps'),dias:val('c_dias'),magro:val('c_magro'),outros:val('c_outros'),san:val('c_san'),mo:val('c_mo'),dep:val('c_dep'),
+const confInputs=()=>({cab:val('c_cab'),pe:val('c_pe'),ps:val('c_ps'),rend:val('c_rend')/100,rendE:val('c_rendE')/100,dias:val('c_dias'),magro:val('c_magro'),outros:val('c_outros'),san:val('c_san'),mo:val('c_mo'),dep:val('c_dep'),
   fin:val('c_fin')/100,cons:val('c_cons'),milho:val('c_milho'),fut:val('m_fut'),mpct:val('m_pct')/100,mbase:mtBaseMilho()});
 function veredito(ph,cArr,bm){
   if(ph<=cArr) return ['bad','🔴 NÃO TRAVA — a bolsa não cobre seu custo'];
@@ -1089,7 +1131,7 @@ function calc(){
 
   const {dieta,cCompra,cDieta,cFixos,cFin,cCab,cLote,cArr}=CO;
   const rec=venda*totArr, lucro=rec-cLote, lCab=cc>0?lucro/cc:0;
-  $('co1').textContent=`${nf2.format(aE)} / ${nf2.format(aS)}`; $('co2').textContent=`${nf0.format(ganho)} kg · ${nf0.format(gpd)} g/dia`;
+  $('co1').textContent=`${nf2.format(aE)} / ${nf2.format(aS)} (${nf1.format(val('c_rend'))}% de carcaça)`; $('co2').textContent=`${nf0.format(ganho)} kg · ${nf0.format(gpd)} g/dia`;
   $('co3').textContent=nf0.format(totArr)+' @'; $('co4').textContent=brl(rec); $('co5').textContent=brl(cLote); $('co6').innerHTML=sgn(lucro);
   $('co7').innerHTML=`${sgn(lCab)} · ${sgn(totArr>0?lucro/totArr:0,brl2)}`; $('co8').innerHTML=sgn(rec>0?lucro/rec:0,pct);
   $('co9').innerHTML=`${sgn(cLote>0?lucro/cLote:0,pct)} · ${sgn(cLote>0&&meses>0?lucro/cLote/meses:0,pct)}/mês`;
@@ -1118,6 +1160,19 @@ function calc(){
   const SR=[["Cabeças no confinamento",nf0.format(cc),nf0.format(cc)],["Arrobas produzidas",nf0.format(totArr),nf0.format(totArr)],[`Travou na bolsa em ${mesL}?`,"NÃO — ficou no risco",`SIM — vendeu ${ctrC} contratos`],
     ["(A) Recebeu do frigorífico",brl(recF),brl(recF)],["(B) Resultado na bolsa",brl(0),sgn(bolsa)],["(C) Receita total (A+B)",brl(recF),brl(recF+bolsa)],["(D) Custo do confinamento",brl(cLote),brl(cLote)],
     ["💵 O que sobrou no bolso (C−D)",`<b>${sgn(sobraJ)}</b>`,`<b>${sgn(sobraP)}</b>`]];
+  // controle deslizante + gráfico do bolso de cada um
+  const rMin=r10(sm*0.7), rMax=r10(sm*1.3), sl=$('s_out_r');
+  sl.min=rMin; sl.max=rMax; if(document.activeElement!==sl) sl.value=Math.min(rMax,Math.max(rMin,so));
+  $('st_rmin').textContent=brl(rMin); $('st_rmax').textContent=brl(rMax); $('st_rval').textContent=brl2(so)+'/@';
+  $('st_j').innerHTML=sgn(sobraJ); $('st_p').innerHTML=sgn(sobraP);
+  const dif=sobraP-sobraJ;
+  $('st_w').innerHTML=Math.abs(dif)<1?'🟰 Empate: o boi ficou no preço da trava.':dif>0?`🛡️ Seu Pedro ficou ${brl(dif)} na frente — a trava protegeu a queda.`:`🎲 Seu João ficou ${brl(-dif)} na frente — o boi subiu e ele ganhou a aposta. Seu Pedro ${sobraP>=0?'ainda teve lucro':'teve prejuízo'}: abriu mão da alta, não do preço combinado.`;
+  const SX=range(rMin,rMax,5), jo=SX.map(x=>(x+base)*totArr-cLote), pe2=SX.map(x=>(x+base)*totArr+(sm-x)*330*ctrC-cLote);
+  const vend=ctrC*330, dh=vend-totArr;
+  $('st_hint2').textContent='A linha do Seu Pedro quase não se mexe: o que ele perde no frigorífico, ganha na bolsa. A do Seu João sobe e desce com o mercado. Onde as linhas se cruzam é o preço da trava.'+
+    (Math.abs(dh)>=1?` Repare que a linha do Seu Pedro inclina um pouco: como cada contrato tem 330 @, ele vendeu ${nf0.format(vend)} @ na bolsa para ${nf0.format(totArr)} @ produzidas (${dh>0?'sobra':'falta'} de ${nf0.format(Math.abs(dh))} @). `+(dh>0?'Essa sobra funciona como aposta na queda.':'Essa parte fica sem proteção.'):'');
+  const mk=SX.reduce((bi,x,i)=>Math.abs(x-so)<Math.abs(SX[bi]-so)?i:bi,0);
+  lineChart($('chStory'),{xs:SX.map(x=>'R$ '+x),series:[{name:'Seu João',data:jo,color:'var(--s2)',fmt:brl},{name:'Seu Pedro',data:pe2,color:'var(--s1)',fmt:brl}],yFmt:kfmt,markX:mk});
   $('tStory').tBodies[0].innerHTML=SR.map(r=>`<tr><td class="l">${r[0]}</td><td>${r[1]}</td><td>${r[2]}</td></tr>`).join('')+`<tr class="hl"><td class="l">Diferença entre os dois compadres</td><td colspan="2" style="text-align:center">${sgn(sobraP-sobraJ)}</td></tr>`;
 
   // conversion table
@@ -1146,6 +1201,21 @@ function calc(){
   $('pr7').innerHTML=ph+base>cmin?pill('good','✅ Travado com lucro'):pill('bad','🔴 Hedge abaixo do custo');
   $('pr8').innerHTML=sgn(lCab); $('pr9').textContent=brl2(cArr); $('pr10').innerHTML=sgn(folga,brl2); $('pr11').textContent=brl2(medio);
 
+  // plano de hedge (lote do confinamento)
+  {
+    const tk=ticker('BGI',venc), meio=Math.max(1,Math.round(ctrC/2)), hoje=new Date().toLocaleDateString('pt-BR');
+    const L=[`🐂 MEU PLANO DE HEDGE — Boi na Bolsa`,`Data: ${hoje}`+(SEL.spot&&STAMP?` · cotação B3 de ${String(STAMP).slice(8,10)}/${String(STAMP).slice(5,7)}`:''),'',
+      `LOTE`,`• ${nf0.format(cc)} cabeças · ${nf0.format(ps)} kg no abate · ${nf1.format(val('c_rend'))}% de carcaça`,`• ${nf0.format(totArr)} @ previstas · abate em ${mesFull(venc)} (${nf0.format(dias)} dias)`,'',
+      `CUSTO`,`• Custo de produção: ${brl2(cArr)}/@`+(mtCus!=null?` (IMEA: ${brl2(mtCus)}/@)`:''),'',
+      `PREÇO`,`• Cotação atual: ${brl2(spot)}/@`+(SEL.spot?` (${SEL.spot.symb})`:''),`• Futuro para o abate: ${brl2(ph)}/@ (${tk})`];
+    if(mtBoi!=null) L.push(`• Base da praça MT: ${base>=0?'+':'−'}${brl2(Math.abs(base))}/@ → físico esperado ${brl2(phF)}/@`);
+    L.push('',`DECISÃO`,`• ${vt}`,`• Folga sobre o custo: ${folga>=0?'':'−'}${brl2(Math.abs(folga))}/@`,`• Lucro travado: ${brl(lucH)} (${brl(cc>0?lucH/cc:0)} por cabeça)`,
+      `• Contratos a vender: ${ctrC} ${tk} (330 @ cada)`,`• Escalonado: ${meio} agora, o restante perto do abate`,'',
+      `CAIXA`,`• Margem de garantia: ${brl(margC)} · com reserva de 20%: ${brl(margC*1.2)}`,'',
+      `FRASE PARA A CORRETORA`,`“Quero VENDER ${ctrC} contratos de boi gordo ${tk}, vencimento ${venc}, a ${brl2(ph)} por arroba, para hedge de produção.”`,'',
+      `⚠️ Simulação educativa — confirme margem, custos e impostos com sua corretora.`,`Simule o seu: https://cleitonfranco74.github.io/boibolsa/simulador.html`);
+    const txt=L.join('\n'); $('plano').textContent=txt; $('planoWa').href='https://wa.me/?text='+encodeURIComponent(txt);
+  }
   $('mtO1').innerHTML=mtBoi!=null?`${sgn(base,brl2)}/@ <span style="color:var(--text2);font-weight:400">(${brl2(mtBoi)} − ${brl2(spot)})</span>`:'— usando B3';
   $('mtO2').textContent=`${brl2(phF)}/@`+(mtBoi!=null?` (futuro ${brl2(ph)} + base)`:' (= futuro B3)');
   $('mtO3').innerHTML=mtMil!=null&&B3MS?`${sgn(mbase,brl2)}/sc <span style="color:var(--text2);font-weight:400">(${brl2(mtMil)} − ${brl2(B3MS)})</span>`:'— usando B3';
@@ -1257,6 +1327,17 @@ document.addEventListener('input',e=>{
   else if(['r_spot','h_preco','c_milho','m_fut'].includes(k)) painelCotacao();
 },true);
 const PRECO=/^(r_spot|h_preco|h_venc|m_venc|c_magro|c_venda|c_milho|m_fut|h_custo|h_cmin|s_mar|s_out|d\d+|br\d+|bf\d+)$/;
+$('s_out_r').addEventListener('input',e=>{ $('s_out').value=e.target.value; touched.add('s_out'); calc(); });
+$('planoCopiar').addEventListener('click',async()=>{
+  const t=$('plano').textContent;
+  try{ await navigator.clipboard.writeText(t); }catch(e){ const r=document.createRange(); r.selectNodeContents($('plano')); const w=getSelection(); w.removeAllRanges(); w.addRange(r); document.execCommand('copy'); w.removeAllRanges(); }
+  $('planoMsg').textContent='✓ copiado';
+});
+$('planoImprimir').addEventListener('click',()=>{
+  const w=window.open('','_blank'); if(!w){ $('planoMsg').textContent='libere pop-ups para imprimir'; return; }
+  w.document.write('<!doctype html><html lang="pt-BR"><head><meta charset="utf-8"><title>Meu plano de hedge</title><style>body{font:15px/1.6 ui-monospace,Menlo,Consolas,monospace;padding:32px;white-space:pre-wrap;color:#111}</style></head><body></body></html>');
+  w.document.body.textContent=$('plano').textContent; w.document.close(); w.focus(); w.print();
+});
 $('mtClear').addEventListener('click',()=>{ MT_IDS.forEach(id=>$(id).value=''); mtSalvar(); calc(); });
 $('qUse').addEventListener('click',()=>{
   [...touched].forEach(k=>{ if(PRECO.test(k)) touched.delete(k); });
