@@ -154,6 +154,31 @@ h3{font-size:17px;font-weight:700;margin-bottom:12px;color:var(--text)}
 .duelo .d-j{border-left:4px solid var(--s2)} .duelo .d-p{border-left:4px solid var(--s1)}
 .duelo .d-w{grid-column:1/-1;font-size:14px;font-weight:600}
 .plano{white-space:pre-wrap;font:13.5px/1.6 ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;background:var(--bg4,rgba(0,0,0,.04));border:1px solid var(--border);border-radius:12px;padding:16px;max-height:420px;overflow:auto}
+.guia-cta{display:flex;flex-wrap:wrap;gap:14px;align-items:center;justify-content:space-between;background:var(--green-a10);border:1px solid var(--green-a20);border-radius:var(--r2);padding:16px 20px;margin-bottom:20px;font-size:15px}
+dialog#guia{margin:auto;max-height:92vh;overflow:auto;border:0;border-radius:18px;padding:0;width:min(560px,94vw);box-shadow:0 20px 60px rgba(0,0,0,.35);color:var(--text);background:var(--bg2)}
+dialog#guia::backdrop{background:rgba(10,20,15,.55)}
+.g-in{padding:24px 26px}
+.g-top{display:flex;justify-content:space-between;align-items:center;font-size:12px;color:var(--text2);font-weight:700;letter-spacing:.08em;text-transform:uppercase;margin-bottom:10px}
+.g-dots{display:flex;gap:6px}.g-dots i{width:9px;height:9px;border-radius:50%;background:var(--border2)}.g-dots i.on{background:var(--green)}
+.g-in h3{font-size:22px;margin-bottom:6px}
+.g-in .g-p{color:var(--text2);font-size:14px;margin-bottom:16px}
+.g-nav{display:flex;justify-content:space-between;gap:10px;margin-top:20px;flex-wrap:wrap}
+.g-big{font-size:26px;font-weight:800;line-height:1.25}
+.aj{border:1px solid var(--border2);background:var(--bg2);border-radius:50%;width:22px;height:22px;font-size:11px;line-height:1;cursor:pointer;margin-left:6px;vertical-align:middle;padding:0}
+.aj[aria-expanded=true]{background:var(--green-a10);border-color:var(--green)}
+.aj-box{font-size:13.5px;line-height:1.55;color:var(--text);background:var(--green-a10);border-left:3px solid var(--green);border-radius:0 8px 8px 0;padding:10px 12px;margin:8px 0 4px;text-transform:none;letter-spacing:0;font-weight:400}
+.jogo-dec{margin-top:14px;padding:14px 16px;border-radius:12px;background:rgba(184,50,50,.07);border:1px solid rgba(184,50,50,.3)}
+.jogo-res{margin-top:14px;padding:14px 16px;border-radius:12px;background:var(--green-a10);border:1px solid var(--green-a20);font-size:14px}
+.jogo-res p+p{margin-top:6px}
+.quiz{background:var(--bg3);border:1px solid var(--border);border-radius:12px;padding:14px 16px;margin-bottom:10px}
+.quiz .q{font-weight:600;font-size:14.5px;margin-bottom:10px}
+.quiz .opts{display:flex;flex-wrap:wrap;gap:8px}
+.quiz .opts button{border:1px solid var(--border2);background:var(--bg2);border-radius:50px;padding:6px 14px;font:600 13px inherit;cursor:pointer;color:var(--text)}
+.quiz .opts button:disabled{cursor:default;opacity:.55}
+.quiz .opts button.ok{background:rgba(29,122,75,.12);border-color:var(--good);color:var(--good);opacity:1}
+.quiz .opts button.err{background:rgba(184,50,50,.1);border-color:var(--bad);color:var(--bad);opacity:1}
+.quiz .ans{margin-top:10px;font-size:13.5px;color:var(--text2)}
+.quiz-score{position:sticky;top:120px;z-index:2;display:inline-block;background:var(--green);color:#fff;border-radius:50px;padding:6px 14px;font-weight:700;font-size:13px;margin-bottom:12px}
 .plano-btns{display:flex;flex-wrap:wrap;gap:10px;margin-top:12px}
 .btn-wa{background:#25d366}.btn-wa:hover{background:#1ebe5a}
 .btn-sec{background:#5b6b75}.btn-sec:hover{background:#4a5962}
@@ -282,6 +307,8 @@ footer b{color:#e8eeeb}
 
 <main>
 
+<dialog id="guia" aria-labelledby="gTitulo"><div class="g-in" id="gIn"></div></dialog>
+
 <!-- ═══════════════ PAINEL ═══════════════ -->
 <section class="panel active" id="painel">
   <div class="banner ">
@@ -290,6 +317,7 @@ footer b{color:#e8eeeb}
     <div class="sub">Resumo da operação de hedge e do confinamento</div>
     <p>Uma tela só, com tudo puxado das abas <b>Hedge BGI</b> e <b>Confinamento</b>: custo por arroba, preço na bolsa, margem travável, relação boi/milho, caixa necessário e folga. <em>Altere os dados lá e o veredito muda aqui.</em></p>
   </div>
+  <div class="guia-cta"><span>🧭 <b>Primeira vez aqui?</b> Responda 4 perguntas e veja se vale travar o seu lote.</span><button class="btn-q" id="guiaAbrir" type="button">Começar o guia rápido →</button></div>
   <div class="quote" id="quote">
     <div>
       <div class="ql" id="qLab">Cotação atual da @</div>
@@ -501,6 +529,13 @@ footer b{color:#e8eeeb}
   <div class="section">
     <h2>📆 Diário de ajustes — seu extrato simulado</h2>
     <p class="lead">20 pregões na vida de quem está VENDIDO em BGI, com os contratos, preço de entrada e margem do simulador acima. Edite os preços de ajuste e veja o caixa se mexer.</p>
+    <div class="card" style="margin-bottom:16px">
+      <h3>🎲 Treine com um mercado sorteado</h3>
+      <p class="story">Sorteie 20 pregões. Se vier a chamada de margem, decida o que fazer — e veja no fim o que aconteceu com o seu preço.</p>
+      <div class="plano-btns"><button class="btn-q" id="jgNovo" type="button">🎲 Sortear um mercado</button><button class="btn-q btn-sec" id="jgVolta" type="button">↺ Voltar ao exemplo</button></div>
+      <div class="jogo-dec" id="jgDec" hidden></div>
+      <div class="jogo-res" id="jgRes" hidden></div>
+    </div>
     <div class="card" style="margin-bottom:16px">
       <div class="legend"><span><i style="background:var(--s1)"></i>Caixa: margem + resultado acumulado</span><span><i class="dash" style="color:var(--bad)"></i>Gatilho de chamada de margem</span></div>
       <div class="chart" id="chDiario"></div>
@@ -813,7 +848,8 @@ footer b{color:#e8eeeb}
   </div>
   <div class="section">
     <h2>❓ Mitos e verdades</h2>
-    <p class="lead">As 12 dúvidas de todo iniciante.</p>
+    <p class="lead">As 12 dúvidas de todo iniciante. Antes de ver a resposta, arrisque: é mito, é verdade ou depende?</p>
+    <div class="quiz-score" id="quizScore">Acertos: 0 de 0</div>
     <div id="mitos"></div>
   </div>
   <div class="section">
@@ -941,7 +977,17 @@ const MITOS=[["“Vou ter que entregar meu boi na B3?”","bad","MITO","Liquida�
 ["“Hedge é especulação”","bad","MITO","É o contrário: o especulador busca o risco de preço; o hedger se livra dele. A B3 é onde os dois se encontram."],
 ["“Preciso de muito dinheiro para começar”","warn","DEPENDE","1 contrato cobre 330 @ (~20 cabeças) e exige ~10% do montante em garantia — que pode ser título, não caixa parado."],
 ["“Ganho de hedge não paga imposto”","bad","MITO","Paga: 15% sobre o ganho líquido, via DARF mensal. Planeje o caixa para o leão."]];
-$('mitos').innerHTML=MITOS.map(m=>`<details><summary><span>${m[0]}</span>${pill(m[1],m[2])}</summary><div class="body"><p>${m[3]}</p></div></details>`).join('');
+const QZ={feitas:0,certas:0};
+$('mitos').innerHTML=MITOS.map((m,i)=>`<div class="quiz" data-i="${i}"><div class="q">${m[0]}</div><div class="opts"><button type="button" data-r="mito">❌ É mito</button><button type="button" data-r="verdade">✅ É verdade</button><button type="button" data-r="depende">⚖️ Depende</button></div><div class="ans" hidden></div></div>`).join('');
+$('mitos').addEventListener('click',e=>{
+  const bt=e.target.closest('button[data-r]'); if(!bt) return;
+  const card=bt.closest('.quiz'), m=MITOS[+card.dataset.i], certa=/^MITO/.test(m[2])?'mito':'depende', ok=bt.dataset.r===certa;
+  card.querySelectorAll('button').forEach(b=>{ b.disabled=true; if(b.dataset.r===certa) b.classList.add('ok'); });
+  if(!ok) bt.classList.add('err');
+  const a=card.querySelector('.ans'); a.hidden=false; a.innerHTML=`${ok?'🎯 Acertou!':'Quase.'} ${pill(m[1],m[2])} ${m[3]}`;
+  QZ.feitas++; if(ok) QZ.certas++;
+  $('quizScore').textContent=`Acertos: ${QZ.certas} de ${QZ.feitas}`+(QZ.feitas===MITOS.length?(QZ.certas>=10?' · 🏆 Pronto para a mesa!':' · Releia as respostas e tente de novo amanhã.'):'');
+});
 
 const DIC=[["HEDGE","É vender o boi antes de engordar. Você combina hoje o preço de um boi que só sai do cocho em outubro — como quem fecha o preço da soja antes do plantio.","Trava a margem que já paga suas contas. Não é para ganhar mais: é para não perder o que já está garantido."],
 ["CONTRATO FUTURO (BGI)","É o “lote padrão” da bolsa: 330 arrobas, sempre. Como o caminhão boiadeiro, que só anda cheio.","Seu rebanho vira número de contratos: arrobas do lote ÷ 330. 20 cabeças ≈ 1 contrato."],
@@ -1005,6 +1051,7 @@ function veredito(ph,cArr,bm){
 
 /* ── exemplo: campos que seguem a cotação até o usuário digitar ── */
 const touched=new Set();
+const CTX={};
 let SEL={}, B3MS=FALLBACK.mspot;   // contratos escolhidos e milho spot da B3
 const MT_IDS=['mt_boi','mt_milho','mt_magro','mt_custo','mt_ref'];
 const mtv=id=>{ const v=parseFloat($(id).value); return isFinite(v)&&v>0?v:null; };
@@ -1216,6 +1263,8 @@ function calc(){
       `⚠️ Simulação educativa — confirme margem, custos e impostos com sua corretora.`,`Simule o seu: https://cleitonfranco74.github.io/boibolsa/simulador.html`);
     const txt=L.join('\n'); $('plano').textContent=txt; $('planoWa').href='https://wa.me/?text='+encodeURIComponent(txt);
   }
+  Object.assign(CTX,{cArr,totArr,ph,phF,base,lCab,bm,milho,venda,margC,folga,ctr,cob,arrLote,margem,ctrC,spot,mtBoi,cc,mesA:mesFull(venc),venc});
+  refreshAjuda();
   $('mtO1').innerHTML=mtBoi!=null?`${sgn(base,brl2)}/@ <span style="color:var(--text2);font-weight:400">(${brl2(mtBoi)} − ${brl2(spot)})</span>`:'— usando B3';
   $('mtO2').textContent=`${brl2(phF)}/@`+(mtBoi!=null?` (futuro ${brl2(ph)} + base)`:' (= futuro B3)');
   $('mtO3').innerHTML=mtMil!=null&&B3MS?`${sgn(mbase,brl2)}/sc <span style="color:var(--text2);font-weight:400">(${brl2(mtMil)} − ${brl2(B3MS)})</span>`:'— usando B3';
@@ -1344,6 +1393,116 @@ $('qUse').addEventListener('click',()=>{
   $('qMsg').textContent='✓ exemplo refeito com a cotação de hoje';
   ROWS.BGI.length?escolher():buscar();
 });
+/* ── 2. "o que isso quer dizer pra você" ── */
+const AJUDA={
+  k1:c=>`Cada arroba deste lote custa ${brl2(c.cArr)} para produzir: boi magro, dieta, sanidade, mão de obra e juros, divididos pelas ${nf0.format(c.totArr)} @ que vão sair do cocho. Vender abaixo disso é prejuízo.`,
+  k2:c=>`É o que a B3 paga hoje por uma arroba de ${c.mesA}. Vendendo contrato agora, você garante esse preço`+(c.mtBoi!=null?` — na sua praça, cerca de ${brl2(c.phF)}/@ (base ${brl2(c.base)}).`:'.'),
+  k3:c=>`Travando hoje, sobram ${brl(c.lCab)} por cabeça depois de pagar todos os custos. É o “salário” do confinamento garantido antes do boi sair do cocho.`,
+  k4:c=>`Com o boi a ${brl2(c.venda)} e o milho a ${brl2(c.milho)}, uma arroba compra ${nf2.format(c.bm)} sacas de milho. Acima de 5 o cocho se paga bem; abaixo, o milho está caro para engordar.`,
+  k5:c=>`É o dinheiro que precisa ficar na corretora: margem de garantia (${brl(c.margC)}) + 20% para os ajustes diários. Não é custo — volta no fim —, mas precisa existir no caixa no dia.`,
+  k6:c=>c.folga>0?`O preço pode cair até ${brl2(c.folga)} por arroba (de ${brl2(c.phF)} para ${brl2(c.cArr)}) antes de virar prejuízo. Folga acima de R$ 5/@ dá tranquilidade para travar.`:`A bolsa paga menos do que o seu custo: travar agora seria travar prejuízo de ${brl2(-c.folga)} por arroba. O problema está no custo, não no hedge.`,
+  h_o1:c=>`Cada contrato BGI tem 330 arrobas — como o caminhão que só anda cheio. Suas ${nf0.format(c.arrLote)} @ ÷ 330 = ${c.ctr} contrato(s), arredondado.`,
+  h_o4:c=>`É a caução que a B3 exige para você ficar vendido: fica bloqueada na corretora e volta inteira no encerramento. Aqui: ${brl(c.margem)}.`,
+  pe3:c=>`É a distância entre o preço travado e o seu custo por arroba. Positiva = o hedge garante lucro; negativa = garante prejuízo.`,
+  ch7:c=>AJUDA.k6(c),
+  bm1:c=>AJUDA.k4(c),
+  mtO1:c=>c.mtBoi!=null?`Base é a diferença entre o preço da sua praça e o da B3. Hoje o boi em MT vale ${brl2(c.base)} por arroba em relação à B3; o hedge trava a B3, e a base é o risco que sobra.`:`Digite o preço do boi em MT para ver a base da sua praça: a diferença entre o frigorífico da região e a B3.`
+};
+function refreshAjuda(){ document.querySelectorAll('.aj[aria-expanded=true]').forEach(b=>{ const f=AJUDA[b.dataset.k]; if(f) b._box.textContent=f(CTX); }); }
+Object.keys(AJUDA).forEach(k=>{
+  const el=$(k); if(!el) return;
+  const kpi=el.closest('.kpi'), kv=el.closest('.kv');
+  const lab=kpi?kpi.querySelector('.k-lab'):kv?kv.firstElementChild:null; if(!lab) return;
+  const b=document.createElement('button'); b.type='button'; b.className='aj'; b.dataset.k=k; b.textContent='?'; b.title='O que isso quer dizer pra você';
+  b.setAttribute('aria-expanded','false'); b.setAttribute('aria-label','O que isso quer dizer pra você');
+  const box=document.createElement('div'); box.className='aj-box'; box.hidden=true; b._box=box;
+  lab.appendChild(b); (kpi||kv).insertAdjacentElement(kpi?'beforeend':'afterend',box);
+  b.addEventListener('click',()=>{ const on=b.getAttribute('aria-expanded')!=='true'; b.setAttribute('aria-expanded',on); box.hidden=!on; if(on) box.textContent=AJUDA[k](CTX); });
+});
+
+/* ── 1. guia rápido de primeira vez ── */
+const GUIA=[
+  {t:'Quantas cabeças você vai confinar?',p:'Tudo começa pelo tamanho do lote.',f:[['c_cab','Cabeças','1']]},
+  {t:'Como o boi entra e sai do cocho?',p:'Peso médio por cabeça e quantos dias de confinamento.',f:[['c_pe','Peso de entrada (kg)','1'],['c_ps','Peso de saída (kg)','1'],['c_dias','Dias de cocho','1']]},
+  {t:'Quanto custa o boi magro?',p:'Preço da arroba da reposição na sua região. Se não sabe, deixe o valor de hoje.',f:[['c_magro','Boi magro (R$/@)','0.5']]},
+  {t:'O veredito do seu lote',p:'',f:[]}];
+let gPasso=0;
+function guiaRender(){
+  const g=GUIA[gPasso], ult=gPasso===GUIA.length-1, dots=GUIA.map((_,i)=>`<i class="${i<=gPasso?'on':''}"></i>`).join('');
+  let corpo='';
+  if(!ult) corpo=`<div class="fields">${g.f.map(([id,lab,st])=>`<div class="field"><label for="g_${id}">${lab}</label><input id="g_${id}" data-alvo="${id}" type="number" step="${st}" value="${$(id).value}"></div>`).join('')}</div>`;
+  else{
+    const c=CTX, [vc,vt]=veredito(c.phF,c.cArr,c.bm);
+    corpo=`<div class="verdict ${vc}" style="margin-bottom:14px"><div class="v-title">${vt}</div></div>
+      <div class="kv"><span>Custo para produzir cada @</span><b>${brl2(c.cArr)}</b></div>
+      <div class="kv"><span>Quanto a bolsa paga em ${c.mesA}</span><b>${brl2(c.ph)}</b></div>
+      <div class="kv"><span>Folga por arroba</span><b>${sgn(c.folga,brl2)}</b></div>
+      <div class="kv"><span>Contratos para travar o lote</span><b>${c.ctrC} × 330 @</b></div>
+      <p class="g-p" style="margin-top:12px">${c.folga>5?`A bolsa paga ${brl2(c.folga)} por arroba acima do seu custo: dá para garantir ${brl(c.lCab)} por cabeça hoje, venha o preço que vier em ${c.mesA}.`:c.folga>0?`A bolsa cobre o custo, mas com folga curta (${brl2(c.folga)}/@). Vale olhar a put — garante o piso e deixa a alta respirar.`:`Hoje a bolsa paga menos que o seu custo. Travar agora seria garantir prejuízo — reveja o custo (magro, dieta) antes de travar.`}</p>`;
+  }
+  $('gIn').innerHTML=`<div class="g-top"><span>Guia rápido · ${gPasso+1} de ${GUIA.length}</span><span class="g-dots">${dots}</span></div>
+    <h3 id="gTitulo">${g.t}</h3>${g.p?`<p class="g-p">${g.p}</p>`:''}${corpo}
+    <div class="g-nav"><button class="btn-q btn-sec" type="button" data-g="${gPasso?'voltar':'fechar'}">${gPasso?'← Voltar':'Pular o guia'}</button>
+    ${ult?`<span style="display:flex;gap:10px;flex-wrap:wrap"><button class="btn-q btn-sec" type="button" data-g="fechar">Explorar as abas</button><button class="btn-q" type="button" data-g="plano">📄 Ver meu plano de hedge</button></span>`:`<button class="btn-q" type="button" data-g="prox">Próximo →</button>`}</div>`;
+  const i=$('gIn').querySelector('input'); if(i) i.focus();
+}
+function guiaAplicar(){
+  let dias=false;
+  $('gIn').querySelectorAll('input[data-alvo]').forEach(i=>{ const v=parseFloat(i.value); if(!isFinite(v)||v<=0) return; const id=i.dataset.alvo;
+    if($(id).value!==i.value){ $(id).value=i.value; touched.add(id); if(id==='c_dias') dias=true; } });
+  dias?escolher():calc();
+}
+function guiaFechar(){ $('guia').close(); try{ localStorage.setItem('bb_guia','1'); }catch(e){} }
+$('gIn').addEventListener('click',e=>{
+  const a=e.target.closest('[data-g]'); if(!a) return; const g=a.dataset.g;
+  if(g==='prox'){ guiaAplicar(); gPasso++; guiaRender(); }
+  else if(g==='voltar'){ guiaAplicar(); gPasso--; guiaRender(); }
+  else if(g==='fechar'){ guiaFechar(); }
+  else if(g==='plano'){ guiaFechar(); show('painel',true); $('plano').scrollIntoView({behavior:'smooth',block:'center'}); }
+});
+$('gIn').addEventListener('keydown',e=>{ if(e.key==='Enter'&&e.target.matches('input')){ e.preventDefault(); const b=$('gIn').querySelector('[data-g=prox]'); if(b) b.click(); } });
+$('guia').addEventListener('cancel',()=>{ try{ localStorage.setItem('bb_guia','1'); }catch(e){} });
+$('guiaAbrir').addEventListener('click',()=>{ gPasso=0; guiaRender(); $('guia').showModal(); });
+let guiaVisto=false; try{ guiaVisto=!!localStorage.getItem('bb_guia'); }catch(e){}
+if(!guiaVisto&&!location.hash&&typeof $('guia').showModal==='function') setTimeout(()=>{ if(!document.querySelector('dialog[open]')){ gPasso=0; guiaRender(); $('guia').showModal(); } },900);
+
+/* ── 3. diário de ajustes como jogo ── */
+const diarioIns=()=>[...$('tDiario').tBodies[0].rows].map(r=>r.cells[1].firstChild);
+function jogoEstado(){
+  const c=CTX, ps=diarioIns().map(i=>parseFloat(i.value)||0); let prev=c.ph, acc=0; const A=[];
+  ps.forEach(p=>{ acc+=(prev-p)*330*c.ctr; A.push(acc); prev=p; });
+  return {c,ps,A,call:A.findIndex(a=>a<-0.2*c.margem)};
+}
+function jogoResultado(saiu){
+  const {c,ps,A,call}=jogoEstado(), P=ps[ps.length-1], fis=(P-c.ph)*c.arrLote, maxDef=Math.max(0,...A.map(a=>-a));
+  let h='';
+  if(saiu!=null){
+    const pN=ps[saiu], accN=A[saiu], ef=P+accN/c.arrLote;
+    h=`<p>🚪 Você zerou no dia ${saiu+1}, a ${brl2(pN)}/@, realizando ${sgn(accN)} na bolsa. Daí em diante o lote ficou <b>sem proteção</b>.</p>
+       <p>No dia 20 o boi estava em ${brl2(P)}/@. Somando o que perdeu na bolsa, seu preço efetivo ficou em <b>${brl2(ef)}/@</b> — contra ${brl2(c.ph)}/@ se tivesse mantido a trava.</p>
+       <p>${ef<c.ph-0.5?'❌ Sair na chamada transformou ajuste em prejuízo: o boi voltou a cair e você já não estava protegido.':ef>c.ph+0.5?'🎲 Desta vez sair deu certo, porque o boi continuou subindo. Mas repare: a partir do dia em que zerou, você deixou de fazer hedge e passou a apostar no preço.':'🟰 Ficou praticamente no mesmo preço — mas correu o risco sem proteção.'}</p>`;
+  }else{
+    h=`<p>🛡️ Você manteve a trava até o dia 20. O boi terminou a ${brl2(P)}/@: no frigorífico, o lote ${fis>=0?'ganhou':'perdeu'} ${brl(Math.abs(fis))} em relação ao preço travado, e a bolsa ${A[A.length-1]>=0?'pagou':'cobrou'} ${brl(Math.abs(A[A.length-1]))}.</p>
+       <p>Somando os dois, você fica perto de <b>${brl2(c.ph)}/@</b> — o preço que travou.${call>=0?` No pior momento, o caixa precisou de ${brl(maxDef)} em ajustes, que voltam com a venda do boi.`:''}</p>
+       <p>✅ Lição: chamada de margem é o hedge funcionando. Quem tem reserva de caixa atravessa a tempestade com o preço garantido.</p>`;
+  }
+  $('jgRes').innerHTML=h; $('jgRes').hidden=false;
+}
+function jogoMostrar(){
+  const {c,ps,A,call}=jogoEstado(); $('jgRes').hidden=true;
+  if(call<0){ $('jgDec').hidden=true; jogoResultado(); $('jgRes').insertAdjacentHTML('afterbegin',`<p>📈 Neste mercado não houve chamada de margem: o boi ${ps[ps.length-1]<c.ph?'caiu e a bolsa foi creditando':'oscilou sem apertar o caixa'}. Sorteie de novo para treinar uma chamada.</p>`); return; }
+  $('jgDec').hidden=false;
+  $('jgDec').innerHTML=`<p><b>📞 Dia ${call+1}: chamada de margem!</b> O boi foi a ${brl2(ps[call])}/@ e a bolsa já debitou ${brl(-A[call])}. A corretora pede reforço de caixa. O que você faz?</p>
+    <div class="plano-btns"><button class="btn-q" type="button" data-j="manter">💰 Deposito o reforço e mantenho a trava</button><button class="btn-q btn-sec" type="button" data-j="sair">🚪 Zero a posição e saio da bolsa</button></div>`;
+}
+$('jgDec').addEventListener('click',e=>{ const b=e.target.closest('[data-j]'); if(!b) return; $('jgDec').querySelectorAll('button').forEach(x=>x.disabled=true); jogoResultado(b.dataset.j==='sair'?jogoEstado().call:null); });
+$('jgNovo').addEventListener('click',()=>{
+  const c=CTX, sub=Math.random()<0.65, drift=(sub?1:-1)*(0.002+Math.random()*0.004), g=()=>Math.sqrt(-2*Math.log(1-Math.random()))*Math.cos(2*Math.PI*Math.random());
+  let p=c.ph; diarioIns().forEach((inp,i)=>{ p=p*(1+drift+0.009*g()); inp.value=String(half(p)); touched.add('d'+i); });
+  calc(); jogoMostrar();
+});
+$('jgVolta').addEventListener('click',()=>{ diarioIns().forEach((_,i)=>touched.delete('d'+i)); $('jgDec').hidden=true; $('jgRes').hidden=true; calc(); });
+
 doCache(); escolher();
 buscar(); setInterval(()=>{ if(!document.hidden) buscar(); },120000);
 })();
