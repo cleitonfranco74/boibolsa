@@ -154,6 +154,16 @@ h3{font-size:17px;font-weight:700;margin-bottom:12px;color:var(--text)}
 .duelo .d-j{border-left:4px solid var(--s2)} .duelo .d-p{border-left:4px solid var(--s1)}
 .duelo .d-w{grid-column:1/-1;font-size:14px;font-weight:600}
 .plano{white-space:pre-wrap;font:13.5px/1.6 ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;background:var(--bg4,rgba(0,0,0,.04));border:1px solid var(--border);border-radius:12px;padding:16px;max-height:420px;overflow:auto}
+.sist{display:flex;flex-wrap:wrap;gap:10px;margin:0 0 18px}
+.sist label{display:flex;align-items:center;gap:8px;border:2px solid var(--border2);background:var(--bg2);border-radius:12px;padding:10px 16px;font-weight:700;cursor:pointer}
+.sist label:has(input:checked){border-color:var(--green);background:var(--green-a10)}
+.sist input{accent-color:var(--green)}
+body.pasto .so-conf{display:none!important}
+body:not(.pasto) .so-pasto{display:none!important}
+body.telao .top,body.telao .guia-cta,body.telao [data-fb-util]{display:none!important}
+body.telao main{zoom:1.3}
+#telaoSair{display:none;position:fixed;bottom:16px;left:16px;z-index:60}
+body.telao #telaoSair{display:inline-block}
 .guia-cta{display:flex;flex-wrap:wrap;gap:14px;align-items:center;justify-content:space-between;background:var(--green-a10);border:1px solid var(--green-a20);border-radius:var(--r2);padding:16px 20px;margin-bottom:20px;font-size:15px}
 dialog#guia{margin:auto;max-height:92vh;overflow:auto;border:0;border-radius:18px;padding:0;width:min(560px,94vw);box-shadow:0 20px 60px rgba(0,0,0,.35);color:var(--text);background:var(--bg2)}
 dialog#guia::backdrop{background:rgba(10,20,15,.55)}
@@ -298,7 +308,7 @@ textarea#cepeaTxt{width:100%;min-height:110px;margin-top:10px;font:14px/1.5 ui-m
   <button class="mod" data-go="comece"><b>🥇 Comece aqui</b><span>A história de dois pecuaristas: um travou, o outro não.</span><i>Abrir →</i></button>
   <button class="mod" data-go="hedge"><b>🎯 Hedge BGI</b><span>Cenários, quanto travar e margem de garantia.</span><i>Abrir →</i></button>
   <button class="mod" data-go="estrategias"><b>🛡️ Futuro × Put</b><span>Trava de preço ou seguro de preço.</span><i>Abrir →</i></button>
-  <button class="mod" data-go="confinamento"><b>🐄 Confinamento</b><span>90 dias de custos, ROI e trava do milho.</span><i>Abrir →</i></button>
+  <button class="mod" data-go="confinamento"><b>🐄 Confinamento</b><span>Confinamento ou boi a pasto: custos, ROI e trava do milho.</span><i>Abrir →</i></button>
   <button class="mod" data-go="mercado"><b>📊 Mercado</b><span>CEPEA, previsão e risco de base.</span><i>Abrir →</i></button>
   <button class="mod" data-go="aprenda"><b>🎓 Aprenda</b><span>Passo a passo, mitos e exercícios.</span><i>Abrir →</i></button>
 </div>
@@ -310,7 +320,7 @@ textarea#cepeaTxt{width:100%;min-height:110px;margin-top:10px;font:14px/1.5 ui-m
     <button class="tab" role="tab" data-tab="comece" aria-selected="false"><b>🥇 Comece aqui</b><small>Seu João × Seu Pedro</small></button>
     <button class="tab" role="tab" data-tab="hedge" aria-selected="false"><b>🎯 Hedge BGI</b><small>Boi gordo · B3</small></button>
     <button class="tab" role="tab" data-tab="estrategias" aria-selected="false"><b>🛡️ Futuro × Put</b><small>Trava · Seguro</small></button>
-    <button class="tab" role="tab" data-tab="confinamento" aria-selected="false"><b>🐄 Confinamento</b><small>90 dias · Milho CCM</small></button>
+    <button class="tab" role="tab" data-tab="confinamento" aria-selected="false"><b>🐄 Confinamento</b><small>Confinamento · Pasto</small></button>
     <button class="tab" role="tab" data-tab="mercado" aria-selected="false"><b>📊 Mercado</b><small>CEPEA · Base MT</small></button>
     <button class="tab" role="tab" data-tab="aprenda" aria-selected="false"><b>🎓 Aprenda</b><small>Passo a passo · Exercícios</small></button>
   </div>
@@ -318,6 +328,7 @@ textarea#cepeaTxt{width:100%;min-height:110px;margin-top:10px;font:14px/1.5 ui-m
 
 <main>
 
+<button class="btn-q" id="telaoSair" type="button">✕ Sair do telão</button>
 <dialog id="guia" aria-labelledby="gTitulo"><div class="g-in" id="gIn"></div></dialog>
 
 <!-- ═══════════════ PAINEL ═══════════════ -->
@@ -328,7 +339,7 @@ textarea#cepeaTxt{width:100%;min-height:110px;margin-top:10px;font:14px/1.5 ui-m
     <div class="sub">Resumo da operação de hedge e do confinamento</div>
     <p>Uma tela só, com tudo puxado das abas <b>Hedge BGI</b> e <b>Confinamento</b>: custo por arroba, preço na bolsa, margem travável, relação boi/milho, caixa necessário e folga. <em>Altere os dados lá e o veredito muda aqui.</em></p>
   </div>
-  <div class="guia-cta"><span>🧭 <b>Primeira vez aqui?</b> Responda 4 perguntas e veja se vale travar o seu lote.</span><button class="btn-q" id="guiaAbrir" type="button">Começar o guia rápido →</button></div>
+  <div class="guia-cta"><span>🧭 <b>Primeira vez aqui?</b> Responda 4 perguntas e veja se vale travar o seu lote.</span><span style="display:flex;gap:10px;flex-wrap:wrap"><button class="btn-q" id="guiaAbrir" type="button">Começar o guia rápido →</button><button class="btn-q btn-sec" type="button" data-telao>📺 Modo telão (aula)</button></span></div>
   <div class="quote" id="quote">
     <div>
       <div class="ql" id="qLab">Cotação atual da @</div>
@@ -402,6 +413,7 @@ textarea#cepeaTxt{width:100%;min-height:110px;margin-top:10px;font:14px/1.5 ui-m
         <a class="btn-q btn-wa" id="planoWa" href="#" target="_blank" rel="noopener">📲 Enviar no WhatsApp</a>
         <button class="btn-q" id="planoCopiar" type="button">📋 Copiar texto</button>
         <button class="btn-q btn-sec" id="planoImprimir" type="button">🖨️ Imprimir</button>
+        <button class="btn-q btn-sec" id="linkCopiar" type="button">🔗 Copiar link deste cenário</button>
         <span class="qmsg" id="planoMsg" style="color:var(--text2);align-self:center"></span>
       </div>
     </div>
@@ -457,7 +469,7 @@ textarea#cepeaTxt{width:100%;min-height:110px;margin-top:10px;font:14px/1.5 ui-m
     <p class="lead">Mesmo lote, mesmo confinamento, mesma queda de preço. Um travou. O outro não. Veja o bolso de cada um — e arraste o preço do abate para ver a história virar.</p>
     <div class="grid">
       <div class="card story">
-        <p>Em <span class="stL">março</span>, os dois compraram <b id="st_cab"></b> cabeças e botaram no confinamento. Mesmo cocho, mesmo custo, mesma data de abate: <span class="stA">outubro</span>.</p>
+        <p>Em <span class="stL">março</span>, os dois compraram <b id="st_cab"></b> cabeças e botaram <span class="stSis">no confinamento</span>. Mesmo <span class="stCocho">cocho</span>, mesmo custo, mesma data de abate: <span class="stA">outubro</span>.</p>
         <p>Naquele dia, o boi de <span class="stA">outubro</span> valia <b id="st_m"></b> na bolsa. <b>Seu Pedro</b> pegou o telefone e vendeu <b id="st_ct"></b> contratos. <b>Seu João</b> disse: “vou esperar, isso ainda sobe”.</p>
         <p>Veio <span class="stA">outubro</span>. O boi foi para <b id="st_o"></b>. Os dois embarcaram o mesmo gado, no mesmo frigorífico, no mesmo dia.</p>
         <div class="fields" style="margin-top:14px">
@@ -500,6 +512,7 @@ textarea#cepeaTxt{width:100%;min-height:110px;margin-top:10px;font:14px/1.5 ui-m
       <button class="btn-q" type="button" data-guia>🧭 Fazer o guia rápido (4 perguntas)</button>
       <button class="btn-q btn-sec" type="button" data-ir="confinamento">🐄 Ajustar o lote no Confinamento</button>
       <button class="btn-q btn-sec" type="button" data-ir="hedge">🎯 Ver os cenários do hedge</button>
+      <button class="btn-q btn-sec" type="button" data-telao>📺 Projetar no telão</button>
     </div>
   </div>
   <div data-fb-util="Comece aqui"></div>
@@ -519,6 +532,7 @@ textarea#cepeaTxt{width:100%;min-height:110px;margin-top:10px;font:14px/1.5 ui-m
     <div class="grid g2">
       <div class="card">
         <h3>📋 Parâmetros da fazenda</h3>
+        <p class="hint" id="h_lote" style="margin:0 0 10px"></p>
         <div class="fields">
           <div class="field"><label for="h_cab">Número de cabeças</label><input id="h_cab" type="number" step="1" value="200"></div>
           <div class="field"><label for="h_arr">Arrobas por cabeça (@)</label><input id="h_arr" type="number" step="0.1" value="16.5"></div>
@@ -682,14 +696,18 @@ textarea#cepeaTxt{width:100%;min-height:110px;margin-top:10px;font:14px/1.5 ui-m
 <!-- ═══════════════ CONFINAMENTO ═══════════════ -->
 <section class="panel" id="confinamento">
   <div class="banner b-gold">
-    <span class="ico">🐄</span><span class="tag">Ciclo de 90 dias · Milho CCM</span>
-    <h2>Confinamento</h2>
-    <div class="sub">Custos, ganho de peso, ROI e trava do milho</div>
-    <p>Preencha todos os custos antes de decidir — <em>um custo esquecido muda a decisão de confinar.</em> A necessidade de milho sai dos parâmetros do lote e alimenta a trava em contratos CCM de 450 sacas.</p>
+    <span class="ico">🐄</span><span class="tag">Confinamento ou boi a pasto</span>
+    <h2 id="engBanTit">Confinamento</h2>
+    <div class="sub" id="engBanSub">Custos, ganho de peso, ROI e trava do milho</div>
+    <p id="engBanTxt">Preencha todos os custos antes de decidir — <em>um custo esquecido muda a decisão de confinar.</em> A necessidade de milho sai dos parâmetros do lote e alimenta a trava em contratos CCM de 450 sacas.</p>
   </div>
   <div class="section">
-    <h2>🐄 Confinamento — ciclo de 90 dias</h2>
-    <p class="lead">Custos, ganho de peso, receita, ROI e integração com o hedge. Preencha TODOS os campos antes de analisar — um custo esquecido muda a decisão de confinar.</p>
+    <div class="sist" role="radiogroup" aria-label="Sistema de engorda">
+      <label><input type="radio" name="sistema" value="conf" checked> 🐄 Confinamento</label>
+      <label><input type="radio" name="sistema" value="pasto"> 🌾 Boi a pasto</label>
+    </div>
+    <h2 id="engTit">🐄 Confinamento — ciclo de 90 dias</h2>
+    <p class="lead" id="engLead">Custos, ganho de peso, receita, ROI e integração com o hedge. Preencha TODOS os campos antes de analisar — um custo esquecido muda a decisão de confinar.</p>
     <div class="grid g2">
       <div class="card">
         <h3>Parâmetros do lote</h3>
@@ -699,23 +717,26 @@ textarea#cepeaTxt{width:100%;min-height:110px;margin-top:10px;font:14px/1.5 ui-m
           <div class="field"><label for="c_ps">Peso de saída esperado (kg/cab)</label><input id="c_ps" type="number" step="1" value="480"></div>
           <div class="field"><label for="c_rend">Rendimento de carcaça no abate (%)</label><input id="c_rend" type="number" step="0.5" value="54"></div>
           <div class="field"><label for="c_rendE">Rendimento na compra do magro (%)</label><input id="c_rendE" type="number" step="0.5" value="50"></div>
-          <div class="field"><label for="c_dias">Dias de confinamento</label><input id="c_dias" type="number" step="1" value="90"></div>
+          <div class="field so-conf"><label for="c_dias">Dias de confinamento</label><input id="c_dias" type="number" step="1" value="90"></div>
+          <div class="field so-pasto"><label for="p_meses">Meses de engorda a pasto</label><input id="p_meses" type="number" step="1" min="1" value="8"></div>
         </div>
         <h3 style="margin-top:18px">Custos (R$/cabeça)</h3>
         <div class="fields">
           <div class="field"><label for="c_magro">Compra do boi magro (R$/@)</label><input id="c_magro" type="number" step="1" value="348"></div>
-          <div class="field"><label for="c_outros">Outros ingredientes da dieta (R$/cab/dia)</label><input id="c_outros" type="number" step="0.1" value="5"></div>
+          <div class="field so-pasto"><label for="p_cmes">Pasto e suplementação (R$/cab/mês)</label><input id="p_cmes" type="number" step="5" min="0" value="110"></div>
+          <div class="field so-conf"><label for="c_outros">Outros ingredientes da dieta (R$/cab/dia)</label><input id="c_outros" type="number" step="0.1" value="5"></div>
           <div class="field"><label for="c_san">Sanidade / medicamentos</label><input id="c_san" type="number" step="1" value="80"></div>
           <div class="field"><label for="c_mo">Mão de obra</label><input id="c_mo" type="number" step="1" value="60"></div>
           <div class="field"><label for="c_dep">Depreciação / outros</label><input id="c_dep" type="number" step="1" value="40"></div>
           <div class="field"><label for="c_fin">Custo financeiro (% a.m.)</label><input id="c_fin" type="number" step="0.1" value="1.2"></div>
         </div>
-        <h3 style="margin-top:18px">Venda e milho</h3>
+        <h3 style="margin-top:18px">Venda<span class="so-conf"> e milho</span></h3>
         <div class="fields">
           <div class="field"><label for="c_venda">Preço de venda da @ (R$/@)</label><input id="c_venda" type="number" step="0.5" value="360"></div>
-          <div class="field"><label for="c_milho">Preço do milho spot (R$/sc 60 kg)</label><input id="c_milho" type="number" step="0.5" value="70"></div>
-          <div class="field"><label for="c_cons">Consumo de milho/cab/dia (kg)</label><input id="c_cons" type="number" step="0.1" value="7"></div>
+          <div class="field so-conf"><label for="c_milho">Preço do milho spot (R$/sc 60 kg)</label><input id="c_milho" type="number" step="0.5" value="70"></div>
+          <div class="field so-conf"><label for="c_cons">Consumo de milho/cab/dia (kg)</label><input id="c_cons" type="number" step="0.1" value="7"></div>
         </div>
+        <p class="hint so-pasto">A pasto: some aqui o arrendamento (ou o custo de oportunidade da terra), sal mineral e suplemento, manutenção de pasto e cerca. Os R$ 110/cab/mês e os 8 meses (≈ 0,4 kg/dia de 380 a 480 kg) são só um exemplo — use os números da sua fazenda.</p>
         <p class="hint">Exemplo: compra do magro acompanha a cotação atual da @ (+0,6%, como na planilha), preço de venda acompanha o preço futuro e o milho spot vem da B3. Arroba do abate = peso vivo × rendimento de carcaça ÷ 15 kg (480 kg a 54% ≈ 17,3 @). Arroba do magro na compra = peso vivo × 50% ÷ 15, a convenção do mercado de reposição (380 kg ≈ 12,7 @). A dieta por dia é calculada com o custo médio do milho após a trava CCM (abaixo).</p>
       </div>
       <div>
@@ -758,7 +779,7 @@ textarea#cepeaTxt{width:100%;min-height:110px;margin-top:10px;font:14px/1.5 ui-m
         <div class="kv"><span>Preço mín. p/ equilíbrio</span><b id="ch6"></b></div>
         <div class="kv"><span>Folga do hedge</span><b id="ch7"></b></div>
       </div>
-      <div class="card">
+      <div class="card so-conf">
         <h3>🎯 Relação boi/milho</h3>
         <div class="kv"><span>Relação boi/milho (sc/@)</span><b id="bm1"></b></div>
         <div class="kv"><span>Referência Cepea ago/26</span><b>4,94</b></div>
@@ -770,7 +791,7 @@ textarea#cepeaTxt{width:100%;min-height:110px;margin-top:10px;font:14px/1.5 ui-m
     </div>
   </div>
 
-  <div class="section">
+  <div class="section so-conf">
     <h2>🌽 Trava do milho — contratos CCM/B3</h2>
     <p class="lead">Hedge de compra (comprado) do insumo do confinamento. A necessidade de milho vem dos parâmetros do lote acima.</p>
     <div class="grid g2">
@@ -803,7 +824,7 @@ textarea#cepeaTxt{width:100%;min-height:110px;margin-top:10px;font:14px/1.5 ui-m
     </table></div>
   </div>
 
-  <div class="section">
+  <div class="section so-conf">
     <h2>📊 Sensibilidade — lucro por cabeça</h2>
     <p class="lead">Linhas = preço de venda (R$/@) · colunas = custo de dieta (R$/cabeça/dia). Linha destacada = preço de hedge atual.</p>
     <div class="tbl-wrap"><table id="tSens" class="heat"><thead></thead><tbody></tbody></table></div>
@@ -1067,9 +1088,12 @@ function deveres(o,ph,venda,bm,venc,base=0){
   const f1=+(o.fut*1.2).toFixed(1), c1=conf({...o,fut:f1});
   const p2=Math.round(ph*QUEDA_K);
   const m3=Math.round(o.magro*380/348), c3=conf({...o,magro:m3});
-  const v=(p,c)=>veredito(p+base,c,bm)[1].split(' — ')[0];
+  const v=(p,c)=>veredito(p+base,c,o.pasto?Infinity:bm)[1].split(' — ')[0];
   const lc=c=>venda*c.aS-c.cCab;
-  const D=[["🌽 O milho subiu 20%",`A entressafra apertou e o milho futuro foi de ${brl2(o.fut)} para ${brl2(f1)} a saca.`,`Aba Confinamento → “Preço futuro travado CCM”: troque ${nf1.format(o.fut)} por ${nf1.format(f1)}.`,
+  const o1=o.pasto?{...o,outros:o.outros*1.2}:null, cp=o.pasto?conf(o1):null;
+  const D=[o.pasto?["🌾 O custo do pasto subiu 20%",`O arrendamento e o suplemento encareceram: o pasto foi de ${brl(o.outros*30)} para ${brl(o.outros*36)} por cabeça por mês.`,`Aba Confinamento (a pasto) → “Pasto e suplementação”: troque ${nf0.format(o.outros*30)} por ${nf0.format(o.outros*36)}.`,
+      `Veja o custo por arroba subir e a folga encolher. Com o pasto mais caro, o boi a ${brl2(ph)} ainda paga a engorda?`,
+      `Custo/@ vai de ${brl2(b0.cArr)} para ${brl2(cp.cArr)} · folga vai de ${brl2(ph+base-b0.cArr)} para ${brl2(ph+base-cp.cArr)} — Painel: ${v(ph,cp.cArr)}. Lição: a pasto, o tempo é custo — cada mês a mais no pasto come a margem.`]:["🌽 O milho subiu 20%",`A entressafra apertou e o milho futuro foi de ${brl2(o.fut)} para ${brl2(f1)} a saca.`,`Aba Confinamento → “Preço futuro travado CCM”: troque ${nf1.format(o.fut)} por ${nf1.format(f1)}.`,
       `Veja a dieta por dia subir, o preço de equilíbrio subir e a folga encolher. Com milho a ${brl2(f1)}, o boi a ${brl2(ph)} ainda paga o confinamento?`,
       `Dieta sobe de ${brl2(b0.dieta)} para ${brl2(c1.dieta)}/dia · custo/@ vai de ${brl2(b0.cArr)} para ${brl2(c1.cArr)} · folga vai de ${brl2(ph+base-b0.cArr)} para ${brl2(ph+base-c1.cArr)} — Painel: ${v(ph,c1.cArr)}. Lição: o cocho corrói a margem; acompanhe o número, não só a cor.`],
     [`🐂 O boi caiu para ${brl(p2)}`,`A China segurou a compra e o vencimento ${venc} despencou de ${brl2(ph)} para ${brl2(p2)} (−11%).`,`Aba Hedge → “Preço futuro da @”: troque ${nf2.format(ph)} por ${p2}.`,
@@ -1091,8 +1115,10 @@ function conf(o){
   const cCab=cCompra+cDieta+cFixos+cFin, cLote=cCab*o.cab, cArr=totArr>0?cLote/totArr:0;
   return {meses,aE,aS,totArr,consTot,sacas,ctrM,cobM,cTrav,cSpot,cMil,medio,dieta,cCompra,cDieta,cFixos,cFin,cCab,cLote,cArr};
 }
-const confInputs=()=>({cab:val('c_cab'),pe:val('c_pe'),ps:val('c_ps'),rend:val('c_rend')/100,rendE:val('c_rendE')/100,dias:val('c_dias'),magro:val('c_magro'),outros:val('c_outros'),san:val('c_san'),mo:val('c_mo'),dep:val('c_dep'),
-  fin:val('c_fin')/100,cons:val('c_cons'),milho:val('c_milho'),fut:val('m_fut'),mpct:val('m_pct')/100,mbase:mtBaseMilho()});
+const ehPasto=()=>document.body.classList.contains('pasto');
+const diasEng=()=>ehPasto()?Math.max(1,val('p_meses'))*30:(val('c_dias')||90);
+const confInputs=()=>({pasto:ehPasto(),cab:val('c_cab'),pe:val('c_pe'),ps:val('c_ps'),rend:val('c_rend')/100,rendE:val('c_rendE')/100,dias:diasEng(),magro:val('c_magro'),outros:ehPasto()?val('p_cmes')/30:val('c_outros'),san:val('c_san'),mo:val('c_mo'),dep:val('c_dep'),
+  fin:val('c_fin')/100,cons:ehPasto()?0:val('c_cons'),milho:val('c_milho'),fut:val('m_fut'),mpct:val('m_pct')/100,mbase:mtBaseMilho()});
 function veredito(ph,cArr,bm){
   if(ph<=cArr) return ['bad','🔴 NÃO TRAVA — a bolsa não cobre seu custo'];
   if(bm<4.94) return ['warn','🟡 ATENÇÃO — trava o boi, mas o milho está caro (boi/milho abaixo da referência)'];
@@ -1109,6 +1135,20 @@ const MT_IDS=['mt_boi','mt_milho','mt_magro','mt_custo','mt_ref'];
 const mtv=id=>{ const v=parseFloat($(id).value); return isFinite(v)&&v>0?v:null; };
 const mtBaseMilho=()=>{ const m=mtv('mt_milho'); return m!=null&&B3MS?m-B3MS:0; };
 try{ const sv=JSON.parse(localStorage.getItem('bb_mt')||'{}'); MT_IDS.forEach(id=>{ if(sv[id]!=null) $(id).value=sv[id]; }); }catch(e){}
+/* cenário vindo de um link (?c_cab=100&sistema=pasto…): os valores do link valem como digitados */
+const CENARIO_IDS=/^(r_spot|h_\w+|c_\w+|p_\w+|m_\w+|s_mar|s_out|mt_\w+)$/;
+function linkCenario(){
+  const q=new URLSearchParams();
+  if(ehPasto()) q.set('sistema','pasto');
+  document.querySelectorAll('main input[id]').forEach(i=>{ if(!CENARIO_IDS.test(i.id)||i.type==='range') return;
+    if(touched.has(i.id)||(i.id.startsWith('mt_')&&i.value!=='')) q.set(i.id,i.value); });
+  const qs=q.toString(); return location.origin+location.pathname+(qs?'?'+qs:'');
+}
+try{
+  const q=new URLSearchParams(location.search);
+  if(q.get('sistema')==='pasto') document.body.classList.add('pasto');
+  q.forEach((v,k)=>{ const el=document.getElementById(k); if(el&&el.tagName==='INPUT'&&CENARIO_IDS.test(k)){ el.value=v; touched.add(k); } });
+}catch(e){}
 const mtSalvar=()=>{ try{ localStorage.setItem('bb_mt',JSON.stringify(Object.fromEntries(MT_IDS.map(id=>[id,$(id).value])))); }catch(e){} };
 const fieldKey=el=>el.id||(el.dataset.d!=null?'d'+el.dataset.d:el.dataset.br!=null?'br'+el.dataset.br:el.dataset.bf!=null?'bf'+el.dataset.bf:'');
 function setAuto(el,v,dec){
@@ -1187,6 +1227,7 @@ function calc(){
   auto('c_magro',mtMag!=null?mtMag:spot*MAGRO_K,mtMag!=null?2:0);
   auto('c_venda',val('h_preco')+base,2);
   const C0=conf(confInputs());
+  auto('h_cab',val('c_cab'),0); auto('h_arr',C0.aS,2);   // um lote só: o hedge usa o lote da engorda até o usuário digitar outro
   auto('h_cmin',C0.cArr,2);
   auto('h_custo',C0.cArr*val('h_cab')*val('h_arr'),0);
   auto('s_mar',val('h_preco'),0);
@@ -1201,6 +1242,9 @@ function calc(){
   const mgc=mtv('h_mgc'), mpc=mgc!=null?mgc:330*ph*mg, custoCtr=Math.max(0,val('h_ccus')), irR=Math.max(0,val('h_ir'))/100;
   const liq=(res,n)=>{ const g=res-n*custoCtr; return g-(g>0?g*irR:0); };   // resultado da bolsa após custos e IR
   const arrLote=cab*arr, ctr=Math.round(arrLote/330), cob=ctr*330, mont=cob*ph, margem=ctr*mpc, receitaEsp=arrLote*ph;
+  const loteProprio=['h_cab','h_arr','h_custo'].some(k=>touched.has(k));
+  $('h_lote').innerHTML=loteProprio?`⚠️ Você digitou um lote diferente do da aba Confinamento. O Painel, o Comece aqui e o plano continuam usando o lote de lá. <button class="aj" style="width:auto;border-radius:50px;padding:2px 10px" type="button" id="h_loteVolta">↺ usar o lote de lá</button>`:
+    `🔗 Mesmo lote da aba Confinamento: ${nf0.format(cab)} cabeças × ${nf2.format(arr)} @ = ${nf0.format(arrLote)} @, a ${brl2(val('h_cmin'))}/@. Mude lá — ou digite aqui para simular outro lote.`;
   $('h_o1').textContent=nf0.format(ctr); $('h_tk').textContent=ticker('BGI',venc);
   $('h_o2').textContent=nf0.format(cob)+' @'; $('h_o3').textContent=brl(mont); $('h_o4').textContent=brl(margem);
   $('h_o5').textContent=brl(margem*1.2); $('h_o6').textContent=receitaEsp>0?pct(margem/receitaEsp):'—';
@@ -1250,7 +1294,7 @@ function calc(){
     return `<tr><td>${nf0.format(p)}${now(p)}</td><td>${sgn(p-ph,nf2.format)}</td><td>${sgn(vd)}</td><td>${sgn(-vd)}</td><td class="l">${p<ph?'🟢 Vendido':p>ph?'🔵 Comprado':'⚖️ Empate'}</td><td class="l">${p<ph?'Hedge protegeu a queda ✅':p>ph?'Hedge custou o seguro ⚖️':'Preço travado = entrada'}</td></tr>`;}).join('');
 
   // Confinamento
-  const cc=val('c_cab'), pe_=val('c_pe'), ps=val('c_ps'), dias=val('c_dias'), magro=val('c_magro'), outros=val('c_outros'),
+  const cc=val('c_cab'), pe_=val('c_pe'), ps=val('c_ps'), dias=diasEng(), magro=val('c_magro'), outros=val('c_outros'),
         san=val('c_san'), mo=val('c_mo'), dep=val('c_dep'), fin=val('c_fin')/100, venda=val('c_venda'), milho=val('c_milho'), cons=val('c_cons');
   const CO=conf(confInputs());
   const {meses,aE,aS,totArr,consTot,sacas,ctrM,cobM,cTrav,cSpot,cMil,medio}=CO, ganho=ps-pe_, gpd=dias>0?ganho*1000/dias:0;
@@ -1286,14 +1330,22 @@ function calc(){
   $('tSens').tBodies[0].innerHTML=SP.map(p=>`<tr class="${Math.abs(p-ph)<5?'hl':''}"><td>R$ ${p}/@</td>${DT.map(d=>{const base=cCompra+d*dias+cFixos; const v=p*aS-base-base*fin*meses; return `<td style="${heatPL(v)}">${brl(v)}</td>`;}).join('')}</tr>`).join('');
 
   // story
+  $('engTit').textContent=ehPasto()?`🌾 Boi a pasto — ${nf0.format(dias/30)} meses de engorda`:`🐄 Confinamento — ciclo de ${nf0.format(dias)} dias`;
+  $('engLead').textContent=ehPasto()?'Custos, ganho de peso, receita e integração com o hedge, para a engorda a pasto. Preencha todos os custos — um custo esquecido muda a decisão.':'Custos, ganho de peso, receita, ROI e integração com o hedge. Preencha TODOS os campos antes de analisar — um custo esquecido muda a decisão de confinar.';
+  if(!CTX.banConf) CTX.banConf=$('engBanTxt').innerHTML;
+  $('engBanTit').textContent=ehPasto()?'Boi a pasto':'Confinamento';
+  $('engBanSub').textContent=ehPasto()?'Custos, ganho de peso e resultado da engorda a pasto':'Custos, ganho de peso, ROI e trava do milho';
+  $('engBanTxt').innerHTML=ehPasto()?'Preencha todos os custos antes de decidir — <em>a pasto, cada mês a mais no campo é custo.</em> Some arrendamento, suplemento e manutenção de pasto; o milho e a trava CCM saem de cena.':CTX.banConf;
+  document.querySelectorAll('.stSis').forEach(e=>e.textContent=ehPasto()?'no pasto':'no confinamento');
+  document.querySelectorAll('.stCocho').forEach(e=>e.textContent=ehPasto()?'pasto':'cocho');
   const sm=val('s_mar'), so=val('s_out'), mesL=MESL[new Date().getMonth()], mesA=mesFull($('h_venc').value);
   document.querySelectorAll('.stL').forEach(e=>e.textContent=e.classList.contains('up')?mesL.toUpperCase():mesL);
   document.querySelectorAll('.stA').forEach(e=>e.textContent=e.classList.contains('up')?mesA.toUpperCase():mesA);
   $('st_hint').textContent=`Coloque ${brl(r10(sm*1.11))} em ${mesA} e veja a história virar: Seu João passa na frente.`;
   $('st_cab').textContent=nf0.format(cc); $('st_m').textContent=brl2(sm)+'/@'; $('st_o').textContent=brl2(so)+'/@'; $('st_ct').textContent=ctrC;
   const recF=(so+base)*totArr, bolsa=(sm-so)*330*ctrC, bolsaL=liq(bolsa,ctrC), sobraJ=recF-cLote, sobraP=recF+bolsaL-cLote;
-  const SR=[["Cabeças no confinamento",nf0.format(cc),nf0.format(cc)],["Arrobas produzidas",nf0.format(totArr),nf0.format(totArr)],[`Travou na bolsa em ${mesL}?`,"NÃO — ficou no risco",`SIM — vendeu ${ctrC} contratos`],
-    ["(A) Recebeu do frigorífico",brl(recF),brl(recF)],["(B) Resultado na bolsa",brl(0),sgn(bolsa)],["(C) Custos de bolsa e IR",brl(0),sgn(bolsaL-bolsa)],["(D) Receita total (A+B+C)",brl(recF),brl(recF+bolsaL)],["(E) Custo do confinamento",brl(cLote),brl(cLote)],
+  const SR=[["Cabeças no lote",nf0.format(cc),nf0.format(cc)],["Arrobas produzidas",nf0.format(totArr),nf0.format(totArr)],[`Travou na bolsa em ${mesL}?`,"NÃO — ficou no risco",`SIM — vendeu ${ctrC} contratos`],
+    ["(A) Recebeu do frigorífico",brl(recF),brl(recF)],["(B) Resultado na bolsa",brl(0),sgn(bolsa)],["(C) Custos de bolsa e IR",brl(0),sgn(bolsaL-bolsa)],["(D) Receita total (A+B+C)",brl(recF),brl(recF+bolsaL)],["(E) Custo da engorda",brl(cLote),brl(cLote)],
     ["💵 O que sobrou no bolso (D−E)",`<b>${sgn(sobraJ)}</b>`,`<b>${sgn(sobraP)}</b>`]];
   // controle deslizante + gráfico do bolso de cada um
   const rMin=r10(sm*0.7), rMax=r10(sm*1.3), sl=$('s_out_r');
@@ -1329,7 +1381,7 @@ function calc(){
   // Painel
   $('k1').textContent=brl2(cArr); $('k2').textContent=brl2(ph); $('k2s').textContent=mtBoi!=null?`Com a base MT, o físico fica em ${brl2(phF)}/@`:'O que a bolsa paga hoje pelo seu vencimento';
   $('k1s').textContent=mtCus!=null?`IMEA: ${brl2(mtCus)}/@ · diferença ${cArr-mtCus>=0?'+':'−'}${brl2(Math.abs(cArr-mtCus))}`:'Quanto custa produzir cada @ neste lote'; $('k3').innerHTML=sgn(lCabH); $('k4').textContent=nf2.format(bm)+' sc/@'; $('k5').textContent=brl(margC*1.2); $('k6').innerHTML=sgn(folga,brl2);
-  const [vc,vt]=veredito(phF,cArr,bm);
+  const [vc,vt]=veredito(phF,cArr,ehPasto()?Infinity:bm);
   $('verdict').className='verdict '+vc; $('vTitle').textContent=vt;
   $('vSub').textContent=`Custo ${brl2(cArr)}/@ · Bolsa paga ${brl2(ph)}/@`+(mtBoi!=null?` (físico MT ≈ ${brl2(phF)}/@)`:'')+` · Folga de ${brl2(folga)}/@ · Boi/milho ${nf2.format(bm)} sc/@ (ref. 4,94) · Caixa: ${brl(margC*1.2)}`;
   $('pr1').textContent=brl2(cmin); $('pr2').textContent=brl2(ph); $('pr3').textContent=ctr; $('pr4').innerHTML=sgn(lucroEsp); $('pr5').textContent=brl(margem); $('pr6').textContent=brl(margem*1.2);
@@ -1348,7 +1400,7 @@ function calc(){
       `• Contratos a vender: ${ctrC} ${tk} (330 @ cada)`,`• Escalonado: ${meio} agora, o restante perto do abate`,'',
       `CAIXA`,`• Margem de garantia: ${brl(margC)} · com reserva de 20%: ${brl(margC*1.2)}`,'',
       `FRASE PARA A CORRETORA`,`“Quero VENDER ${ctrC} contratos de boi gordo ${tk}, vencimento ${venc}, a ${brl2(ph)} por arroba, para hedge de produção.”`,'',
-      `⚠️ Simulação educativa — confirme margem, custos e impostos com sua corretora.`,`Simule o seu: https://cleitonfranco74.github.io/boibolsa/simulador.html`);
+      `⚠️ Simulação educativa — confirme margem, custos e impostos com sua corretora.`,`Abra este cenário: ${linkCenario()}`);
     const txt=L.join('\n'); $('plano').textContent=txt; $('planoWa').href='https://wa.me/?text='+encodeURIComponent(txt);
   }
   Object.assign(CTX,{cArr,totArr,ph,phF,base,lCab:lCabH,bm,milho,venda,margC,folga,ctr,cob,arrLote,margem,ctrC,spot,mtBoi,cc,mesA:mesFull(venc),venc});
@@ -1376,6 +1428,24 @@ document.addEventListener('input',e=>{ if(e.target.matches('input')) calc(); });
 let rw=0; addEventListener('resize',()=>{clearTimeout(rw); rw=setTimeout(calc,150);});
 const h=location.hash.slice(1); show(tabs.some(t=>t.dataset.tab===h)?h:'painel',false);
 
+/* link do cenário e modo telão */
+$('linkCopiar').addEventListener('click',async()=>{
+  const u=linkCenario();
+  try{ await navigator.clipboard.writeText(u); $('planoMsg').textContent='✓ link copiado — quem abrir vê os mesmos números'; }
+  catch(e){ prompt('Copie o link deste cenário:',u); }
+});
+function telao(on){
+  document.body.classList.toggle('telao',on);
+  if(on&&document.documentElement.requestFullscreen) document.documentElement.requestFullscreen().catch(()=>{});
+  if(!on&&document.fullscreenElement) document.exitFullscreen().catch(()=>{});
+  calc();
+}
+document.addEventListener('click',e=>{ if(e.target.closest('[data-telao]')) telao(true); });
+$('telaoSair').addEventListener('click',()=>telao(false));
+document.addEventListener('fullscreenchange',()=>{ if(!document.fullscreenElement&&document.body.classList.contains('telao')) telao(false); });
+/* sistema de engorda: confinamento ou pasto */
+function setSistema(v){ document.body.classList.toggle('pasto',v==='pasto'); document.querySelectorAll('input[name=sistema]').forEach(r=>r.checked=r.value===(v==='pasto'?'pasto':'conf')); }
+document.querySelectorAll('input[name=sistema]').forEach(r=>r.addEventListener('change',()=>{ setSistema(r.value); escolher(); }));
 /* atalhos para outras abas e para o guia */
 document.addEventListener('click',e=>{
   const ir=e.target.closest('[data-ir]'); if(ir){ show(ir.dataset.ir,true); document.querySelector('.tabs-wrap').scrollIntoView({behavior:'smooth'}); return; }
@@ -1421,7 +1491,7 @@ async function buscar(){
 
 /* escolhe os contratos: atual = vencimento mais próximo; futuro = primeiro vencimento depois do abate */
 function escolher(){
-  const dias=val('c_dias')||90, abate=maisDias(dias), meio=maisDias(dias/2), B=ROWS.BGI, C=ROWS.CCM;
+  const dias=diasEng(), abate=maisDias(dias), meio=maisDias(dias/2), B=ROWS.BGI, C=ROWS.CCM;
   const hv=normMes($('h_venc').value), mv=normMes($('m_venc').value);
   const spot=B[0]||null;
   const fut=touched.has('h_venc')?B.find(r=>r.mes===hv)||null:(B.find(r=>r.venc>=abate)||B[B.length-1]||null);
@@ -1440,7 +1510,7 @@ function escolher(){
 function painelCotacao(){
   const t=/(\d{4})-(\d{2})-(\d{2})[ T](\d{2}):(\d{2})/.exec(STAMP||''), quando=t?`${t[3]}/${t[2]} às ${t[4]}:${t[5]}`:'';
   const varTxt=r=>(r.ultimo!=null?'último negócio':'ajuste anterior')+(r.var!=null?` · <span class="${r.var>=0?'pos':'neg'}">${r.var>=0?'▲':'▼'} ${nf2.format(Math.abs(r.var*100))}%</span>`:'');
-  const {spot,fut,ms,mf}=SEL, dias=val('c_dias')||90;
+  const {spot,fut,ms,mf}=SEL, dias=diasEng();
   $('qBoi').textContent=nf2.format(val('r_spot')); $('qFut').textContent=nf2.format(val('h_preco'));
   $('qMil').textContent=`${nf2.format(val('c_milho'))} / ${nf2.format(val('m_fut'))}`;
   $('qLab').textContent=spot?`Cotação atual da @ · ${spot.symb}`:'Cotação atual da @';
@@ -1449,7 +1519,7 @@ function painelCotacao(){
   const dig=id=>touched.has(id)?' · <b>valor digitado</b>':'';
   if(spot){
     $('qBoiS').innerHTML=`vencimento mais próximo (≈ indicador CEPEA/B3) · ${varTxt(spot)}${dig('r_spot')}`;
-    $('qFutS').innerHTML=fut?`${fut.mes} · 1º vencimento após o abate (${dias} dias) · ${varTxt(fut)}${dig('h_preco')}`:`vencimento ${$('h_venc').value} não está sendo negociado na B3${dig('h_preco')}`;
+    $('qFutS').innerHTML=fut?`${fut.mes} · 1º vencimento após o abate (${ehPasto()?nf0.format(dias/30)+' meses':dias+' dias'}) · ${varTxt(fut)}${dig('h_preco')}`:`vencimento ${$('h_venc').value} não está sendo negociado na B3${dig('h_preco')}`;
     $('qMilS').innerHTML=(ms&&mf)?`spot ${ms.mes} · futuro ${mf.mes} (meio do confinamento)`:'milho sem cotação na B3 agora';
     $('qNote').innerHTML=(ONLINE?`✓ Cotação da B3${quando?` de <b>${quando}</b>`:''}.`:`⚠️ B3 indisponível agora — usando a última cotação salva neste navegador${quando?` (${quando})`:''}.`)+
       ` Todas as abas montam o exemplo com a cotação atual e o preço futuro da @; ao digitar um valor num campo amarelo, o seu prevalece.`;
@@ -1464,7 +1534,7 @@ document.addEventListener('input',e=>{
   const el=e.target; if(!el.matches||!el.matches('input')||!e.isTrusted) return;
   const k=fieldKey(el); if(k) touched.add(k);
   if(MT_IDS.includes(k)) mtSalvar();
-  if(k==='c_dias'||k==='h_venc'||k==='m_venc') escolher();
+  if(k==='c_dias'||k==='p_meses'||k==='h_venc'||k==='m_venc') escolher();
   else if(['r_spot','h_preco','c_milho','m_fut'].includes(k)) painelCotacao();
 },true);
 const PRECO=/^(r_spot|h_preco|h_venc|m_venc|c_magro|c_venda|c_milho|m_fut|h_custo|h_cmin|s_mar|s_out|d\d+|br\d+|bf\d+)$/;
@@ -1500,6 +1570,7 @@ $('cepeaAplicar').addEventListener('click',()=>{
   if(out.length){ $('cepeaTxt').value=''; market(); }
 });
 $('cepeaLimpar').addEventListener('click',()=>{ CEPEA_EXTRA=[]; try{ localStorage.removeItem('bb_cepea'); }catch(e){} $('cepeaMsg').textContent='✓ série voltou à da planilha'; market(); });
+document.addEventListener('click',e=>{ if(e.target.id==='h_loteVolta'){ ['h_cab','h_arr','h_custo','h_cmin'].forEach(k=>touched.delete(k)); calc(); } });
 $('mtClear').addEventListener('click',()=>{ MT_IDS.forEach(id=>$(id).value=''); mtSalvar(); calc(); });
 $('qUse').addEventListener('click',()=>{
   [...touched].forEach(k=>{ if(PRECO.test(k)) touched.delete(k); });
@@ -1536,14 +1607,15 @@ Object.keys(AJUDA).forEach(k=>{
 /* ── 1. guia rápido de primeira vez ── */
 const GUIA=[
   {t:'Quantas cabeças você vai confinar?',p:'Tudo começa pelo tamanho do lote.',f:[['c_cab','Cabeças','1']]},
-  {t:'Como o boi entra e sai do cocho?',p:'Peso médio por cabeça e quantos dias de confinamento.',f:[['c_pe','Peso de entrada (kg)','1'],['c_ps','Peso de saída (kg)','1'],['c_dias','Dias de cocho','1']]},
+  {t:'Como o boi engorda?',p:'Confinamento ou pasto, peso médio por cabeça na entrada e na saída, e quanto tempo.',f:()=>[['sistema','Sistema de engorda','sel'],['c_pe','Peso de entrada (kg)','1'],['c_ps','Peso de saída (kg)','1'],ehPasto()?['p_meses','Meses a pasto','1']:['c_dias','Dias de cocho','1']]},
   {t:'Quanto custa o boi magro?',p:'Preço da arroba da reposição na sua região. Se não sabe, deixe o valor de hoje.',f:[['c_magro','Boi magro (R$/@)','0.5']]},
   {t:'O veredito do seu lote',p:'',f:[]}];
 let gPasso=0;
 function guiaRender(){
   const g=GUIA[gPasso], ult=gPasso===GUIA.length-1, dots=GUIA.map((_,i)=>`<i class="${i<=gPasso?'on':''}"></i>`).join('');
   let corpo='';
-  if(!ult) corpo=`<div class="fields">${g.f.map(([id,lab,st])=>`<div class="field"><label for="g_${id}">${lab}</label><input id="g_${id}" data-alvo="${id}" type="number" step="${st}" value="${$(id).value}"></div>`).join('')}</div>`;
+  const F=typeof g.f==='function'?g.f():g.f;
+  if(!ult) corpo=`<div class="fields">${F.map(([id,lab,st])=>st==='sel'?`<div class="field"><label for="g_sis">${lab}</label><select id="g_sis" data-sis style="width:160px;padding:8px;border-radius:8px"><option value="conf"${ehPasto()?'':' selected'}>🐄 Confinamento</option><option value="pasto"${ehPasto()?' selected':''}>🌾 A pasto</option></select></div>`:`<div class="field"><label for="g_${id}">${lab}</label><input id="g_${id}" data-alvo="${id}" type="number" step="${st}" value="${$(id).value}"></div>`).join('')}</div>`;
   else{
     const c=CTX, [vc,vt]=veredito(c.phF,c.cArr,c.bm);
     corpo=`<div class="verdict ${vc}" style="margin-bottom:14px"><div class="v-title">${vt}</div></div>
@@ -1562,7 +1634,7 @@ function guiaRender(){
 function guiaAplicar(){
   let dias=false;
   $('gIn').querySelectorAll('input[data-alvo]').forEach(i=>{ const v=parseFloat(i.value); if(!isFinite(v)||v<=0) return; const id=i.dataset.alvo;
-    if($(id).value!==i.value){ $(id).value=i.value; touched.add(id); if(id==='c_dias') dias=true; } });
+    if($(id).value!==i.value){ $(id).value=i.value; touched.add(id); if(id==='c_dias'||id==='p_meses') dias=true; } });
   dias?escolher():calc();
 }
 function guiaFechar(){ $('guia').close(); try{ localStorage.setItem('bb_guia','1'); }catch(e){} }
@@ -1574,6 +1646,7 @@ $('gIn').addEventListener('click',e=>{
   else if(g==='historia'){ guiaFechar(); show('comece',true); document.querySelector('.tabs-wrap').scrollIntoView({behavior:'smooth'}); }
   else if(g==='plano'){ guiaFechar(); show('painel',true); $('plano').scrollIntoView({behavior:'smooth',block:'center'}); }
 });
+$('gIn').addEventListener('change',e=>{ if(e.target.matches('[data-sis]')){ guiaAplicar(); setSistema(e.target.value); escolher(); guiaRender(); } });
 $('gIn').addEventListener('keydown',e=>{ if(e.key==='Enter'&&e.target.matches('input')){ e.preventDefault(); const b=$('gIn').querySelector('[data-g=prox]'); if(b) b.click(); } });
 $('guia').addEventListener('cancel',()=>{ try{ localStorage.setItem('bb_guia','1'); }catch(e){} });
 $('guiaAbrir').addEventListener('click',()=>{ gPasso=0; guiaRender(); $('guia').showModal(); });
@@ -1617,6 +1690,7 @@ $('jgNovo').addEventListener('click',()=>{
 });
 $('jgVolta').addEventListener('click',()=>{ diarioIns().forEach((_,i)=>touched.delete('d'+i)); $('jgDec').hidden=true; $('jgRes').hidden=true; calc(); });
 
+setSistema(ehPasto()?'pasto':'conf');
 doCache(); escolher();
 buscar(); setInterval(()=>{ if(!document.hidden) buscar(); },120000);
 })();
