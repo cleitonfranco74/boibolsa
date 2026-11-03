@@ -58,7 +58,7 @@ nav{max-width:1180px;margin:0 auto;display:flex;align-items:center;justify-conte
 .hero h1{font-size:clamp(36px,5.4vw,60px);line-height:1.02;font-weight:800;max-width:760px;margin-bottom:16px}
 .hero p{color:#c5cfca;max-width:640px;font-size:16px}
 .hero p b{color:#f2d88a}
-.mods{max-width:1180px;margin:0 auto;padding:10px 32px 48px;display:grid;grid-template-columns:repeat(6,1fr);gap:12px}
+.mods{max-width:1180px;margin:0 auto;padding:10px 32px 48px;display:grid;grid-template-columns:repeat(7,1fr);gap:12px}
 .mod{display:flex;flex-direction:column;gap:6px;text-align:left;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.12);border-radius:12px;
   padding:16px;color:#f2f5f3;cursor:pointer;font:inherit;transition:background .15s,border-color .15s}
 .mod:hover{background:rgba(255,255,255,.08);border-color:rgba(255,255,255,.25)}
@@ -253,7 +253,7 @@ details .body p+p{margin-top:8px}
 footer{background:#0b100e;color:#8e9c95;padding:36px 32px;text-align:center;font-size:13px}
 footer b{color:#e8eeeb}
 
-@media(max-width:1000px){.mods{grid-template-columns:repeat(3,1fr)}}
+@media(max-width:1000px){.mods{grid-template-columns:repeat(4,1fr)}}
 @media(max-width:1000px){.quote{grid-template-columns:1fr 1fr}}
 @media(max-width:760px){.quote{grid-template-columns:1fr}.nav-links a:not(.hi){display:none}}
 @media(max-width:640px){
@@ -295,6 +295,7 @@ textarea#cepeaTxt{width:100%;min-height:110px;margin-top:10px;font:14px/1.5 ui-m
 
 <div class="mods">
   <button class="mod" data-go="painel"><b>🖥️ Painel</b><span>Os 6 números que decidem e o veredito do lote.</span><i>Abrir →</i></button>
+  <button class="mod" data-go="comece"><b>🥇 Comece aqui</b><span>A história de dois pecuaristas: um travou, o outro não.</span><i>Abrir →</i></button>
   <button class="mod" data-go="hedge"><b>🎯 Hedge BGI</b><span>Cenários, quanto travar e margem de garantia.</span><i>Abrir →</i></button>
   <button class="mod" data-go="estrategias"><b>🛡️ Futuro × Put</b><span>Trava de preço ou seguro de preço.</span><i>Abrir →</i></button>
   <button class="mod" data-go="confinamento"><b>🐄 Confinamento</b><span>90 dias de custos, ROI e trava do milho.</span><i>Abrir →</i></button>
@@ -306,6 +307,7 @@ textarea#cepeaTxt{width:100%;min-height:110px;margin-top:10px;font:14px/1.5 ui-m
 <div class="tabs-wrap">
   <div class="tabs" role="tablist">
     <button class="tab" role="tab" data-tab="painel" aria-selected="true"><b>🖥️ Painel do Lote</b><small>Veredito · 6 números</small></button>
+    <button class="tab" role="tab" data-tab="comece" aria-selected="false"><b>🥇 Comece aqui</b><small>Seu João × Seu Pedro</small></button>
     <button class="tab" role="tab" data-tab="hedge" aria-selected="false"><b>🎯 Hedge BGI</b><small>Boi gordo · B3</small></button>
     <button class="tab" role="tab" data-tab="estrategias" aria-selected="false"><b>🛡️ Futuro × Put</b><small>Trava · Seguro</small></button>
     <button class="tab" role="tab" data-tab="confinamento" aria-selected="false"><b>🐄 Confinamento</b><small>90 dias · Milho CCM</small></button>
@@ -440,6 +442,67 @@ textarea#cepeaTxt{width:100%;min-height:110px;margin-top:10px;font:14px/1.5 ui-m
     </div>
   </div>
   <div data-fb-util="Painel do Lote"></div>
+</section>
+
+<!-- ═══════════════ COMECE AQUI ═══════════════ -->
+<section class="panel" id="comece">
+  <div class="banner b-gold">
+    <span class="ico">🥇</span><span class="tag">Por onde começar</span>
+    <h2>Comece aqui</h2>
+    <div class="sub">A história de Seu João e Seu Pedro</div>
+    <p>Antes de qualquer conta, uma história de curral: <em>mesmo lote, mesmo cocho, mesma data de abate.</em> Um vendeu o boi na bolsa antes de engordar; o outro esperou o preço subir. O que aconteceu com o bolso de cada um explica, em cinco minutos, para que serve o hedge.</p>
+  </div>
+  <div class="section">
+    <h2>A história de dois pecuaristas</h2>
+    <p class="lead">Mesmo lote, mesmo confinamento, mesma queda de preço. Um travou. O outro não. Veja o bolso de cada um — e arraste o preço do abate para ver a história virar.</p>
+    <div class="grid">
+      <div class="card story">
+        <p>Em <span class="stL">março</span>, os dois compraram <b id="st_cab"></b> cabeças e botaram no confinamento. Mesmo cocho, mesmo custo, mesma data de abate: <span class="stA">outubro</span>.</p>
+        <p>Naquele dia, o boi de <span class="stA">outubro</span> valia <b id="st_m"></b> na bolsa. <b>Seu Pedro</b> pegou o telefone e vendeu <b id="st_ct"></b> contratos. <b>Seu João</b> disse: “vou esperar, isso ainda sobe”.</p>
+        <p>Veio <span class="stA">outubro</span>. O boi foi para <b id="st_o"></b>. Os dois embarcaram o mesmo gado, no mesmo frigorífico, no mesmo dia.</p>
+        <div class="fields" style="margin-top:14px">
+          <div class="field"><label for="s_mar">Preço do boi em <span class="stL up">MARÇO</span> — quando travou (R$/@)</label><input id="s_mar" type="number" step="1" value="360"></div>
+          <div class="field"><label for="s_out">Preço do boi em <span class="stA up">OUTUBRO</span> — no abate (R$/@)</label><input id="s_out" type="number" step="1" value="320"></div>
+        </div>
+        <div class="slide">
+          <label for="s_out_r">👉 Arraste: e se o boi fosse para…</label>
+          <input id="s_out_r" type="range" min="200" max="500" step="1" value="320" aria-label="Preço do boi no abate">
+          <div class="slide-ends"><span id="st_rmin"></span><b id="st_rval"></b><span id="st_rmax"></span></div>
+        </div>
+        <p class="hint" id="st_hint">Coloque R$ 400 em outubro e veja a história virar: Seu João passa na frente.</p>
+      </div>
+      <div class="tbl-wrap"><table id="tStory">
+        <thead><tr><th class="l"></th><th>Seu João<br><span style="text-transform:none;font-weight:500">“boi bom sempre vende”</span></th><th>Seu Pedro<br><span style="text-transform:none;font-weight:500">“travei e dormi em paz”</span></th></tr></thead>
+        <tbody></tbody>
+      </table></div>
+    </div>
+    <div class="card" style="margin-top:16px">
+      <h3>💵 O bolso de cada um, conforme o preço no abate</h3>
+      <div class="duelo"><div class="d-j"><span>Seu João · não travou</span><b id="st_j"></b></div><div class="d-p"><span>Seu Pedro · travou</span><b id="st_p"></b></div><div class="d-w" id="st_w"></div></div>
+      <div class="legend"><span><i style="background:var(--s2)"></i>Seu João (sem hedge)</span><span><i style="background:var(--s1)"></i>Seu Pedro (com hedge)</span></div>
+      <div class="chart" id="chStory"></div>
+      <p class="hint" id="st_hint2">A linha do Seu Pedro quase não se mexe: o que ele perde no frigorífico, ganha na bolsa. A do Seu João sobe e desce com o mercado. Onde as linhas se cruzam é o preço da trava.</p>
+    </div>
+  </div>
+  <div class="section">
+    <h2>🎯 A moral da história</h2>
+    <div class="grid g2">
+      <div class="card story"><h3>Seu Pedro não adivinhou o futuro</h3><p>Ele só decidiu, no dia da trava, que aquele preço já pagava as contas. Não previu a queda — se protegeu dela.</p></div>
+      <div class="card story"><h3>A bolsa pagou o que o frigorífico tirou</h3><p>Quando o boi caiu, Seu Pedro perdeu no curral e ganhou a mesma coisa na bolsa. Ficou no preço que travou.</p></div>
+      <div class="card story"><h3>E se o boi tivesse subido?</h3><p>Seu João levaria mais. Seu Pedro ficaria no preço dele — e ainda com lucro. Perde-se a loteria, não o lucro.</p></div>
+      <div class="card story"><h3>Seu João não é burro. É apostador.</h3><p>Ele apostou a margem de meses de cocho num palpite de preço. Às vezes ganha. Foi isso que quebrou muito confinador bom.</p></div>
+    </div>
+  </div>
+  <div class="section">
+    <h2>👉 E o seu lote?</h2>
+    <p class="lead">Os números da história vêm do lote da aba Confinamento (cabeças, pesos, custos) e do preço futuro de hoje na B3. Faça a conta com os seus números:</p>
+    <div class="plano-btns">
+      <button class="btn-q" type="button" data-guia>🧭 Fazer o guia rápido (4 perguntas)</button>
+      <button class="btn-q btn-sec" type="button" data-ir="confinamento">🐄 Ajustar o lote no Confinamento</button>
+      <button class="btn-q btn-sec" type="button" data-ir="hedge">🎯 Ver os cenários do hedge</button>
+    </div>
+  </div>
+  <div data-fb-util="Comece aqui"></div>
 </section>
 
 <!-- ═══════════════ HEDGE ═══════════════ -->
@@ -746,39 +809,6 @@ textarea#cepeaTxt{width:100%;min-height:110px;margin-top:10px;font:14px/1.5 ui-m
     <div class="tbl-wrap"><table id="tSens" class="heat"><thead></thead><tbody></tbody></table></div>
   </div>
 
-  <div class="section">
-    <h2>🥇 A história de dois pecuaristas</h2>
-    <p class="lead">Mesmo lote do confinamento, mesma queda de preço. Um travou. O outro não.</p>
-    <div class="grid g2">
-      <div class="card story">
-        <p>Em <span class="stL">março</span>, os dois compraram <b id="st_cab"></b> cabeças e botaram no confinamento. Mesmo cocho, mesmo custo, mesma data de abate: <span class="stA">outubro</span>.</p>
-        <p>Naquele dia, o boi de <span class="stA">outubro</span> valia <b id="st_m"></b> na bolsa. <b>Seu Pedro</b> pegou o telefone e vendeu <b id="st_ct"></b> contratos. <b>Seu João</b> disse: “vou esperar, isso ainda sobe”.</p>
-        <p>Veio <span class="stA">outubro</span>. O boi foi para <b id="st_o"></b>. Os dois embarcaram o mesmo gado, no mesmo frigorífico, no mesmo dia.</p>
-        <div class="fields" style="margin-top:14px">
-          <div class="field"><label for="s_mar">Preço do boi em <span class="stL up">MARÇO</span> — quando travou (R$/@)</label><input id="s_mar" type="number" step="1" value="360"></div>
-          <div class="field"><label for="s_out">Preço do boi em <span class="stA up">OUTUBRO</span> — no abate (R$/@)</label><input id="s_out" type="number" step="1" value="320"></div>
-        </div>
-        <div class="slide">
-          <label for="s_out_r">👉 Arraste: e se o boi fosse para…</label>
-          <input id="s_out_r" type="range" min="200" max="500" step="1" value="320" aria-label="Preço do boi no abate">
-          <div class="slide-ends"><span id="st_rmin"></span><b id="st_rval"></b><span id="st_rmax"></span></div>
-        </div>
-        <p class="hint" id="st_hint">Coloque R$ 400 em outubro e veja a história virar: Seu João passa na frente.</p>
-      </div>
-      <div class="tbl-wrap"><table id="tStory">
-        <thead><tr><th class="l"></th><th>Seu João<br><span style="text-transform:none;font-weight:500">“boi bom sempre vende”</span></th><th>Seu Pedro<br><span style="text-transform:none;font-weight:500">“travei e dormi em paz”</span></th></tr></thead>
-        <tbody></tbody>
-      </table></div>
-    </div>
-    <div class="card" style="margin-top:16px">
-      <h3>💵 O bolso de cada um, conforme o preço no abate</h3>
-      <div class="duelo"><div class="d-j"><span>Seu João · não travou</span><b id="st_j"></b></div><div class="d-p"><span>Seu Pedro · travou</span><b id="st_p"></b></div><div class="d-w" id="st_w"></div></div>
-      <div class="legend"><span><i style="background:var(--s2)"></i>Seu João (sem hedge)</span><span><i style="background:var(--s1)"></i>Seu Pedro (com hedge)</span></div>
-      <div class="chart" id="chStory"></div>
-      <p class="hint" id="st_hint2">A linha do Seu Pedro quase não se mexe: o que ele perde no frigorífico, ganha na bolsa. A do Seu João sobe e desce com o mercado. Onde as linhas se cruzam é o preço da trava.</p>
-    </div>
-    <div class="note"><b>Moral:</b> Seu Pedro não adivinhou o futuro — só decidiu, em <span class="stL">março</span>, que aquele preço já pagava as contas. Se o boi subir, Seu João leva mais; Seu Pedro fica no preço dele, e ainda com lucro. Perde-se a loteria, não o lucro.</div>
-  </div>
   <div data-fb-util="Confinamento"></div>
 </section>
 
@@ -1346,6 +1376,11 @@ document.addEventListener('input',e=>{ if(e.target.matches('input')) calc(); });
 let rw=0; addEventListener('resize',()=>{clearTimeout(rw); rw=setTimeout(calc,150);});
 const h=location.hash.slice(1); show(tabs.some(t=>t.dataset.tab===h)?h:'painel',false);
 
+/* atalhos para outras abas e para o guia */
+document.addEventListener('click',e=>{
+  const ir=e.target.closest('[data-ir]'); if(ir){ show(ir.dataset.ir,true); document.querySelector('.tabs-wrap').scrollIntoView({behavior:'smooth'}); return; }
+  if(e.target.closest('[data-guia]')){ $('guiaAbrir').click(); }
+});
 /* módulos do topo */
 document.querySelectorAll('.mod').forEach(b=>b.addEventListener('click',()=>{show(b.dataset.go,true); document.querySelector('.tabs-wrap').scrollIntoView({behavior:'smooth'});}));
 
@@ -1521,7 +1556,7 @@ function guiaRender(){
   $('gIn').innerHTML=`<div class="g-top"><span>Guia rápido · ${gPasso+1} de ${GUIA.length}</span><span class="g-dots">${dots}</span></div>
     <h3 id="gTitulo">${g.t}</h3>${g.p?`<p class="g-p">${g.p}</p>`:''}${corpo}
     <div class="g-nav"><button class="btn-q btn-sec" type="button" data-g="${gPasso?'voltar':'fechar'}">${gPasso?'← Voltar':'Pular o guia'}</button>
-    ${ult?`<span style="display:flex;gap:10px;flex-wrap:wrap"><button class="btn-q btn-sec" type="button" data-g="fechar">Explorar as abas</button><button class="btn-q" type="button" data-g="plano">📄 Ver meu plano de hedge</button></span>`:`<button class="btn-q" type="button" data-g="prox">Próximo →</button>`}</div>`;
+    ${ult?`<span style="display:flex;gap:10px;flex-wrap:wrap"><button class="btn-q btn-sec" type="button" data-g="historia">🥇 Ver a história</button><button class="btn-q" type="button" data-g="plano">📄 Ver meu plano de hedge</button></span>`:`<button class="btn-q" type="button" data-g="prox">Próximo →</button>`}</div>`;
   const i=$('gIn').querySelector('input'); if(i) i.focus();
 }
 function guiaAplicar(){
@@ -1536,6 +1571,7 @@ $('gIn').addEventListener('click',e=>{
   if(g==='prox'){ guiaAplicar(); gPasso++; guiaRender(); }
   else if(g==='voltar'){ guiaAplicar(); gPasso--; guiaRender(); }
   else if(g==='fechar'){ guiaFechar(); }
+  else if(g==='historia'){ guiaFechar(); show('comece',true); document.querySelector('.tabs-wrap').scrollIntoView({behavior:'smooth'}); }
   else if(g==='plano'){ guiaFechar(); show('painel',true); $('plano').scrollIntoView({behavior:'smooth',block:'center'}); }
 });
 $('gIn').addEventListener('keydown',e=>{ if(e.key==='Enter'&&e.target.matches('input')){ e.preventDefault(); const b=$('gIn').querySelector('[data-g=prox]'); if(b) b.click(); } });

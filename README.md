@@ -8,9 +8,10 @@ Kit de gestão e risco no mercado futuro do boi gordo, em versão web interativa
 
 - **Cotações ao vivo** ([cotacoes.html](https://cleitonfranco74.github.io/boibolsa/cotacoes.html)) — curva BGI e CCM buscada direto da B3 a cada minuto, com semáforo de trava para o seu custo
 - **Painel do Lote** — os 6 números que decidem e o veredito 🟢/🟡/🔴
+- **Comece aqui** — a história de Seu João e Seu Pedro (mesmo lote, um travou e o outro não), com controle deslizante do preço no abate, gráfico do bolso de cada um e a moral da história
 - **Hedge BGI** — cenários de preço no abate, ponto de equilíbrio, quanto travar, margem de garantia e diário de ajustes
 - **Futuro × Put** — trava de preço vs. seguro de preço, comprado × vendido
-- **Confinamento 90 dias** — custos, ROI, trava de milho CCM, sensibilidade e a história dos dois pecuaristas
+- **Confinamento 90 dias** — custos, ROI, trava de milho CCM e sensibilidade
 - **Mercado** — histórico CEPEA, previsão (Holt-Winters + ARIMA), taxa de conversão milho × boi e risco de base MT × B3
 - **Aprenda** — passo a passo, mitos e verdades, dicionário do pecuarista e exercícios
 
