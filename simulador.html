@@ -1050,12 +1050,12 @@ textarea#cepeaTxt{width:100%;min-height:110px;margin-top:10px;font:14px/1.5 ui-m
     <div class="grid g2" style="margin-top:16px">
       <div class="card">
         <h3>Boi gordo (R$/@)</h3>
-        <div class="legend"><span><i style="background:var(--s1)"></i>Histórico</span><span><i class="dash" style="color:var(--s1)"></i>Previsão</span><span><i style="background:rgba(57,135,229,.25);height:8px"></i>IC 95%</span><span><i style="background:var(--good);width:10px;height:10px;border-radius:50%"></i>Futuro B3 hoje</span></div>
+        <div class="legend"><span><i style="background:var(--s1)"></i>Histórico CEPEA</span><span><i class="dash" style="color:var(--s1)"></i>Projeção</span><span><i style="background:rgba(57,135,229,.25);height:8px"></i>IC 95%</span><span><i style="background:var(--good);width:10px;height:10px;border-radius:50%"></i>Futuro B3 hoje</span></div>
         <div class="chart" id="chBoi"></div>
       </div>
       <div class="card">
         <h3>Milho (R$/sc 60 kg)</h3>
-        <div class="legend"><span><i style="background:var(--s2)"></i>Histórico</span><span><i class="dash" style="color:var(--s2)"></i>Previsão</span><span><i style="background:rgba(217,89,38,.25);height:8px"></i>IC 95%</span></div>
+        <div class="legend"><span><i style="background:var(--s2)"></i>Histórico CEPEA</span><span><i class="dash" style="color:var(--s2)"></i>Projeção</span><span><i style="background:rgba(217,89,38,.25);height:8px"></i>IC 95%</span><span><i style="background:var(--good);width:10px;height:10px;border-radius:50%"></i>Futuro B3 hoje</span></div>
         <div class="chart" id="chMilho"></div>
       </div>
     </div>
@@ -1069,7 +1069,7 @@ textarea#cepeaTxt{width:100%;min-height:110px;margin-top:10px;font:14px/1.5 ui-m
   </div>
 
   <div class="section">
-    <h3>🔮 Previsão mês a mês</h3>
+    <h3>🔮 Projeção mês a mês</h3>
     <div class="tbl-wrap"><table id="tPrev">
       <thead><tr><th>Mês</th><th>Boi previsto</th><th>IC inf.</th><th>IC sup.</th><th>Milho previsto</th><th>IC inf.</th><th>IC sup.</th><th>Taxa conv.</th><th class="l">Sinal</th></tr></thead>
       <tbody></tbody>
@@ -1377,19 +1377,18 @@ function serieCepea(){
   return [...mp.entries()].sort((a,b)=>a[0]-b[0]).map(e=>e[1]);
 }
 /* suavização exponencial de Holt (tendência), parâmetros pelo menor erro de 1 passo */
-function holt(y,h){
+function holt(y){
   let best=null;
   for(let a=0.1;a<0.96;a+=0.05) for(let bt=0.05;bt<0.51;bt+=0.05){
     let L=y[0], T=y[1]-y[0], sse=0;
     for(let t=1;t<y.length;t++){ const f=L+T, e=y[t]-f; sse+=e*e; const L2=a*y[t]+(1-a)*(L+T); T=bt*(L2-L)+(1-bt)*T; L=L2; }
     if(!best||sse<best.sse) best={sse,L,T};
   }
-  const se=Math.sqrt(best.sse/Math.max(1,y.length-3));
-  return [...Array(h)].map((_,k)=>{ const f=best.L+(k+1)*best.T, w=1.96*se*Math.sqrt(k+1); return [f,f-w,f+w]; });
+  return {L:best.L, T:best.T, se:Math.sqrt(best.sse/Math.max(1,y.length-3))};
 }
 function market(){
   const H=serieCepea(), b=H.map(h=>h[1]), m=H.map(h=>h[2]), nH=H.length, iU=labIdx(H[nH-1][0]);
-  const ultB3=ROWS.BGI.reduce((mx,r)=>Math.max(mx,labIdx(r.mes)||0),0), H12=Math.max(12,Math.min(24,ultB3-iU));
+  const hoje=new Date(), iHoje=hoje.getFullYear()*12+hoje.getMonth(), atraso=iHoje-iU-1;
   const avg=a=>a.reduce((s,v)=>s+v,0)/a.length;
   const ab=avg(b), am=avg(m);
   let cov=0,vb=0,vm=0; b.forEach((v,i)=>{cov+=(v-ab)*(m[i]-am);vb+=(v-ab)**2;vm+=(m[i]-am)**2;});
@@ -1398,25 +1397,37 @@ function market(){
            ["Milho — mín / máx / média",`R$ ${nf1.format(Math.min(...m))} / ${nf1.format(Math.max(...m))} / ${nf2.format(am)}`],
            ["Correlação boi × milho · taxa conv. média",`${nf2.format(corr)} · ${nf2.format(conv)} sc/@`]];
   $('stats').innerHTML=S.map(s=>`<div class="kpi"><div class="k-lab">${s[0]}</div><div class="k-sub" style="font-size:15px;color:var(--text);margin-top:8px;font-weight:600">${s[1]}</div></div>`).join('');
-  const i0=labIdx(H[nH-1][0]), FL=[...Array(H12)].map((_,k)=>idxLab(i0+k+1));
-  const PB=holt(b,H12), PM=holt(m,H12);
-  const xs=[...H.map(h=>h[0]),...FL];
-  const hist=a=>[...a,...FL.map(()=>null)];
-  const prev=(last,P)=>[...H.map((_,i)=>i===nH-1?last:null),...P.map(p=>p[0])];
-  const band=P=>({lo:[...H.map(()=>null),...P.map(p=>p[1])],hi:[...H.map(()=>null),...P.map(p=>p[2])]});
-  const b3=xs.map(x=>{ const r=ROWS.BGI.find(r=>r.mes.toLowerCase()===x.toLowerCase()); return r?r.preco:null; });
-  const temB3=b3.some(v=>v!=null);
-  lineChart($('chBoi'),{xs,series:[{name:'Histórico',data:hist(b),color:'var(--s1)'},{name:'Previsão',data:prev(b[nH-1],PB),color:'var(--s1)',dash:true},...(temB3?[{name:'Futuro B3 hoje',data:b3,color:'var(--good)',dots:true}]:[])],bands:[{...band(PB),name:'IC 95%',color:'var(--s1)'}],yFmt:v=>'R$ '+nf0.format(v),markX:nH-1});
-  lineChart($('chMilho'),{xs,series:[{name:'Histórico',data:hist(m),color:'var(--s2)'},{name:'Previsão',data:prev(m[nH-1],PM),color:'var(--s2)',dash:true}],bands:[{...band(PM),name:'IC 95%',color:'var(--s2)'}],yFmt:v=>'R$ '+nf0.format(v),markX:nH-1});
+  // ponto de partida: último mês da série ou, se ela está atrasada, a cotação de hoje na B3 (vencimento mais próximo)
+  const sB=ROWS.BGI[0]?ROWS.BGI[0].preco:null, sM=ROWS.CCM[0]?ROWS.CCM[0].preco:null;
+  const ancora=atraso>1&&sB!=null, iS=ancora?iHoje:iU;
+  const ultB3=[...ROWS.BGI,...ROWS.CCM].reduce((mx,r)=>Math.max(mx,labIdx(r.mes)||0),0);
+  const iE=Math.min(iS+36,Math.max(iS+12,ultB3?ultB3+2:0,iHoje+12));      // pelo menos 12 meses depois de hoje e todos os vencimentos da B3
+  const FI=[]; for(let i=iU+1;i<=iE;i++) FI.push(i);
+  const xs=[...H.map(h=>h[0]),...FI.map(idxLab)];
+  const HB=holt(b), HM=holt(m);
+  const proj=(hw,base0)=>FI.map(i=>{ if(i<iS) return null; const k=i-iS, f=ancora?base0+k*hw.T:hw.L+k*hw.T, w=1.96*hw.se*Math.sqrt(Math.max(1,k)); return [f,f-w,f+w]; });
+  const PB=proj(HB,sB), PM=proj(HM,sM!=null?sM:HM.L+HM.T*(iHoje-iU));
+  const hist=a=>[...a,...FI.map(()=>null)];
+  const linha=(last,P)=>[...H.map((_,i)=>!ancora&&i===nH-1?last:null),...P.map(p=>p?p[0]:null)];
+  const band=P=>({lo:[...H.map(()=>null),...P.map(p=>p?p[1]:null)],hi:[...H.map(()=>null),...P.map(p=>p?p[2]:null)]});
+  const pontos=rows=>xs.map(x=>{ const r=rows.find(r=>r.mes.toLowerCase()===x.toLowerCase()); return r?r.preco:null; });
+  const b3B=pontos(ROWS.BGI), b3M=pontos(ROWS.CCM), temB=b3B.some(v=>v!=null), temM=b3M.some(v=>v!=null);
+  const mk=ancora?nH+(iHoje-iU-1):nH-1;
+  lineChart($('chBoi'),{xs,series:[{name:'Histórico CEPEA',data:hist(b),color:'var(--s1)'},{name:ancora?'Tendência a partir de hoje':'Previsão',data:linha(b[nH-1],PB),color:'var(--s1)',dash:true},
+    ...(temB?[{name:'Futuro B3 hoje',data:b3B,color:'var(--good)',dots:true}]:[])],bands:[{...band(PB),name:'IC 95%',color:'var(--s1)'}],yFmt:v=>'R$ '+nf0.format(v),markX:mk});
+  lineChart($('chMilho'),{xs,series:[{name:'Histórico CEPEA',data:hist(m),color:'var(--s2)'},{name:ancora?'Tendência a partir de hoje':'Previsão',data:linha(m[nH-1],PM),color:'var(--s2)',dash:true},
+    ...(temM?[{name:'Futuro B3 hoje',data:b3M,color:'var(--good)',dots:true}]:[])],bands:[{...band(PM),name:'IC 95%',color:'var(--s2)'}],yFmt:v=>'R$ '+nf0.format(v),markX:mk});
   const sig=t=>t>=6?pill('good','✅ Confinar'):t>=5?pill('warn','🟡 Avaliar'):pill('bad','🔴 Cautela');
-  $('tPrev').tBodies[0].innerHTML=FL.map((l,k)=>{const pb=PB[k], pm=PM[k], t=pb[0]/pm[0];return `<tr><td>${l}</td><td>${nf2.format(pb[0])}</td><td>${nf2.format(pb[1])}</td><td>${nf2.format(pb[2])}</td><td>${nf2.format(pm[0])}</td><td>${nf2.format(pm[1])}</td><td>${nf2.format(pm[2])}</td><td>${nf2.format(t)}</td><td class="l">${sig(t)}</td></tr>`;}).join('');
-  const hoje=new Date(), iHoje=hoje.getFullYear()*12+hoje.getMonth(), atraso=iHoje-i0-1;
+  const linhasT=FI.map((i,k)=>[i,PB[k],PM[k]]).filter(x=>x[1]&&x[0]>(ancora?iHoje:iU));
+  $('tPrev').tBodies[0].innerHTML=linhasT.map(([i,pb,pm])=>{const t=pb[0]/pm[0], fb=ROWS.BGI.find(r=>labIdx(r.mes)===i);return `<tr><td>${idxLab(i)}</td><td>${nf2.format(pb[0])}${fb?`<br><span style="color:var(--good);font-size:12px">B3: ${nf2.format(fb.preco)}</span>`:''}</td><td>${nf2.format(pb[1])}</td><td>${nf2.format(pb[2])}</td><td>${nf2.format(pm[0])}</td><td>${nf2.format(pm[1])}</td><td>${nf2.format(pm[2])}</td><td>${nf2.format(t)}</td><td class="l">${sig(t)}</td></tr>`;}).join('');
   const gaps=[]; for(let k=1;k<nH;k++){ const d=labIdx(H[k][0])-labIdx(H[k-1][0]); if(d>1) gaps.push(`${H[k-1][0]}–${H[k][0]}`); }
-  $('mkLead').textContent=`Médias mensais CEPEA/ESALQ de boi gordo (R$/@) e milho (R$/sc 60 kg), ${H[0][0].toLowerCase()} a ${H[nH-1][0].toLowerCase()}, e previsão de 12 meses por suavização exponencial (Holt), recalculada aqui a partir da série${temB3?'. Os pontos verdes são o preço que a B3 paga hoje por cada vencimento — a “previsão” do mercado.':'.'}`;
+  $('mkLead').textContent=`Médias mensais CEPEA/ESALQ de boi gordo (R$/@) e milho (R$/sc 60 kg), ${H[0][0].toLowerCase()} a ${H[nH-1][0].toLowerCase()}, e projeção até ${idxLab(iE).toLowerCase()} por suavização exponencial (Holt), recalculada aqui a partir da série.`+
+    (ancora?` Como a série está atrasada, a projeção parte da cotação de hoje na B3 (boi ${brl2(sB)}/@${sM!=null?`, milho ${brl2(sM)}/sc`:''}) e segue a tendência estatística da série.`:'')+
+    (temB?' Os pontos verdes são o preço que a B3 paga hoje por cada vencimento — a “previsão” do mercado.':'');
   const w=$('mkWarn'), msgs=[];
-  if(atraso>1) msgs.push(`⚠️ A série termina em ${H[nH-1][0].toLowerCase()} — faltam ${atraso} meses até hoje. Cole os meses novos no quadro abaixo para atualizar a previsão.`);
+  if(atraso>1) msgs.push(`⚠️ A série CEPEA termina em ${H[nH-1][0].toLowerCase()} — faltam ${atraso} meses até hoje (o trecho fica em branco no gráfico). Cole os meses novos no quadro abaixo para a projeção usar a série completa.`);
   if(gaps.length) msgs.push(`⚠️ Faltam meses na série (${gaps.join(', ')}): a previsão fica menos confiável.`);
-  msgs.push('Previsão estatística mostra tendência, não certeza: use junto com a curva da B3 e com a análise de mercado (câmbio, exportação, ciclo pecuário). Referência da planilha: Indicador Cepea/B3 a R$ 346,00/@ em 02/09/2026.');
+  msgs.push('Previsão estatística mostra tendência, não certeza: use junto com a curva da B3 e com a análise de mercado (câmbio, exportação, ciclo pecuário).');
   w.innerHTML=msgs.join('<br>');
 }
 
