@@ -1197,7 +1197,7 @@ function lineChart(el, {xs, series, bands=[], yFmt=v=>nf0.format(v), refLines=[]
   ticks.forEach(v=>{svg+=`<line class="grid-l" x1="${m.l}" x2="${W-m.r}" y1="${Y(v)}" y2="${Y(v)}"/><text class="axis-t" x="${m.l-8}" y="${Y(v)+4}" text-anchor="end">${yFmt(v)}</text>`;});
   if(lo<0&&hi>0) svg+=`<line x1="${m.l}" x2="${W-m.r}" y1="${Y(0)}" y2="${Y(0)}" stroke="#b9c6c0"/>`;
   const every=Math.max(1,Math.ceil(n/8));
-  xs.forEach((x,i)=>{ if(i%every===0||i===n-1&&n<=12) svg+=`<text class="axis-t" x="${X(i)}" y="${H-8}" text-anchor="middle">${x}</text>`;});
+  xs.forEach((x,i)=>{ const ult=i===n-1; if(ult||(i%every===0&&n-1-i>=every*0.6)) svg+=`<text class="axis-t" x="${X(i)}" y="${H-8}" text-anchor="${ult&&n>12?'end':'middle'}">${x}</text>`;});   // o último mês sempre aparece no eixo
   bands.forEach(b=>{ const idx=b.lo.map((v,i)=>v==null?null:i).filter(i=>i!=null);
     if(!idx.length) return;
     svg+=`<path d="M${idx.map(i=>X(i)+' '+Y(b.hi[i])).join('L')}L${idx.slice().reverse().map(i=>X(i)+' '+Y(b.lo[i])).join('L')}Z" fill="${b.color}" opacity=".18"/>`;});
