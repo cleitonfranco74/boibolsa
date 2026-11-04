@@ -1013,6 +1013,12 @@ textarea#cepeaTxt{width:100%;min-height:110px;margin-top:10px;font:14px/1.5 ui-m
     </div>
   </div>
   <div class="section">
+    <h2>📐 Passo a passo: como se constrói o custo da @</h2>
+    <p class="lead">A mesma conta da tabela, feita à mão, com os números do seu lote. Mude qualquer campo acima e os passos se refazem.</p>
+    <div class="steps" id="csPassos"></div>
+  </div>
+
+  <div class="section">
     <h2>🪜 A bolsa cobre qual nível de custo?</h2>
     <div class="grid g2">
       <div class="card">
@@ -1679,6 +1685,22 @@ function calc(){
     $('cs_graf').innerHTML=g; $('cs_pr').textContent=brl2(phF)+'/@';
     $('cs_nota').innerHTML=`<b>Como ler:</b> margem bruta positiva (receita > COE) paga as contas do ciclo; margem líquida positiva (receita > COT) mantém a estrutura de pé; lucro positivo (receita > CT) remunera também o capital e a terra. O custo por arroba usado no veredito do Painel (${brl2(cArr)}/@) inclui reposição, alimentação, sanidade, mão de obra, depreciação e juros — fica entre o COT e o CT desta aba.`;
     Object.assign(CTX,{coeA:pe1,cotA:pe2,ctA:pe3});
+    // passo a passo do custo da @
+    {
+      const r2=v=>brl2(v), soma=(itens,total)=>{ const it=itens.filter(i=>Math.abs(i[1])>=0.005); return (it.length?it.map(([n,v])=>`${n} ${r2(v)}`).join(' + '):'nenhum item')+` = <b>${r2(total)}</b> por cabeça`; };
+      const coeIt=[['reposição',val('cs_rep')],['alimentação',val('cs_ali')],['sanidade',val('cs_san')],['mão de obra',val('cs_mo')],['manutenção',val('cs_man')],['combustível e energia',val('cs_comb')],['frete',val('cs_frete')],['assistência e administração',val('cs_adm')],[`impostos (${nf1.format(val('cs_fun')).replace(',0','')}% da receita)`,imp],['custos de bolsa',val('cs_bolsa')]].concat(finan?[['juros do custeio financiado',juros]]:[]);
+      const rendS=val('c_rend'), rendE=val('c_rendE'), aE=val('c_pe')*rendE/100/15, ganho=aS-aE, semRep=ct-val('cs_rep');
+      const P=[
+        ['Quantas arrobas o boi entrega?',`Peso de saída × rendimento de carcaça ÷ 15 kg: <b>${nf0.format(val('c_ps'))} kg × ${nf1.format(rendS).replace(',0','')}% ÷ 15 = ${nf2.format(aS)} @ por cabeça</b>. No lote: ${nf2.format(aS)} @ × ${nf0.format(cc)} cabeças = ${nf0.format(totArr)} @.`,'É o divisor de todo o resto: errar o rendimento muda o custo da @ inteiro.'],
+        ['Some o que sai do bolso — COE',soma(coeIt,coe),'São os desembolsos do ciclo. Juros entram aqui só se o custeio for financiado.'],
+        ['Acrescente depreciação e família — COT',`COE ${r2(coe)} + depreciação ${r2(val('cs_dep'))} + mão de obra familiar ${r2(val('cs_mof'))} = <b>${r2(cot)}</b> por cabeça`,'Não sai do bolso hoje, mas a cerca, a máquina e o seu trabalho também custam.'],
+        ['Acrescente capital e terra — CT',`COT ${r2(cot)}${finan?'':` + juros do capital de giro ${r2(juros)}`} + capital fixo ${r2(kf)} + terra ${r2(terra)} = <b>${r2(ct)}</b> por cabeça`,'É o que o dinheiro e a terra renderiam em outro uso — o custo de oportunidade.'],
+        ['Divida pelas arrobas',`COE: ${r2(coe)} ÷ ${nf2.format(aS)} @ = <b>${r2(pe1)}/@</b><br>COT: ${r2(cot)} ÷ ${nf2.format(aS)} @ = <b>${r2(pe2)}/@</b><br>CT: ${r2(ct)} ÷ ${nf2.format(aS)} @ = <b>${r2(pe3)}/@</b>`,'Esses são os preços de equilíbrio: abaixo deles, cada nível de custo deixa de ser pago.'],
+        ['Compare com o preço da venda',`Preço esperado ${r2(phF)}/@${mtBoi!=null?' (futuro + base MT)':' (futuro da B3)'}:<br>− COE ${r2(pe1)} = ${sgn(phF-pe1,r2)}/@ · − COT ${r2(pe2)} = ${sgn(phF-pe2,r2)}/@ · − CT ${r2(pe3)} = ${sgn(phF-pe3,r2)}/@<br>No lote (× ${nf0.format(totArr)} @): margem bruta ${sgn(L(rbC-coe))}, margem líquida ${sgn(L(rbC-cot))}, lucro ${sgn(L(rbC-ct))}.`,'Se o preço da bolsa não cobre o COE, travar é travar prejuízo de caixa.'],
+        ['E o custo da @ produzida (só a engorda)?',`Entrou com ${nf0.format(val('c_pe'))} kg × ${nf1.format(rendE).replace(',0','')}% ÷ 15 = ${nf2.format(aE)} @; saiu com ${nf2.format(aS)} @; ganhou <b>${nf2.format(ganho)} @</b>. Tirando a reposição do CT: (${r2(ct)} − ${r2(val('cs_rep'))}) ÷ ${nf2.format(ganho)} @ = <b>${ganho>0?r2(semRep/ganho)+'/@ produzida':'—'}</b>.`,'Serve para comparar a eficiência da engorda entre lotes e safras, sem a influência do preço pago no boi magro. Usa o rendimento de compra (50%) na entrada e o de carcaça na saída, como no restante do simulador.']
+      ];
+      $('csPassos').innerHTML=P.map((x,i)=>`<div class="step"><div class="n">${i+1}</div><div><h4>${x[0]}</h4><p>${x[1]}</p><p class="hint" style="margin-top:6px">${x[2]}</p></div></div>`).join('');
+    }
   }
 
   // prazo, liquidez e rolagem
