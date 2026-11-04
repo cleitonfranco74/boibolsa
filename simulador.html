@@ -581,6 +581,12 @@ textarea#cepeaTxt{width:100%;min-height:110px;margin-top:10px;font:14px/1.5 ui-m
   </div>
 
   <div class="section">
+    <h2>🔁 Prazo, liquidez e rolagem</h2>
+    <p class="lead">Há contrato com movimento para o mês do seu abate? Em prazos longos (recria e engorda de 12 a 16 meses), muitas vezes não há — e a saída é travar num vencimento mais próximo e <b>rolar</b> a posição depois.</p>
+    <div class="card" id="rolBox"></div>
+  </div>
+
+  <div class="section">
     <h2>🔄 Cenários de preço no abate</h2>
     <p class="lead">Receita com hedge = receita física + (preço hedge − preço abate) × contratos × 330. Com hedge, o lucro fica travado; sem hedge, ele acompanha o mercado.</p>
     <div class="card">
@@ -829,6 +835,35 @@ textarea#cepeaTxt{width:100%;min-height:110px;margin-top:10px;font:14px/1.5 ui-m
     </div>
   </div>
 
+  <div class="section" id="prazos">
+    <h2>⏱️ Mesmo bezerro, dois prazos</h2>
+    <p class="lead">Compare engordar o bezerro da calculadora acima (peso e preço por kg) em dois prazos — por exemplo, 7 meses em sistema intensivo × 16 meses de recria e engorda a pasto. O ganho de peso e o custo mensal abaixo são <b>apenas exemplos</b>: use os números da sua fazenda.</p>
+    <div class="grid g2">
+      <div class="card">
+        <h3>Prazo A</h3>
+        <div class="fields">
+          <div class="field"><label for="pz_a_m">Meses até o abate</label><input id="pz_a_m" type="number" step="1" min="1" value="7"></div>
+          <div class="field"><label for="pz_a_gmd">Ganho de peso (kg/cab/dia)</label><input id="pz_a_gmd" type="number" step="0.05" min="0" value="0.95"></div>
+          <div class="field"><label for="pz_a_c">Custo de alimentação e manejo (R$/cab/mês)</label><input id="pz_a_c" type="number" step="5" min="0" value="300"></div>
+        </div>
+      </div>
+      <div class="card">
+        <h3>Prazo B</h3>
+        <div class="fields">
+          <div class="field"><label for="pz_b_m">Meses até o abate</label><input id="pz_b_m" type="number" step="1" min="1" value="16"></div>
+          <div class="field"><label for="pz_b_gmd">Ganho de peso (kg/cab/dia)</label><input id="pz_b_gmd" type="number" step="0.05" min="0" value="0.55"></div>
+          <div class="field"><label for="pz_b_c">Custo de alimentação e manejo (R$/cab/mês)</label><input id="pz_b_c" type="number" step="5" min="0" value="110"></div>
+        </div>
+      </div>
+    </div>
+    <div class="tbl-wrap" style="margin-top:16px"><table id="tPrazos">
+      <thead><tr><th class="l">Bezerro de <span id="pzKg"></span> a <span id="pzPkg"></span>/kg · lote de <span id="pzCab"></span> cabeças</th><th id="pzA"></th><th id="pzB"></th></tr></thead>
+      <tbody></tbody>
+    </table></div>
+    <div class="note" id="pzNota"></div>
+    <p class="hint">Contas: arrobas no abate = (peso do bezerro + ganho × dias) × rendimento de carcaça (aba acima) ÷ 15. Custo = bezerro + custo mensal × meses + sanidade, mão de obra e depreciação + juros (sobre o bezerro no prazo todo e sobre os demais custos na metade do prazo). Preço = vencimento BGI do mês do abate + base MT (se informada). Margem de garantia conforme a aba Hedge.</p>
+  </div>
+
   <div class="section so-conf">
     <h2>🌽 Trava do milho — contratos CCM/B3</h2>
     <p class="lead">Hedge de compra (comprado) do insumo do confinamento. A necessidade de milho vem dos parâmetros do lote acima.</p>
@@ -995,7 +1030,7 @@ const nf1 = new Intl.NumberFormat('pt-BR',{minimumFractionDigits:1,maximumFracti
 const nf2 = new Intl.NumberFormat('pt-BR',{minimumFractionDigits:2,maximumFractionDigits:2});
 const brl = v => (v<0?'−':'')+'R$ '+nf0.format(Math.abs(Math.round(v)));
 const brl2 = v => (v<0?'−':'')+'R$ '+nf2.format(Math.abs(v));
-const pct = v => nf1.format(v*100)+'%';
+const pct = v => (v<0?'−':'')+nf1.format(Math.abs(v)*100)+'%';
 const sgn = (v,f=brl) => `<span class="${v>0?'pos':v<0?'neg':''}">${f(v)}</span>`;
 const pill = (cls,txt) => `<span class="pill ${cls}">${txt}</span>`;
 const range = (a,b,s) => { const r=[]; for(let x=a;x<=b+1e-9;x+=s) r.push(+x.toFixed(4)); return r; };
@@ -1175,7 +1210,7 @@ const mtv=id=>{ const v=parseFloat($(id).value); return isFinite(v)&&v>0?v:null;
 const mtBaseMilho=()=>{ const m=mtv('mt_milho'); return m!=null&&B3MS?m-B3MS:0; };
 try{ const sv=JSON.parse(localStorage.getItem('bb_mt')||'{}'); MT_IDS.forEach(id=>{ if(sv[id]!=null) $(id).value=sv[id]; }); }catch(e){}
 /* cenário vindo de um link (?c_cab=100&sistema=pasto…): os valores do link valem como digitados */
-const CENARIO_IDS=/^(r_spot|h_\w+|c_\w+|p_\w+|m_\w+|s_mar|s_out|mt_\w+|ag_\w+)$/;
+const CENARIO_IDS=/^(r_spot|h_\w+|c_\w+|p_\w+|m_\w+|s_mar|s_out|mt_\w+|ag_\w+|pz_\w+)$/;
 function linkCenario(){
   const q=new URLSearchParams();
   if(ehPasto()) q.set('sistema','pasto');
@@ -1457,6 +1492,77 @@ function calc(){
     const rE=val('c_rendE')/100, pvMag=val('c_magro')*rE/15, agL=pv>0?(pvMag/pv-1)*100:0;
     $('ag_lote').innerHTML=`No lote deste simulador, o boi magro sai a ${brl2(val('c_magro'))}/@ (${brl2(pvMag)}/kg vivo, a ${nf0.format(rE*100)}% de rendimento na compra): ${agL>=0?`ágio de <b>${pc(agL)}</b>`:`deságio de <b>${pc(-agL)}</b>`} sobre o boi gordo. Para ver se a reposição fecha a conta, olhe o custo por arroba e a folga do lote acima.`;
   }
+  // prazo, liquidez e rolagem
+  {
+    const B=ROWS.BGI, dd=diasEng(), abISO=new Date(Date.now()+dd*864e5).toISOString().slice(0,10);
+    const mesNome=isoD=>{ const [y,m]=isoD.split('-'); return MESL[+m-1]+'/'+y.slice(2); };
+    const mesesEntre=(a,b)=>{ const [y1,m1]=a.split('-').map(Number), [y2,m2]=b.split('-').map(Number); return (y2-y1)*12+(m2-m1); };
+    const prazoTxt=ehPasto()?`${nf0.format(dd/30)} meses`:`${nf0.format(dd)} dias`;
+    let h=`<div class="kv"><span>Abate previsto</span><b>${mesNome(abISO)} (${prazoTxt})</b></div>`;
+    if(!B.length){
+      h+=`<p class="story" style="margin-top:10px">Sem cotação da B3 agora: não dá para conferir quais vencimentos existem e quanto movimento cada um tem. Veja a página <a href="cotacoes.html" style="color:var(--green)">Cotações ao vivo</a>.</p>`;
+    }else{
+      const vu=B.find(r=>r.mes===$('h_venc').value.trim().toLowerCase())||SEL.fut||B[B.length-1], ult=B[B.length-1];
+      const liq=B.reduce((a,r)=>(r.aberto||0)>(a.aberto||0)?r:a,B[0]), maxA=liq.aberto||0;
+      const slope=mesesEntre(B[0].venc,ult.venc)>0?(ult.preco-B[0].preco)/mesesEntre(B[0].venc,ult.venc):0;
+      h+=`<div class="kv"><span>Vencimento usado</span><b>${vu.mes} · ${vu.symb} · ${brl2(vu.preco)}/@</b></div>
+          <div class="kv"><span>Contratos em aberto nele</span><b>${nf0.format(vu.aberto||0)}</b></div>
+          <div class="kv"><span>Vencimento mais negociado hoje</span><b>${liq.mes} · ${nf0.format(maxA)} em aberto</b></div>
+          <div class="kv"><span>Último vencimento negociado</span><b>${ult.mes}</b></div>`;
+      const rolCusto=ctr*custoCtr;
+      if(SEL.alem){
+        const g=Math.max(1,mesesEntre(ult.venc,abISO)), adj=slope*g;
+        h+=`<div class="note warn" style="margin-top:12px"><b>⚠️ O abate (${mesNome(abISO)}) fica ${g} ${g>1?'meses':'mês'} depois do último vencimento negociado (${ult.mes}).</b> Não dá para travar direto o mês do abate hoje.</div>
+          <p class="story" style="margin-top:10px"><b>🔁 Plano de rolagem:</b> ① venda hoje ${ctr} contrato(s) ${ult.symb} a ${brl2(ult.preco)}/@ (ou no mais negociado, ${liq.symb}); ② quando o vencimento do abate começar a ser negociado, recompre os contratos e venda o mesmo número no novo vencimento; ③ encerre na semana do abate.</p>
+          <p class="story" style="margin-top:6px">Quanto pode mudar o preço travado na rolagem? Ninguém sabe hoje — depende da diferença entre os vencimentos no dia. Como referência, a curva de hoje ${slope>=0?'sobe':'cai'} ${brl2(Math.abs(slope))}/@ por mês; se esse desenho se mantiver, a rolagem ${slope>=0?'acrescentaria':'tiraria'} cerca de <b>${brl2(Math.abs(adj))}/@</b>. Cada rolagem custa mais uma ida e volta: ~<b>${brl(rolCusto)}</b> no lote.</p>`;
+      }else if(maxA>0&&(vu.aberto||0)<0.2*maxA){
+        const spr=vu.preco-liq.preco;
+        h+=`<div class="note warn" style="margin-top:12px"><b>⚠️ Pouco movimento em ${vu.mes}</b> (${nf0.format(vu.aberto||0)} contratos em aberto, contra ${nf0.format(maxA)} em ${liq.mes}). Entrar e sair pode sair caro.</div>
+          <p class="story" style="margin-top:10px"><b>🔁 Alternativa:</b> travar hoje no ${liq.symb} (${brl2(liq.preco)}/@) e rolar para ${vu.mes} quando ele ganhar movimento. Hoje a diferença entre os dois é de ${sgn(spr,brl2)}/@ — é o que a rolagem precisaria “recuperar”. Cada rolagem custa ~${brl(rolCusto)} no lote.</p>`;
+      }else{
+        h+=`<p class="story" style="margin-top:10px">✅ Há vencimento com movimento para o mês do abate: dá para travar direto, de preferência em etapas.</p>`;
+      }
+      if(dd>300) h+=`<p class="hint" style="margin-top:8px">Prazo longo: são ${prazoTxt} de ajustes diários. Uma alta forte do boi no meio do caminho pode pedir bastante reforço de caixa antes de você vender o gado — reserve além dos 20% ou considere a put (piso sem ajuste diário), se houver opção para o prazo.</p>`;
+    }
+    $('rolBox').innerHTML=h;
+  }
+
+  // mesmo bezerro, dois prazos
+  {
+    const kg=val('ag_kg'), pkg=val('ag_pkg'), rC=val('c_rend')/100, finM=val('c_fin')/100, fixos=val('c_san')+val('c_mo')+val('c_dep'), B=ROWS.BGI;
+    const mesNome=isoD=>{ const [y,m]=isoD.split('-'); return MESL[+m-1]+'/'+y.slice(2); };
+    const prazo=k=>{
+      const m=Math.max(1,val(`pz_${k}_m`)), gmd=val(`pz_${k}_gmd`), cm=val(`pz_${k}_c`), dd=m*30.44;
+      const abISO=new Date(Date.now()+dd*864e5).toISOString().slice(0,10);
+      const v=B.length?(B.find(r=>r.venc>=abISO)||B[B.length-1]):null, alem=!!(v&&v.venc<abISO);
+      const P=(v?v.preco:ph)+base, pf=kg+gmd*dd, arrC=pf*rC/15, compra=kg*pkg, outros=cm*m+fixos;
+      const juros=compra*finM*m+outros*finM*m/2, custo=compra+outros+juros, cA=arrC>0?custo/arrC:0, folga=P-cA, luc=folga*arrC;
+      const maxCompra=(P*arrC-outros-outros*finM*m/2)/(1+finM*m), maxKg=kg>0?maxCompra/kg:0;
+      const ctrL=Math.round(arrC*cc/330), caixa=ctrL*mpc*1.2, porDez=ctrL*330*10;
+      return {m,v,alem,abISO,P,pf,arrC,custo,cA,folga,luc,lm:luc/m,ret:custo>0?luc/custo/m:0,maxKg,ctrL,caixa,porDez,ver:veredito(P,cA,Infinity)};
+    };
+    const A=prazo('a'), Bz=prazo('b');
+    $('pzKg').textContent=nf0.format(kg)+' kg'; $('pzPkg').textContent=brl2(pkg); $('pzCab').textContent=nf0.format(cc);
+    $('pzA').textContent=`Prazo A · ${nf0.format(A.m)} meses`; $('pzB').textContent=`Prazo B · ${nf0.format(Bz.m)} meses`;
+    const vcel=x=>x.v?`${x.v.mes} · ${x.v.symb}${x.alem?' ⚠️ além da curva — rolar':''}<br><span style="color:var(--text2)">${nf0.format(x.v.aberto||0)} contratos em aberto</span>`:`sem cotação da B3 — usa ${brl2(ph)}`;
+    const L=[['Peso no abate',x=>`${nf0.format(x.pf)} kg · ${nf2.format(x.arrC)} @`],
+      ['Abate e vencimento na B3',vcel],
+      ['Preço futuro'+(mtBoi!=null?' + base MT':'')+' (R$/@)',x=>brl2(x.P)],
+      ['Custo por cabeça',x=>brl(x.custo)],
+      ['Custo por arroba',x=>brl2(x.cA)],
+      ['Folga (R$/@)',x=>sgn(x.folga,brl2)],
+      ['Lucro por cabeça',x=>sgn(x.luc)],
+      ['Lucro por cabeça por mês',x=>`${sgn(x.lm)} · ${sgn(x.ret,pct)}/mês`],
+      ['Máximo a pagar pelo bezerro p/ empatar',x=>`${brl2(x.maxKg)}/kg`],
+      ['Contratos e caixa na bolsa (lote)',x=>`${x.ctrL} contratos · ${brl(x.caixa)}<br><span style="color:var(--text2)">cada R$ 10/@ de alta pede ${brl(x.porDez)}</span>`],
+      ['Veredito',x=>pill(x.ver[0],x.ver[1].split(' — ')[0])]];
+    $('tPrazos').tBodies[0].innerHTML=L.map(([n,f])=>`<tr><td class="l">${n}</td><td>${f(A)}</td><td>${f(Bz)}</td></tr>`).join('');
+    const melhor=A.lm>=Bz.lm?['A',A]:['B',Bz], outro=melhor[0]==='A'?Bz:A;
+    $('pzNota').innerHTML=`<b>Leitura:</b> por mês de capital empatado, o prazo ${melhor[0]} ${melhor[1].lm>=0?'rende mais':'perde menos'} (${brl(melhor[1].lm)} contra ${brl(outro.lm)} por cabeça por mês). `+
+      `Com o bezerro a ${brl2(pkg)}/kg, o prazo A empata pagando até ${brl2(A.maxKg)}/kg e o prazo B até ${brl2(Bz.maxKg)}/kg. `+
+      (Bz.alem||A.alem?'Um dos prazos fica além dos vencimentos negociados: trave num vencimento com movimento e role (veja “Prazo, liquidez e rolagem” na aba Hedge). ':'')+
+      `Quanto mais longo o prazo, mais meses de ajustes diários e mais incerteza de peso, data e base.`;
+  }
   $('mtO1').innerHTML=mtBoi!=null?`${sgn(base,brl2)}/@ <span style="color:var(--text2);font-weight:400">(${brl2(mtBoi)} − ${brl2(spot)})</span>`:'— usando B3';
   $('mtO2').textContent=`${brl2(phF)}/@`+(mtBoi!=null?` (futuro ${brl2(ph)} + base)`:' (= futuro B3)');
   $('mtO3').innerHTML=mtMil!=null&&B3MS?`${sgn(mbase,brl2)}/sc <span style="color:var(--text2);font-weight:400">(${brl2(mtMil)} − ${brl2(B3MS)})</span>`:'— usando B3';
@@ -1549,7 +1655,7 @@ function escolher(){
   const fut=touched.has('h_venc')?B.find(r=>r.mes===hv)||null:(B.find(r=>r.venc>=abate)||B[B.length-1]||null);
   const ms=C[0]||null;
   const mf=touched.has('m_venc')?C.find(r=>r.mes===mv)||null:(proximo(C,meio));
-  SEL={spot,fut,ms,mf,abate};
+  SEL={spot,fut,ms,mf,abate,alem:!touched.has('h_venc')&&B.length>0&&!B.some(r=>r.venc>=abate)};
   auto('h_venc',fut?fut.mes:mesLab(abate)); auto('m_venc',mf?mf.mes:mesLab(meio));
   const temB=B.length>0, temC=C.length>0;
   auto('r_spot',spot?spot.preco:(temB?NaN:FALLBACK.spot),2);
@@ -1571,7 +1677,7 @@ function painelCotacao(){
   const dig=id=>touched.has(id)?' · <b>valor digitado</b>':'';
   if(spot){
     $('qBoiS').innerHTML=`vencimento mais próximo (≈ indicador CEPEA/B3) · ${varTxt(spot)}${dig('r_spot')}`;
-    $('qFutS').innerHTML=fut?`${fut.mes} · 1º vencimento após o abate (${ehPasto()?nf0.format(dias/30)+' meses':dias+' dias'}) · ${varTxt(fut)}${dig('h_preco')}`:`vencimento ${$('h_venc').value} não está sendo negociado na B3${dig('h_preco')}`;
+    $('qFutS').innerHTML=fut?`${fut.mes} · ${SEL.alem?'⚠️ último vencimento negociado — o abate fica depois (veja a rolagem na aba Hedge)':'1º vencimento após o abate'} (${ehPasto()?nf0.format(dias/30)+' meses':dias+' dias'}) · ${varTxt(fut)}${dig('h_preco')}`:`vencimento ${$('h_venc').value} não está sendo negociado na B3${dig('h_preco')}`;
     $('qMilS').innerHTML=(ms&&mf)?`spot ${ms.mes} · futuro ${mf.mes} (meio do confinamento)`:'milho sem cotação na B3 agora';
     $('qNote').innerHTML=(ONLINE?`✓ Cotação da B3${quando?` de <b>${quando}</b>`:''}.`:`⚠️ B3 indisponível agora — usando a última cotação salva neste navegador${quando?` (${quando})`:''}.`)+
       ` Todas as abas montam o exemplo com a cotação atual e o preço futuro da @; ao digitar um valor num campo amarelo, o seu prevalece.`;
