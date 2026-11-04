@@ -311,6 +311,7 @@ textarea#cepeaTxt{width:100%;min-height:110px;margin-top:10px;font:14px/1.5 ui-m
   <button class="mod" data-go="estrategias"><b>🛡️ Futuro × Put</b><span>Trava de preço ou seguro de preço.</span><i>Abrir →</i></button>
   <button class="mod" data-go="confinamento"><b>🐄 Confinamento</b><span>Confinamento ou boi a pasto: custos, ROI e trava do milho.</span><i>Abrir →</i></button>
   <button class="mod" data-go="custos"><b>🧮 Custos</b><span>COE, COT e CT: o custo do lote em três níveis.</span><i>Abrir →</i></button>
+  <button class="mod" data-go="milho"><b>🌽 Hedge do milho</b><span>Custo da saca (COE, COT, CT) e trava em CCM para quem vende milho.</span><i>Abrir →</i></button>
   <button class="mod" data-go="mercado"><b>📊 Mercado</b><span>CEPEA, previsão e risco de base.</span><i>Abrir →</i></button>
   <button class="mod" data-go="aprenda"><b>🎓 Aprenda</b><span>Passo a passo, mitos e exercícios.</span><i>Abrir →</i></button>
 </div>
@@ -324,6 +325,7 @@ textarea#cepeaTxt{width:100%;min-height:110px;margin-top:10px;font:14px/1.5 ui-m
     <button class="tab" role="tab" data-tab="estrategias" aria-selected="false"><b>🛡️ Futuro × Put</b><small>Trava · Seguro</small></button>
     <button class="tab" role="tab" data-tab="confinamento" aria-selected="false"><b>🐄 Confinamento</b><small>Confinamento · Pasto</small></button>
     <button class="tab" role="tab" data-tab="custos" aria-selected="false"><b>🧮 Custos</b><small>COE · COT · CT</small></button>
+    <button class="tab" role="tab" data-tab="milho" aria-selected="false"><b>🌽 Hedge do milho</b><small>CCM · custo IMEA</small></button>
     <button class="tab" role="tab" data-tab="mercado" aria-selected="false"><b>📊 Mercado</b><small>CEPEA · Base MT</small></button>
     <button class="tab" role="tab" data-tab="aprenda" aria-selected="false"><b>🎓 Aprenda</b><small>Passo a passo · Exercícios</small></button>
   </div>
@@ -1035,6 +1037,104 @@ textarea#cepeaTxt{width:100%;min-height:110px;margin-top:10px;font:14px/1.5 ui-m
   <div data-fb-util="Custos"></div>
 </section>
 
+<!-- ═══════════════ MILHO ═══════════════ -->
+<section class="panel" id="milho">
+  <div class="banner b-gold">
+    <span class="ico">🌽</span><span class="tag">Milho CCM · B3</span>
+    <h2>Hedge do milho</h2>
+    <div class="sub">Para quem produz e vende milho</div>
+    <p>Quanto custa produzir cada saca e quanto a bolsa paga hoje pela sua colheita. <em>Quem produz milho fica vendido em CCM</em> — o contrário do confinador, que compra milho e fica comprado (trava do milho na aba Confinamento).</p>
+  </div>
+  <div class="section">
+    <h2>🌱 Lavoura e venda</h2>
+    <div class="grid g2">
+      <div class="card">
+        <div class="fields">
+          <div class="field"><label for="mi_area">Área plantada (ha)</label><input id="mi_area" type="number" step="10" min="0" value="500"></div>
+          <div class="field"><label for="mi_prod">Produtividade esperada (sc 60 kg/ha)</label><input id="mi_prod" type="number" step="1" min="0" value="110"></div>
+          <div class="field"><label for="mi_pct">Parte da produção a travar (%)</label><input id="mi_pct" type="number" step="5" min="0" value="50"></div>
+          <div class="field"><label for="mi_meses">Meses até a venda (colheita)</label><input id="mi_meses" type="number" step="1" min="1" value="8"></div>
+          <div class="field"><label for="mi_base">Base da sua região (R$/sc, preço local − B3)</label><input id="mi_base" type="number" step="0.5" value="0"></div>
+          <div class="field"><label for="mi_mg">Margem de garantia (% do montante)</label><input id="mi_mg" type="number" step="0.5" min="0" value="10"></div>
+        </div>
+        <p class="hint">Base: em MT o milho costuma valer bem menos que a referência da B3 (Campinas/SP), por causa do frete até o consumo e o porto. Se você digitou o milho MT no Painel, a base vem calculada (MT − CCM de hoje). Confira a base da sua praça nos boletins do IMEA.</p>
+      </div>
+      <div class="card">
+        <h3>📊 Produção e contrato</h3>
+        <div class="kv"><span>Produção esperada</span><b id="mi_o1"></b></div>
+        <div class="kv"><span>Vencimento CCM usado</span><b id="mi_o2"></b></div>
+        <div class="kv"><span>Preço futuro (B3)</span><b id="mi_o3"></b></div>
+        <div class="kv"><span>Preço esperado na sua região (futuro + base)</span><b id="mi_o4"></b></div>
+        <div class="kv"><span>Sacas a travar · contratos de 450 sc</span><b id="mi_o5"></b></div>
+        <div class="kv"><span>Margem de garantia + 20% de reserva</span><b id="mi_o6"></b></div>
+        <div class="kv"><span>Cada R$ 1/sc de alta pede de ajuste</span><b id="mi_o7"></b></div>
+      </div>
+    </div>
+  </div>
+  <div class="section">
+    <h2>🧮 Custo de produção por hectare — estrutura IMEA (COE · COT · CT)</h2>
+    <div class="note warn" style="margin-bottom:16px">⚠️ <b>Os valores abaixo são um exemplo didático, não são números do IMEA.</b> Troque pelos do boletim de custo de produção do milho do IMEA para a sua safra e região (R$ por hectare).</div>
+    <div class="grid g3">
+      <div class="card">
+        <h3>COE — custeio e desembolsos (R$/ha)</h3>
+        <div class="fields">
+          <div class="field"><label for="mi_sem">Sementes</label><input id="mi_sem" type="number" step="10" min="0" value="650"></div>
+          <div class="field"><label for="mi_fer">Fertilizantes e corretivos</label><input id="mi_fer" type="number" step="10" min="0" value="1200"></div>
+          <div class="field"><label for="mi_def">Defensivos (herbicidas, inseticidas, fungicidas)</label><input id="mi_def" type="number" step="10" min="0" value="650"></div>
+          <div class="field"><label for="mi_ope">Operações com máquinas (combustível, manutenção)</label><input id="mi_ope" type="number" step="10" min="0" value="550"></div>
+          <div class="field"><label for="mi_mo">Mão de obra contratada</label><input id="mi_mo" type="number" step="10" min="0" value="120"></div>
+          <div class="field"><label for="mi_pos">Pós-colheita (frete, secagem, armazenagem)</label><input id="mi_pos" type="number" step="10" min="0" value="400"></div>
+          <div class="field"><label for="mi_out">Assistência técnica, seguro e outros</label><input id="mi_out" type="number" step="10" min="0" value="150"></div>
+          <div class="field"><label for="mi_fin">Despesas financeiras (juros do custeio)</label><input id="mi_fin" type="number" step="10" min="0" value="120"></div>
+          <div class="field"><label for="mi_imp">Impostos e contribuições sobre a venda (% da receita)</label><input id="mi_imp" type="number" step="0.1" min="0" value="1.5"></div>
+        </div>
+      </div>
+      <div class="card">
+        <h3>COT — + depreciação e família (R$/ha)</h3>
+        <div class="fields">
+          <div class="field"><label for="mi_dep">Depreciação de máquinas e benfeitorias</label><input id="mi_dep" type="number" step="10" min="0" value="250"></div>
+          <div class="field"><label for="mi_mof">Mão de obra familiar / pró-labore</label><input id="mi_mof" type="number" step="10" min="0" value="0"></div>
+        </div>
+        <h3 style="margin-top:18px">CT — + capital e terra</h3>
+        <div class="fields">
+          <div class="field"><label for="mi_tx">Remuneração do capital de custeio (% ao ano)</label><input id="mi_tx" type="number" step="0.5" min="0" value="6"></div>
+          <div class="field"><label for="mi_terra">Remuneração da terra / arrendamento (R$/ha na safra)</label><input id="mi_terra" type="number" step="10" min="0" value="0"></div>
+        </div>
+        <p class="hint">Capital: o custeio (COE) fica empatado em média metade do ciclo. Terra: na safrinha, use a parte do arrendamento que cabe ao milho (ou zero se a terra já é paga pela soja).</p>
+      </div>
+      <div>
+        <div class="card" style="margin-bottom:16px">
+          <h3>Custo por saca</h3>
+          <div class="kv"><span>COE</span><b id="mi_c1"></b></div>
+          <div class="kv"><span>COT</span><b id="mi_c2"></b></div>
+          <div class="kv"><span>CT</span><b id="mi_c3"></b></div>
+          <div class="kv total"><span>Margem bruta da lavoura (receita − COE)</span><b id="mi_r1"></b></div>
+          <div class="kv total"><span>Lucro (receita − CT)</span><b id="mi_r2"></b></div>
+        </div>
+        <div class="verdict" id="mi_v"><div class="v-title" id="mi_vt"></div><div class="v-sub" id="mi_vs"></div></div>
+      </div>
+    </div>
+  </div>
+  <div class="section">
+    <h2>📐 Passo a passo do custo da saca</h2>
+    <div class="steps" id="miPassos"></div>
+  </div>
+  <div class="section">
+    <h2>🔄 Cenários de preço na colheita</h2>
+    <p class="lead">Preço do CCM no vencimento. A parte travada recebe o preço do contrato (mais a base); o resto recebe o preço do dia. Já descontados custos de bolsa e IR sobre o ganho (aba Hedge).</p>
+    <div class="card">
+      <div class="legend"><span><i style="background:var(--s1)"></i>Com hedge</span><span><i style="background:var(--s2)"></i>Sem hedge</span><span><i class="dash" style="color:var(--bad)"></i>Custo total (CT)</span></div>
+      <div class="chart" id="chMi"></div>
+    </div>
+    <div class="tbl-wrap" style="margin-top:16px"><table id="tMi">
+      <thead><tr><th>CCM na colheita (R$/sc)</th><th>Preço na região</th><th>Receita física</th><th>Resultado na bolsa</th><th>Lucro c/ hedge</th><th>Lucro s/ hedge</th><th class="l">Situação</th></tr></thead>
+      <tbody></tbody>
+    </table></div>
+    <div class="note">Lição: travar parte da safra garante o preço do que já paga o custo; o resto fica livre para aproveitar alta. A base (frete até a referência) é o risco que o contrato não elimina.</div>
+  </div>
+  <div data-fb-util="Hedge do milho"></div>
+</section>
+
 <!-- ═══════════════ MERCADO ═══════════════ -->
 <section class="panel" id="mercado">
   <div class="banner b-wine">
@@ -1047,15 +1147,15 @@ textarea#cepeaTxt{width:100%;min-height:110px;margin-top:10px;font:14px/1.5 ui-m
     <h2>📊 Histórico CEPEA e previsão de preços</h2>
     <p class="lead" id="mkLead">Médias mensais de boi gordo (R$/@) e milho (R$/sc 60 kg) e previsão de 12 meses.</p>
     <div class="note warn" id="mkWarn"></div>
-    <div class="grid g2" style="margin-top:16px">
+    <div class="grid" id="mkGraficos" style="margin-top:16px">
       <div class="card">
         <h3>Boi gordo (R$/@)</h3>
-        <div class="legend"><span><i style="background:var(--s1)"></i>Histórico CEPEA</span><span><i class="dash" style="color:var(--s1)"></i>Projeção</span><span><i style="background:rgba(57,135,229,.25);height:8px"></i>IC 95%</span><span><i style="background:var(--good);width:10px;height:10px;border-radius:50%"></i>Futuro B3 hoje</span></div>
+        <div class="legend"><span><i style="background:var(--s1)"></i>Histórico CEPEA</span><span><i class="dash" style="color:var(--s1)"></i>Projeção</span><span><i style="background:rgba(57,135,229,.25);height:8px"></i>IC 95%</span><span><i style="background:var(--good);width:10px;height:10px;border-radius:50%"></i>Futuro B3 hoje</span><span class="leg-sd"><i class="dash" style="color:#9aa9a2"></i>Sem dados CEPEA</span></div>
         <div class="chart" id="chBoi"></div>
       </div>
       <div class="card">
         <h3>Milho (R$/sc 60 kg)</h3>
-        <div class="legend"><span><i style="background:var(--s2)"></i>Histórico CEPEA</span><span><i class="dash" style="color:var(--s2)"></i>Projeção</span><span><i style="background:rgba(217,89,38,.25);height:8px"></i>IC 95%</span><span><i style="background:var(--good);width:10px;height:10px;border-radius:50%"></i>Futuro B3 hoje</span></div>
+        <div class="legend"><span><i style="background:var(--s2)"></i>Histórico CEPEA</span><span><i class="dash" style="color:var(--s2)"></i>Projeção</span><span><i style="background:rgba(217,89,38,.25);height:8px"></i>IC 95%</span><span><i style="background:var(--good);width:10px;height:10px;border-radius:50%"></i>Futuro B3 hoje</span><span class="leg-sd"><i class="dash" style="color:#9aa9a2"></i>Sem dados CEPEA</span></div>
         <div class="chart" id="chMilho"></div>
       </div>
     </div>
@@ -1339,7 +1439,7 @@ const mtv=id=>{ const v=parseFloat($(id).value); return isFinite(v)&&v>0?v:null;
 const mtBaseMilho=()=>{ const m=mtv('mt_milho'); return m!=null&&B3MS?m-B3MS:0; };
 try{ const sv=JSON.parse(localStorage.getItem('bb_mt')||'{}'); MT_IDS.forEach(id=>{ if(sv[id]!=null) $(id).value=sv[id]; }); }catch(e){}
 /* cenário vindo de um link (?c_cab=100&sistema=pasto…): os valores do link valem como digitados */
-const CENARIO_IDS=/^(r_spot|h_\w+|c_\w+|p_\w+|m_\w+|s_mar|s_out|mt_\w+|ag_\w+|pz_\w+|es_\w+|cs_\w+)$/;
+const CENARIO_IDS=/^(r_spot|h_\w+|c_\w+|p_\w+|m_\w+|s_mar|s_out|mt_\w+|ag_\w+|pz_\w+|es_\w+|cs_\w+|mi_\w+)$/;
 function linkCenario(){
   const q=new URLSearchParams();
   if(ehPasto()) q.set('sistema','pasto');
@@ -1413,9 +1513,12 @@ function market(){
   const pontos=rows=>xs.map(x=>{ const r=rows.find(r=>r.mes.toLowerCase()===x.toLowerCase()); return r?r.preco:null; });
   const b3B=pontos(ROWS.BGI), b3M=pontos(ROWS.CCM), temB=b3B.some(v=>v!=null), temM=b3M.some(v=>v!=null);
   const mk=ancora?nH+(iHoje-iU-1):nH-1;
-  lineChart($('chBoi'),{xs,series:[{name:'Histórico CEPEA',data:hist(b),color:'var(--s1)'},{name:ancora?'Tendência a partir de hoje':'Previsão',data:linha(b[nH-1],PB),color:'var(--s1)',dash:true},
+  // ligação tracejada entre o último mês do CEPEA e a cotação de hoje (meses sem dado mensal)
+  const ponte=(last,hoje)=>xs.map((_,j)=>{ if(!ancora||hoje==null||j<nH-1||j>mk) return null; const t=(j-(nH-1))/(mk-(nH-1)); return last+(hoje-last)*t; });
+  const semDado=()=> 'sem dado mensal';
+  lineChart($('chBoi'),{xs,series:[{name:'Histórico CEPEA',data:hist(b),color:'var(--s1)'},...(ancora?[{name:'Sem dados CEPEA',data:ponte(b[nH-1],sB),color:'#9aa9a2',dash:true,fmt:semDado}]:[]),{name:ancora?'Tendência a partir de hoje':'Previsão',data:linha(b[nH-1],PB),color:'var(--s1)',dash:true},
     ...(temB?[{name:'Futuro B3 hoje',data:b3B,color:'var(--good)',dots:true}]:[])],bands:[{...band(PB),name:'IC 95%',color:'var(--s1)'}],yFmt:v=>'R$ '+nf0.format(v),markX:mk});
-  lineChart($('chMilho'),{xs,series:[{name:'Histórico CEPEA',data:hist(m),color:'var(--s2)'},{name:ancora?'Tendência a partir de hoje':'Previsão',data:linha(m[nH-1],PM),color:'var(--s2)',dash:true},
+  lineChart($('chMilho'),{xs,series:[{name:'Histórico CEPEA',data:hist(m),color:'var(--s2)'},...(ancora&&sM!=null?[{name:'Sem dados CEPEA',data:ponte(m[nH-1],sM),color:'#9aa9a2',dash:true,fmt:semDado}]:[]),{name:ancora?'Tendência a partir de hoje':'Previsão',data:linha(m[nH-1],PM),color:'var(--s2)',dash:true},
     ...(temM?[{name:'Futuro B3 hoje',data:b3M,color:'var(--good)',dots:true}]:[])],bands:[{...band(PM),name:'IC 95%',color:'var(--s2)'}],yFmt:v=>'R$ '+nf0.format(v),markX:mk});
   const sig=t=>t>=6?pill('good','✅ Confinar'):t>=5?pill('warn','🟡 Avaliar'):pill('bad','🔴 Cautela');
   const linhasT=FI.map((i,k)=>[i,PB[k],PM[k]]).filter(x=>x[1]&&x[0]>(ancora?iHoje:iU));
@@ -1424,8 +1527,9 @@ function market(){
   $('mkLead').textContent=`Médias mensais CEPEA/ESALQ de boi gordo (R$/@) e milho (R$/sc 60 kg), ${H[0][0].toLowerCase()} a ${H[nH-1][0].toLowerCase()}, e projeção até ${idxLab(iE).toLowerCase()} por suavização exponencial (Holt), recalculada aqui a partir da série.`+
     (ancora?` Como a série está atrasada, a projeção parte da cotação de hoje na B3 (boi ${brl2(sB)}/@${sM!=null?`, milho ${brl2(sM)}/sc`:''}) e segue a tendência estatística da série.`:'')+
     (temB?' Os pontos verdes são o preço que a B3 paga hoje por cada vencimento — a “previsão” do mercado.':'');
+  document.querySelectorAll('.leg-sd').forEach(e=>e.hidden=!ancora);
   const w=$('mkWarn'), msgs=[];
-  if(atraso>1) msgs.push(`⚠️ A série CEPEA termina em ${H[nH-1][0].toLowerCase()} — faltam ${atraso} meses até hoje (o trecho fica em branco no gráfico). Cole os meses novos no quadro abaixo para a projeção usar a série completa.`);
+  if(atraso>1) msgs.push(`⚠️ A série CEPEA termina em ${H[nH-1][0].toLowerCase()} — faltam ${atraso} meses até hoje (no gráfico, esse trecho é só uma ligação cinza tracejada, sem preços). Cole os meses novos no quadro abaixo para a projeção usar a série completa.`);
   if(gaps.length) msgs.push(`⚠️ Faltam meses na série (${gaps.join(', ')}): a previsão fica menos confiável.`);
   msgs.push('Previsão estatística mostra tendência, não certeza: use junto com a curva da B3 e com a análise de mercado (câmbio, exportação, ciclo pecuário).');
   w.innerHTML=msgs.join('<br>');
@@ -1712,6 +1816,47 @@ function calc(){
       ];
       $('csPassos').innerHTML=P.map((x,i)=>`<div class="step"><div class="n">${i+1}</div><div><h4>${x[0]}</h4><p>${x[1]}</p><p class="hint" style="margin-top:6px">${x[2]}</p></div></div>`).join('');
     }
+  }
+
+  // hedge do milho (produtor vendido em CCM)
+  {
+    const C=ROWS.CCM, area=Math.max(0,val('mi_area')), prod=Math.max(0,val('mi_prod')), sacas=area*prod, pctT=Math.min(100,Math.max(0,val('mi_pct')))/100;
+    const venISO=new Date(Date.now()+Math.max(1,val('mi_meses'))*30.44*864e5).toISOString().slice(0,10);
+    const v=C.length?(C.find(r=>r.venc>=venISO)||C[C.length-1]):null, alem=!!(v&&v.venc<venISO);
+    const futM=v?v.preco:val('m_fut'), mtM=mtv('mt_milho');
+    if(mtM!=null&&C.length) auto('mi_base',mtM-C[0].preco,2);
+    const baseM=val('mi_base'), pEsp=futM+baseM;
+    const trav=sacas*pctT, ctrMi=Math.round(trav/450), cobMi=ctrMi*450, margMi=ctrMi*450*futM*val('mi_mg')/100;
+    $('mi_o1').textContent=`${nf0.format(sacas)} sc (${nf0.format(area)} ha × ${nf0.format(prod)} sc/ha)`;
+    $('mi_o2').innerHTML=v?`${v.mes} · ${v.symb}${alem?' ⚠️ último negociado — rolar':''} · ${nf0.format(v.aberto||0)} em aberto`:'sem cotação da B3 — usa o preço futuro da aba Confinamento';
+    $('mi_o3').textContent=brl2(futM)+'/sc'; $('mi_o4').innerHTML=`${brl2(pEsp)}/sc <span style="color:var(--text2);font-weight:400">(base ${brl2(baseM)})</span>`;
+    $('mi_o5').textContent=`${nf0.format(trav)} sc · ${ctrMi} contrato(s) = ${nf0.format(cobMi)} sc`; $('mi_o6').textContent=brl(margMi*1.2); $('mi_o7').textContent=brl(cobMi);
+    // custo por hectare
+    const ciclo=Math.max(1,val('mi_meses')), recHa=pEsp*prod, imp=recHa*Math.max(0,val('mi_imp'))/100;
+    const itens=[['sementes',val('mi_sem')],['fertilizantes e corretivos',val('mi_fer')],['defensivos',val('mi_def')],['operações com máquinas',val('mi_ope')],['mão de obra',val('mi_mo')],['pós-colheita',val('mi_pos')],['assistência, seguro e outros',val('mi_out')],['despesas financeiras',val('mi_fin')],[`impostos (${nf1.format(val('mi_imp')).replace(',0','')}% da receita)`,imp]];
+    const coe=itens.reduce((a,i)=>a+i[1],0), cot=coe+val('mi_dep')+val('mi_mof'), capital=coe*val('mi_tx')/100*ciclo/12/2, ct=cot+capital+val('mi_terra');
+    const pS=x=>prod>0?x/prod:0, [s1,s2,s3]=[pS(coe),pS(cot),pS(ct)];
+    $('mi_c1').textContent=brl2(s1)+'/sc'; $('mi_c2').textContent=brl2(s2)+'/sc'; $('mi_c3').textContent=brl2(s3)+'/sc';
+    $('mi_r1').innerHTML=sgn((recHa-coe)*area); $('mi_r2').innerHTML=sgn((recHa-ct)*area);
+    let cl,ti,su;
+    if(pEsp>=s3){cl='good';ti='🟢 TRAVA — a bolsa cobre o custo total';su=`Preço esperado ${brl2(pEsp)}/sc contra CT de ${brl2(s3)}/sc: dá para garantir ${brl2(pEsp-s3)}/sc de lucro na parte travada.`;}
+    else if(pEsp>=s1){cl='warn';ti='🟡 Cobre o custeio, não o custo total';su=`Paga o COE (${brl2(s1)}/sc), mas não remunera tudo (CT ${brl2(s3)}/sc). Trave o que garante o custeio e deixe o resto respirar — ou use put.`;}
+    else {cl='bad';ti='🔴 NÃO TRAVA — não cobre nem o custeio';su=`O preço esperado (${brl2(pEsp)}/sc) fica abaixo do COE (${brl2(s1)}/sc). Travar agora é travar prejuízo de caixa.`;}
+    $('mi_v').className='verdict '+cl; $('mi_vt').textContent=ti; $('mi_vs').textContent=su;
+    const P=[
+      ['Quanto a lavoura entrega?',`${nf0.format(area)} ha × ${nf0.format(prod)} sc/ha = <b>${nf0.format(sacas)} sacas</b>.`,'A produtividade é o divisor do custo: 10 sc/ha a menos encarecem cada saca.'],
+      ['Some o custeio — COE por hectare',itens.filter(i=>Math.abs(i[1])>=0.005).map(([n,x])=>`${n} ${brl2(x)}`).join(' + ')+` = <b>${brl2(coe)}/ha</b>`,'Tudo o que sai do bolso para plantar, tratar, colher e entregar.'],
+      ['Some depreciação e família — COT',`${brl2(coe)} + depreciação ${brl2(val('mi_dep'))} + família ${brl2(val('mi_mof'))} = <b>${brl2(cot)}/ha</b>`,'A máquina e o trabalho da família também custam, mesmo sem sair do bolso hoje.'],
+      ['Some capital e terra — CT',`${brl2(cot)} + capital ${brl2(capital)} + terra ${brl2(val('mi_terra'))} = <b>${brl2(ct)}/ha</b>`,'O que o dinheiro do custeio e a terra renderiam em outro uso.'],
+      ['Divida pela produtividade',`COE ${brl2(coe)} ÷ ${nf0.format(prod)} sc = <b>${brl2(s1)}/sc</b> · COT <b>${brl2(s2)}/sc</b> · CT <b>${brl2(s3)}/sc</b>`,'Esses são os preços de equilíbrio da saca.'],
+      ['Compare com o preço da sua região',`Futuro ${brl2(futM)} + base ${brl2(baseM)} = <b>${brl2(pEsp)}/sc</b> → sobra ${sgn(pEsp-s1,brl2)} sobre o COE e ${sgn(pEsp-s3,brl2)} sobre o CT por saca.`,'Se o preço da região não cobre o COE, travar é travar prejuízo.']];
+    $('miPassos').innerHTML=P.map((x,i)=>`<div class="step"><div class="n">${i+1}</div><div><h4>${x[0]}</h4><p>${x[1]}</p><p class="hint" style="margin-top:6px">${x[2]}</p></div></div>`).join('');
+    // cenários
+    const m5=Math.round(futM/5)*5, PX=range(Math.max(5,m5-25),m5+25,5), custoTot=ct*area;
+    const fC=x=>(x+baseM)*sacas+liq((futM-x)*cobMi,ctrMi)-custoTot, fS=x=>(x+baseM)*sacas-custoTot;
+    $('tMi').tBodies[0].innerHTML=PX.map(x=>{ const lc=fC(x), ls=fS(x), bol=(futM-x)*cobMi;
+      return `<tr class="${Math.abs(x-futM)<2.5?'hl':''}"><td>${nf0.format(x)}</td><td>${brl2(x+baseM)}</td><td>${brl((x+baseM)*sacas)}</td><td>${sgn(bol)}</td><td>${sgn(lc)}</td><td>${sgn(ls)}</td><td class="l">${lc>=0?(ls<0?pill('good','✅ Hedge segurou'):x<futM?pill('good','✅ Hedge vantajoso'):pill('neu','⚖️ Mercado subiu — custo do seguro')):pill('bad','🔴 Prejuízo mesmo c/ hedge')}</td></tr>`; }).join('');
+    lineChart($('chMi'),{xs:PX.map(x=>'R$ '+x),series:[{name:'Com hedge',data:PX.map(fC),color:'var(--s1)',fmt:brl},{name:'Sem hedge',data:PX.map(fS),color:'var(--s2)',fmt:brl}],refLines:[{y:0,color:'var(--bad)'}],yFmt:kfmt});
   }
 
   // prazo, liquidez e rolagem

@@ -13,6 +13,7 @@ Kit de gestão e risco no mercado futuro do boi gordo, em versão web interativa
 - **Futuro × Put** — trava de preço vs. seguro de preço, comprado × vendido
 - **Confinamento ou boi a pasto** — custos, ROI, trava de milho CCM e sensibilidade (no confinamento); meses de engorda e custo de pasto e suplementação por cabeça/mês (a pasto), e a calculadora **📊 ágio do bezerro em relação ao boi gordo**, passo a passo, e o quadro **⏱️ mesmo bezerro, dois prazos** (ex.: 7 × 16 meses: custo por arroba, folga, lucro por mês, caixa na bolsa e o máximo a pagar pelo bezerro)
 - **Custos (COE · COT · CT)** — custo do lote em três níveis: Custo Operacional Efetivo (desembolsos), Custo Operacional Total (+ depreciação e mão de obra familiar) e Custo Total (+ remuneração do capital e da terra), com margem bruta, margem líquida, lucro, preço de equilíbrio de cada nível a escada “a bolsa cobre qual nível?” e um passo a passo de 7 etapas que constrói o custo da @ com os números do lote (inclusive o custo da @ produzida na engorda)
+- **Hedge do milho** — para quem produz e vende milho: custo por hectare na estrutura do IMEA (COE, COT e CT; valores de exemplo para trocar pelos do boletim), custo por saca com passo a passo, base da região, contratos CCM de 450 sc, margem e cenários de preço na colheita com e sem hedge
 - **Mercado** — histórico CEPEA, previsão (Holt-Winters + ARIMA), taxa de conversão milho × boi e risco de base MT × B3
 - **Aprenda** — passo a passo, mitos e verdades, dicionário do pecuarista e exercícios
 
