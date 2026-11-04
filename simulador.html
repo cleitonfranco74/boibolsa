@@ -312,6 +312,7 @@ textarea#cepeaTxt{width:100%;min-height:110px;margin-top:10px;font:14px/1.5 ui-m
   <button class="mod" data-go="confinamento"><b>🐄 Confinamento</b><span>Confinamento ou boi a pasto: custos, ROI e trava do milho.</span><i>Abrir →</i></button>
   <button class="mod" data-go="custos"><b>🧮 Custos</b><span>COE, COT e CT: o custo do lote em três níveis.</span><i>Abrir →</i></button>
   <button class="mod" data-go="milho"><b>🌽 Hedge do milho</b><span>Custo da saca (COE, COT, CT) e trava em CCM para quem vende milho.</span><i>Abrir →</i></button>
+  <button class="mod" data-go="soja"><b>🫘 Hedge da soja</b><span>Custo da saca, trava em dólar e câmbio para quem vende soja.</span><i>Abrir →</i></button>
   <button class="mod" data-go="mercado"><b>📊 Mercado</b><span>CEPEA, previsão e risco de base.</span><i>Abrir →</i></button>
   <button class="mod" data-go="aprenda"><b>🎓 Aprenda</b><span>Passo a passo, mitos e exercícios.</span><i>Abrir →</i></button>
 </div>
@@ -326,6 +327,7 @@ textarea#cepeaTxt{width:100%;min-height:110px;margin-top:10px;font:14px/1.5 ui-m
     <button class="tab" role="tab" data-tab="confinamento" aria-selected="false"><b>🐄 Confinamento</b><small>Confinamento · Pasto</small></button>
     <button class="tab" role="tab" data-tab="custos" aria-selected="false"><b>🧮 Custos</b><small>COE · COT · CT</small></button>
     <button class="tab" role="tab" data-tab="milho" aria-selected="false"><b>🌽 Hedge do milho</b><small>CCM · custo IMEA</small></button>
+    <button class="tab" role="tab" data-tab="soja" aria-selected="false"><b>🫘 Hedge da soja</b><small>Dólar · custo IMEA</small></button>
     <button class="tab" role="tab" data-tab="mercado" aria-selected="false"><b>📊 Mercado</b><small>CEPEA · Base MT</small></button>
     <button class="tab" role="tab" data-tab="aprenda" aria-selected="false"><b>🎓 Aprenda</b><small>Passo a passo · Exercícios</small></button>
   </div>
@@ -625,12 +627,13 @@ textarea#cepeaTxt{width:100%;min-height:110px;margin-top:10px;font:14px/1.5 ui-m
     <div class="card">
       <div class="tbl-wrap" style="border:0">
         <table id="tEsc">
-          <thead><tr><th class="l">Etapa</th><th>% do lote</th><th>Daqui a (meses)</th><th>Preço do futuro (R$/@)</th><th>Contratos</th><th class="l">Quando</th><th>Travado acumulado</th></tr></thead>
+          <thead><tr><th class="l">Etapa</th><th>% do lote</th><th>Daqui a (meses)</th><th>Preço do futuro (R$/@)</th><th>Contratos</th><th class="l">Quando</th><th>Travado acumulado</th><th>Arrobas travadas</th><th>Valor travado</th><th>Margem da etapa</th></tr></thead>
           <tbody>
-            <tr><td class="l">1ª trava</td><td><input id="es_p1" type="number" step="5" min="0" max="100" value="25" aria-label="Percentual da 1ª trava"></td><td><input id="es_m1" type="number" step="1" min="0" value="0" aria-label="Meses até a 1ª trava"></td><td><input id="es_px1" type="number" step="0.5" min="0" aria-label="Preço da 1ª trava"></td><td id="es_c1"></td><td class="l" id="es_q1"></td><td id="es_a1"></td></tr>
-            <tr><td class="l">2ª trava</td><td><input id="es_p2" type="number" step="5" min="0" max="100" value="50" aria-label="Percentual da 2ª trava"></td><td><input id="es_m2" type="number" step="1" min="0" aria-label="Meses até a 2ª trava"></td><td><input id="es_px2" type="number" step="0.5" min="0" aria-label="Preço da 2ª trava"></td><td id="es_c2"></td><td class="l" id="es_q2"></td><td id="es_a2"></td></tr>
-            <tr><td class="l">3ª trava (restante)</td><td id="es_p3"></td><td><input id="es_m3" type="number" step="1" min="0" aria-label="Meses até a 3ª trava"></td><td><input id="es_px3" type="number" step="0.5" min="0" aria-label="Preço da 3ª trava"></td><td id="es_c3"></td><td class="l" id="es_q3"></td><td id="es_a3"></td></tr>
+            <tr><td class="l">1ª trava</td><td><input id="es_p1" type="number" step="5" min="0" max="100" value="25" aria-label="Percentual da 1ª trava"></td><td><input id="es_m1" type="number" step="1" min="0" value="0" aria-label="Meses até a 1ª trava"></td><td><input id="es_px1" type="number" step="0.5" min="0" aria-label="Preço da 1ª trava"></td><td id="es_c1"></td><td class="l" id="es_q1"></td><td id="es_a1"></td><td id="es_ar1"></td><td id="es_vl1"></td><td id="es_mg1"></td></tr>
+            <tr><td class="l">2ª trava</td><td><input id="es_p2" type="number" step="5" min="0" max="100" value="50" aria-label="Percentual da 2ª trava"></td><td><input id="es_m2" type="number" step="1" min="0" aria-label="Meses até a 2ª trava"></td><td><input id="es_px2" type="number" step="0.5" min="0" aria-label="Preço da 2ª trava"></td><td id="es_c2"></td><td class="l" id="es_q2"></td><td id="es_a2"></td><td id="es_ar2"></td><td id="es_vl2"></td><td id="es_mg2"></td></tr>
+            <tr><td class="l">3ª trava (restante)</td><td id="es_p3"></td><td><input id="es_m3" type="number" step="1" min="0" aria-label="Meses até a 3ª trava"></td><td><input id="es_px3" type="number" step="0.5" min="0" aria-label="Preço da 3ª trava"></td><td id="es_c3"></td><td class="l" id="es_q3"></td><td id="es_a3"></td><td id="es_ar3"></td><td id="es_vl3"></td><td id="es_mg3"></td></tr>
           </tbody>
+          <tfoot><tr style="font-weight:700"><td class="l">Total do lote</td><td>100%</td><td></td><td id="es_tpm"></td><td id="es_tc"></td><td></td><td></td><td id="es_tar"></td><td id="es_tvl"></td><td id="es_tmg"></td></tr></tfoot>
         </table>
       </div>
       <p class="story" style="margin-top:12px"><b>E se o mercado andar até a última trava?</b></p>
@@ -645,6 +648,32 @@ textarea#cepeaTxt{width:100%;min-height:110px;margin-top:10px;font:14px/1.5 ui-m
       <div class="kpi"><div class="k-lab">Preço médio travado</div><div class="k-val" id="es_pm"></div><div class="k-sub" id="es_pms"></div></div>
       <div class="kpi"><div class="k-lab">Lucro se o abate for no preço médio</div><div class="k-val" id="es_lm"></div><div class="k-sub">Já descontados custos de bolsa</div></div>
       <div class="kpi"><div class="k-lab">Caixa máximo na bolsa</div><div class="k-val" id="es_cx"></div><div class="k-sub">Margem + 20% com o lote todo travado</div></div>
+    </div>
+    <div class="card" style="margin-top:16px">
+      <h3>🎯 Simule o preço no abate — resultado de cada etapa</h3>
+      <div class="slide">
+        <label for="es_par">👉 Arraste: e se o boi estiver a… no abate?</label>
+        <input id="es_par" type="range" min="200" max="500" step="1" value="400" aria-label="Preço no abate">
+        <div class="slide-ends"><span id="es_pmin"></span><b id="es_pval"></b><span id="es_pmax"></span></div>
+      </div>
+      <div class="tbl-wrap" style="margin-top:14px"><table id="tEscSim">
+        <thead><tr><th class="l">Etapa</th><th>Contratos</th><th>Arrobas</th><th>Preço travado</th><th>Preço no abate</th><th>Resultado na bolsa</th><th class="l">Leitura</th></tr></thead>
+        <tbody></tbody>
+      </table></div>
+      <div class="grid g2" style="margin-top:14px">
+        <div>
+          <div class="kv"><span>Venda do boi no frigorífico (lote)</span><b id="es_s1"></b></div>
+          <div class="kv"><span>Resultado na bolsa (3 etapas)</span><b id="es_s2"></b></div>
+          <div class="kv"><span>Custos de bolsa e IR</span><b id="es_s3"></b></div>
+          <div class="kv total"><span>Receita total do lote</span><b id="es_s4"></b></div>
+        </div>
+        <div>
+          <div class="kv"><span>Preço efetivo recebido</span><b id="es_s5"></b></div>
+          <div class="kv"><span>(−) Custo do lote</span><b id="es_s6"></b></div>
+          <div class="kv total"><span>Lucro do lote — escalonado</span><b id="es_s7"></b></div>
+          <div class="kv"><span>Comparação: 100% hoje · sem trava</span><b id="es_s8"></b></div>
+        </div>
+      </div>
     </div>
     <div class="card" style="margin-top:16px">
       <h3>Lucro no abate: escalonar × travar tudo hoje × não travar</h3>
@@ -1135,6 +1164,116 @@ textarea#cepeaTxt{width:100%;min-height:110px;margin-top:10px;font:14px/1.5 ui-m
   <div data-fb-util="Hedge do milho"></div>
 </section>
 
+<!-- ═══════════════ SOJA ═══════════════ -->
+<section class="panel" id="soja">
+  <div class="banner b-ink">
+    <span class="ico">🫘</span><span class="tag">Soja · dólar · B3</span>
+    <h2>Hedge da soja</h2>
+    <div class="sub">Para quem produz e vende soja</div>
+    <p>Quanto custa produzir cada saca e quanto o mercado paga pela sua colheita. <em>A soja é cotada em dólar:</em> travar o preço em dólar não trava o real — para isso, é preciso travar também o câmbio. Na B3 a soja tem pouco movimento; muitos produtores fazem o hedge em Chicago (CBOT) com dólar e prêmio de porto — a conta é a mesma.</p>
+  </div>
+  <div class="section">
+    <h2>🌱 Lavoura, preço e câmbio</h2>
+    <div class="grid g2">
+      <div class="card">
+        <div class="fields">
+          <div class="field"><label for="sj_area">Área plantada (ha)</label><input id="sj_area" type="number" step="10" min="0" value="1000"></div>
+          <div class="field"><label for="sj_prod">Produtividade esperada (sc 60 kg/ha)</label><input id="sj_prod" type="number" step="1" min="0" value="60"></div>
+          <div class="field"><label for="sj_pct">Parte da produção a travar (%)</label><input id="sj_pct" type="number" step="5" min="0" value="50"></div>
+          <div class="field"><label for="sj_meses">Meses até a venda (colheita)</label><input id="sj_meses" type="number" step="1" min="1" value="7"></div>
+          <div class="field"><label for="sj_usd">Preço futuro da soja (US$/sc)</label><input id="sj_usd" type="number" step="0.05" min="0" value="24"></div>
+          <div class="field"><label for="sj_fx">Dólar futuro para a data da venda (R$/US$)</label><input id="sj_fx" type="number" step="0.01" min="0" value="5.4"></div>
+          <div class="field"><label for="sj_base">Base da sua região (R$/sc, preço local − referência)</label><input id="sj_base" type="number" step="0.5" value="0"></div>
+          <div class="field"><label for="sj_loc">Soja disponível na sua região hoje (R$/sc, opcional)</label><input id="sj_loc" type="number" step="0.5" min="0" value="0"></div>
+          <div class="field"><label for="sj_tam">Tamanho do contrato de soja (sacas)</label><input id="sj_tam" type="number" step="1" min="1" value="450"></div>
+          <div class="field"><label for="sj_mg">Margem de garantia (% do montante)</label><input id="sj_mg" type="number" step="0.5" min="0" value="10"></div>
+        </div>
+        <label class="story" style="display:flex;gap:8px;align-items:center;margin-top:12px"><input type="checkbox" id="sj_cx"> Travar também o dólar (vender mini-dólar na B3)</label>
+        <p class="hint" id="sj_fonte"></p>
+      </div>
+      <div class="card">
+        <h3>📊 Produção e contrato</h3>
+        <div class="kv"><span>Produção esperada</span><b id="sj_o1"></b></div>
+        <div class="kv"><span>Vencimento usado</span><b id="sj_o2"></b></div>
+        <div class="kv"><span>Preço futuro em reais (US$ × dólar)</span><b id="sj_o3"></b></div>
+        <div class="kv"><span>Preço esperado na sua região (+ base)</span><b id="sj_o4"></b></div>
+        <div class="kv"><span>Sacas a travar · contratos</span><b id="sj_o5"></b></div>
+        <div class="kv"><span>Mini-dólar para travar o câmbio (US$ 10 mil cada)</span><b id="sj_o8"></b></div>
+        <div class="kv"><span>Margem de garantia + 20% de reserva</span><b id="sj_o6"></b></div>
+        <div class="kv"><span>Cada US$ 1/sc de alta pede de ajuste</span><b id="sj_o7"></b></div>
+      </div>
+    </div>
+  </div>
+  <div class="section">
+    <h2>🧮 Custo de produção por hectare — estrutura IMEA (COE · COT · CT)</h2>
+    <div class="note warn" style="margin-bottom:16px">⚠️ <b>Os valores abaixo são um exemplo didático, não são números do IMEA.</b> Troque pelos do boletim de custo de produção da soja do IMEA para a sua safra e região (R$ por hectare).</div>
+    <div class="grid g3">
+      <div class="card">
+        <h3>COE — custeio e desembolsos (R$/ha)</h3>
+        <div class="fields">
+          <div class="field"><label for="sj_sem">Sementes (e tratamento)</label><input id="sj_sem" type="number" step="10" min="0" value="550"></div>
+          <div class="field"><label for="sj_fer">Fertilizantes e corretivos</label><input id="sj_fer" type="number" step="10" min="0" value="1900"></div>
+          <div class="field"><label for="sj_def">Defensivos (herbicidas, inseticidas, fungicidas)</label><input id="sj_def" type="number" step="10" min="0" value="1400"></div>
+          <div class="field"><label for="sj_ope">Operações com máquinas (combustível, manutenção)</label><input id="sj_ope" type="number" step="10" min="0" value="600"></div>
+          <div class="field"><label for="sj_mo">Mão de obra contratada</label><input id="sj_mo" type="number" step="10" min="0" value="120"></div>
+          <div class="field"><label for="sj_pos">Pós-colheita (frete, secagem, armazenagem)</label><input id="sj_pos" type="number" step="10" min="0" value="350"></div>
+          <div class="field"><label for="sj_out">Assistência técnica, seguro e outros</label><input id="sj_out" type="number" step="10" min="0" value="200"></div>
+          <div class="field"><label for="sj_fin">Despesas financeiras (juros do custeio)</label><input id="sj_fin" type="number" step="10" min="0" value="200"></div>
+          <div class="field"><label for="sj_imp">Impostos e contribuições sobre a venda (% da receita)</label><input id="sj_imp" type="number" step="0.1" min="0" value="1.5"></div>
+        </div>
+      </div>
+      <div class="card">
+        <h3>COT — + depreciação e família (R$/ha)</h3>
+        <div class="fields">
+          <div class="field"><label for="sj_dep">Depreciação de máquinas e benfeitorias</label><input id="sj_dep" type="number" step="10" min="0" value="300"></div>
+          <div class="field"><label for="sj_mof">Mão de obra familiar / pró-labore</label><input id="sj_mof" type="number" step="10" min="0" value="0"></div>
+        </div>
+        <h3 style="margin-top:18px">CT — + capital e terra</h3>
+        <div class="fields">
+          <div class="field"><label for="sj_tx">Remuneração do capital de custeio (% ao ano)</label><input id="sj_tx" type="number" step="0.5" min="0" value="6"></div>
+          <div class="field"><label for="sj_terra">Remuneração da terra / arrendamento (R$/ha na safra)</label><input id="sj_terra" type="number" step="10" min="0" value="0"></div>
+        </div>
+        <p class="hint">Arrendamento de soja costuma ser combinado em sacas por hectare: multiplique pelo preço da saca. Capital: o custeio fica empatado, em média, metade do ciclo.</p>
+      </div>
+      <div>
+        <div class="card" style="margin-bottom:16px">
+          <h3>Custo por saca</h3>
+          <div class="kv"><span>COE</span><b id="sj_c1"></b></div>
+          <div class="kv"><span>COT</span><b id="sj_c2"></b></div>
+          <div class="kv"><span>CT</span><b id="sj_c3"></b></div>
+          <div class="kv"><span>CT em dólar (÷ câmbio)</span><b id="sj_c4"></b></div>
+          <div class="kv total"><span>Margem bruta da lavoura (receita − COE)</span><b id="sj_r1"></b></div>
+          <div class="kv total"><span>Lucro (receita − CT)</span><b id="sj_r2"></b></div>
+        </div>
+        <div class="verdict" id="sj_v"><div class="v-title" id="sj_vt"></div><div class="v-sub" id="sj_vs"></div></div>
+      </div>
+    </div>
+  </div>
+  <div class="section">
+    <h2>📐 Passo a passo do custo da saca</h2>
+    <div class="steps" id="sjPassos"></div>
+  </div>
+  <div class="section">
+    <h2>🔄 Cenários de preço na colheita (US$/sc)</h2>
+    <p class="lead">Preço da soja em dólar no vencimento, com o dólar no valor do campo acima. A parte travada recebe o preço do contrato; o resto, o preço do dia. Já descontados custos de bolsa e IR sobre o ganho (aba Hedge).</p>
+    <div class="card">
+      <div class="legend"><span><i style="background:var(--s1)"></i>Com hedge</span><span><i style="background:var(--s2)"></i>Sem hedge</span><span><i class="dash" style="color:var(--bad)"></i>Empate (lucro zero)</span></div>
+      <div class="chart" id="chSj"></div>
+    </div>
+    <div class="tbl-wrap" style="margin-top:16px"><table id="tSj">
+      <thead><tr><th>Soja na colheita (US$/sc)</th><th>Preço na região (R$/sc)</th><th>Receita física</th><th>Resultado na bolsa</th><th>Lucro c/ hedge</th><th>Lucro s/ hedge</th><th class="l">Situação</th></tr></thead>
+      <tbody></tbody>
+    </table></div>
+  </div>
+  <div class="section">
+    <h2>💱 E se o dólar mudar até a venda?</h2>
+    <p class="lead">Mesmo com o preço em dólar travado, o real que você recebe muda com o câmbio. Veja o lucro da lavoura com a soja no preço travado e o dólar variando — com e sem a trava do câmbio.</p>
+    <div class="tbl-wrap"><table id="tSjFx"><thead><tr><th>Dólar na venda</th><th>Só a soja travada</th><th>Soja + dólar travados</th></tr></thead><tbody></tbody></table></div>
+    <div class="note">Lição: quem trava só a soja em dólar continua exposto ao câmbio — dólar em queda reduz o preço em reais. Travar também o dólar fixa o preço em reais da parte travada.</div>
+  </div>
+  <div data-fb-util="Hedge da soja"></div>
+</section>
+
 <!-- ═══════════════ MERCADO ═══════════════ -->
 <section class="panel" id="mercado">
   <div class="banner b-wine">
@@ -1432,14 +1571,14 @@ function veredito(ph,cArr,bm){
 /* ── exemplo: campos que seguem a cotação até o usuário digitar ── */
 const touched=new Set();
 const CTX={};
-let ROWS={BGI:[],CCM:[]}, STAMP=null, ONLINE=false;
+let ROWS={BGI:[],CCM:[],SJC:[],DOL:[]}, STAMP=null, ONLINE=false;
 let SEL={}, B3MS=FALLBACK.mspot;   // contratos escolhidos e milho spot da B3
 const MT_IDS=['mt_boi','mt_milho','mt_magro','mt_custo','mt_ref'];
 const mtv=id=>{ const v=parseFloat($(id).value); return isFinite(v)&&v>0?v:null; };
 const mtBaseMilho=()=>{ const m=mtv('mt_milho'); return m!=null&&B3MS?m-B3MS:0; };
 try{ const sv=JSON.parse(localStorage.getItem('bb_mt')||'{}'); MT_IDS.forEach(id=>{ if(sv[id]!=null) $(id).value=sv[id]; }); }catch(e){}
 /* cenário vindo de um link (?c_cab=100&sistema=pasto…): os valores do link valem como digitados */
-const CENARIO_IDS=/^(r_spot|h_\w+|c_\w+|p_\w+|m_\w+|s_mar|s_out|mt_\w+|ag_\w+|pz_\w+|es_\w+|cs_\w+|mi_\w+)$/;
+const CENARIO_IDS=/^(r_spot|h_\w+|c_\w+|p_\w+|m_\w+|s_mar|s_out|mt_\w+|ag_\w+|pz_\w+|es_\w+|cs_\w+|mi_\w+|sj_\w+)$/;
 function linkCenario(){
   const q=new URLSearchParams();
   if(ehPasto()) q.set('sistema','pasto');
@@ -1606,6 +1745,22 @@ function calc(){
     const fTudo=P=>(P+base)*arrLote+liq(ctr*330*(ph-P),ctr)-custo;
     const fSem=P=>(P+base)*arrLote-custo;
     $('es_pm').textContent=brl2(pm); $('es_pms').innerHTML=`${sgn(pm-ph,brl2)}/@ em relação a travar tudo hoje (${brl2(ph)})`;
+    // valores do lote por etapa
+    let tAr=0,tVl=0,tMg=0;
+    cs.forEach((c,i)=>{ const ar=c*330, vl=ar*px[i], mgE=c*(mgc!=null?mgc:330*px[i]*mg); tAr+=ar; tVl+=vl; tMg+=mgE;
+      $('es_ar'+(i+1)).textContent=nf0.format(ar)+' @'; $('es_vl'+(i+1)).textContent=brl(vl); $('es_mg'+(i+1)).textContent=brl(mgE); });
+    $('es_tpm').textContent=brl2(pm)+' (média)'; $('es_tc').textContent=ctr; $('es_tar').textContent=nf0.format(tAr)+' @'; $('es_tvl').textContent=brl(tVl); $('es_tmg').textContent=brl(tMg);
+    // simulação do preço no abate
+    { const sl=$('es_par'), lo=r10(ph*0.7), hi=r10(ph*1.3);
+      sl.min=lo; sl.max=hi; if(!touched.has('es_par')) sl.value=ph; const Pa=parseFloat(sl.value)||ph;
+      $('es_pmin').textContent=brl(lo); $('es_pmax').textContent=brl(hi); $('es_pval').textContent=brl2(Pa)+'/@';
+      const nomes=['1ª trava','2ª trava','3ª trava'];
+      $('tEscSim').tBodies[0].innerHTML=cs.map((c,i)=>{ const r=c*330*(px[i]-Pa);
+        return `<tr><td class="l">${nomes[i]}</td><td>${c}</td><td>${nf0.format(c*330)}</td><td>${brl2(px[i])}</td><td>${brl2(Pa)}</td><td>${sgn(r)}</td><td class="l">${Math.abs(r)<1?'⚖️ empatou':r>0?'🛡️ a trava pagou a queda':'⚖️ cobrou a alta (custo do seguro)'}</td></tr>`; }).join('');
+      const fis=(Pa+base)*arrLote, bol=cs.reduce((a,c,i)=>a+c*330*(px[i]-Pa),0), bolL=liq(bol,ctr), rec=fis+bolL;
+      $('es_s1').textContent=brl(fis); $('es_s2').innerHTML=sgn(bol); $('es_s3').innerHTML=sgn(bolL-bol); $('es_s4').textContent=brl(rec);
+      $('es_s5').textContent=brl2(arrLote>0?rec/arrLote:0)+'/@'; $('es_s6').textContent=brl(custo); $('es_s7').innerHTML=sgn(rec-custo);
+      $('es_s8').innerHTML=`${sgn(fTudo(Pa))} · ${sgn(fSem(Pa))}`; }
     $('es_lm').innerHTML=sgn(fEsc(pm)); $('es_cx').textContent=brl(ctr*mpc*1.2);
     const PX=range(c5-60,c5+50,5);
     lineChart($('chEsc'),{xs:PX.map(x=>'R$ '+x),series:[{name:'Escalonado',data:PX.map(fEsc),color:'var(--s1)',fmt:brl},{name:'100% hoje',data:PX.map(fTudo),color:'var(--good)',fmt:brl},{name:'Sem trava',data:PX.map(fSem),color:'var(--s2)',fmt:brl}],yFmt:kfmt});
@@ -1818,6 +1973,58 @@ function calc(){
     }
   }
 
+  // hedge da soja (produtor vendido; cotação em dólar)
+  {
+    const SJ=ROWS.SJC||[], DL=ROWS.DOL||[], area=Math.max(0,val('sj_area')), prod=Math.max(0,val('sj_prod')), sacas=area*prod, pctT=Math.min(100,Math.max(0,val('sj_pct')))/100;
+    const venISO=new Date(Date.now()+Math.max(1,val('sj_meses'))*30.44*864e5).toISOString().slice(0,10);
+    const v=SJ.length?(SJ.find(r=>r.venc>=venISO)||SJ[SJ.length-1]):null, alem=!!(v&&v.venc<venISO);
+    const dv=DL.length?DL.reduce((b,r)=>!b||Math.abs(new Date(r.venc)-new Date(venISO))<Math.abs(new Date(b.venc)-new Date(venISO))?r:b,null):null;
+    if(v) auto('sj_usd',v.preco,2);
+    if(dv) auto('sj_fx',dv.preco>100?dv.preco/1000:dv.preco,4);
+    const usd=val('sj_usd'), fx=val('sj_fx'), futR=usd*fx, loc=mtv('sj_loc');
+    if(loc!=null&&SJ.length&&DL.length){ const fx0=DL[0].preco>100?DL[0].preco/1000:DL[0].preco; auto('sj_base',loc-SJ[0].preco*fx0,2); }
+    const baseS=val('sj_base'), pEsp=futR+baseS, tam=Math.max(1,val('sj_tam'));
+    const trav=sacas*pctT, ctrS=Math.round(trav/tam), cobS=ctrS*tam, margS=cobS*futR*val('sj_mg')/100, wdo=Math.round(usd*cobS/10000), cx=$('sj_cx').checked;
+    $('sj_fonte').textContent=(v?`Preço da soja: ${v.symb} na B3. `:'Sem cotação da soja na B3 agora — use o preço do dia (B3 ou Chicago convertido para US$/saca). ')+(dv?`Dólar: ${dv.symb} na B3.`:'Sem cotação do dólar futuro — digite o do dia.')+' Confira na B3 o tamanho e as regras do contrato de soja.';
+    $('sj_o1').textContent=`${nf0.format(sacas)} sc (${nf0.format(area)} ha × ${nf0.format(prod)} sc/ha)`;
+    $('sj_o2').innerHTML=v?`${v.mes} · ${v.symb}${alem?' ⚠️ último negociado — rolar':''} · ${nf0.format(v.aberto||0)} em aberto`:'sem cotação da B3 — valores digitados';
+    $('sj_o3').textContent=`US$ ${nf2.format(usd)} × R$ ${nf2.format(fx)} = ${brl2(futR)}/sc`;
+    $('sj_o4').innerHTML=`${brl2(pEsp)}/sc <span style="color:var(--text2);font-weight:400">(base ${brl2(baseS)})</span>`;
+    $('sj_o5').textContent=`${nf0.format(trav)} sc · ${ctrS} contrato(s) de ${nf0.format(tam)} sc = ${nf0.format(cobS)} sc`;
+    $('sj_o8').textContent=cx?`${wdo} contrato(s) (US$ ${nf0.format(usd*cobS)})`:'— (câmbio sem trava)';
+    $('sj_o6').textContent=brl(margS*1.2); $('sj_o7').textContent=brl(cobS*fx);
+    // custo por hectare
+    const ciclo=Math.max(1,val('sj_meses')), recHa=pEsp*prod, imp=recHa*Math.max(0,val('sj_imp'))/100;
+    const itens=[['sementes',val('sj_sem')],['fertilizantes e corretivos',val('sj_fer')],['defensivos',val('sj_def')],['operações com máquinas',val('sj_ope')],['mão de obra',val('sj_mo')],['pós-colheita',val('sj_pos')],['assistência, seguro e outros',val('sj_out')],['despesas financeiras',val('sj_fin')],[`impostos (${nf1.format(val('sj_imp')).replace(',0','')}% da receita)`,imp]];
+    const coe=itens.reduce((a,i)=>a+i[1],0), cot=coe+val('sj_dep')+val('sj_mof'), capital=coe*val('sj_tx')/100*ciclo/12/2, ct=cot+capital+val('sj_terra');
+    const pS=x=>prod>0?x/prod:0, [s1,s2,s3]=[pS(coe),pS(cot),pS(ct)];
+    $('sj_c1').textContent=brl2(s1)+'/sc'; $('sj_c2').textContent=brl2(s2)+'/sc'; $('sj_c3').textContent=brl2(s3)+'/sc'; $('sj_c4').textContent=fx>0?`US$ ${nf2.format(s3/fx)}/sc`:'—';
+    $('sj_r1').innerHTML=sgn((recHa-coe)*area); $('sj_r2').innerHTML=sgn((recHa-ct)*area);
+    let cl,ti,su;
+    if(pEsp>=s3){cl='good';ti='🟢 TRAVA — o mercado cobre o custo total';su=`Preço esperado ${brl2(pEsp)}/sc contra CT de ${brl2(s3)}/sc: dá para garantir ${brl2(pEsp-s3)}/sc na parte travada${cx?' (com o dólar travado)':' — se o dólar não cair'}.`;}
+    else if(pEsp>=s1){cl='warn';ti='🟡 Cobre o custeio, não o custo total';su=`Paga o COE (${brl2(s1)}/sc), mas não o CT (${brl2(s3)}/sc). Trave o que garante o custeio e deixe o resto respirar.`;}
+    else {cl='bad';ti='🔴 NÃO TRAVA — não cobre nem o custeio';su=`O preço esperado (${brl2(pEsp)}/sc) fica abaixo do COE (${brl2(s1)}/sc). Travar agora é travar prejuízo de caixa.`;}
+    $('sj_v').className='verdict '+cl; $('sj_vt').textContent=ti; $('sj_vs').textContent=su;
+    const P=[
+      ['Quanto a lavoura entrega?',`${nf0.format(area)} ha × ${nf0.format(prod)} sc/ha = <b>${nf0.format(sacas)} sacas</b>.`,'A produtividade é o divisor do custo.'],
+      ['Some o custeio — COE por hectare',itens.filter(i=>Math.abs(i[1])>=0.005).map(([n,x])=>`${n} ${brl2(x)}`).join(' + ')+` = <b>${brl2(coe)}/ha</b>`,'Tudo o que sai do bolso para plantar, tratar, colher e entregar.'],
+      ['Some depreciação e família — COT',`${brl2(coe)} + depreciação ${brl2(val('sj_dep'))} + família ${brl2(val('sj_mof'))} = <b>${brl2(cot)}/ha</b>`,'A máquina e o trabalho da família também custam.'],
+      ['Some capital e terra — CT',`${brl2(cot)} + capital ${brl2(capital)} + terra ${brl2(val('sj_terra'))} = <b>${brl2(ct)}/ha</b>`,'O que o dinheiro do custeio e a terra renderiam em outro uso.'],
+      ['Divida pela produtividade',`COE ${brl2(coe)} ÷ ${nf0.format(prod)} sc = <b>${brl2(s1)}/sc</b> · COT <b>${brl2(s2)}/sc</b> · CT <b>${brl2(s3)}/sc</b> (US$ ${nf2.format(fx>0?s3/fx:0)}/sc)`,'Preços de equilíbrio da saca, em reais e em dólar.'],
+      ['Converta o preço e compare',`US$ ${nf2.format(usd)} × R$ ${nf2.format(fx)} + base ${brl2(baseS)} = <b>${brl2(pEsp)}/sc</b> → sobra ${sgn(pEsp-s1,brl2)} sobre o COE e ${sgn(pEsp-s3,brl2)} sobre o CT por saca.`,'Na soja, o preço em reais depende de dois números: o preço em dólar e o câmbio.']];
+    $('sjPassos').innerHTML=P.map((x,i)=>`<div class="step"><div class="n">${i+1}</div><div><h4>${x[0]}</h4><p>${x[1]}</p><p class="hint" style="margin-top:6px">${x[2]}</p></div></div>`).join('');
+    // cenários de preço em dólar (câmbio = campo)
+    const passo=usd>40?2:0.5, u0=Math.round(usd/passo)*passo, PX=range(Math.max(passo,u0-10*passo),u0+10*passo,passo), custoTot=ct*area;
+    const fC=x=>(x*fx+baseS)*sacas+liq((usd-x)*cobS*fx,ctrS)-custoTot, fS=x=>(x*fx+baseS)*sacas-custoTot;
+    $('tSj').tBodies[0].innerHTML=PX.map(x=>{ const lc=fC(x), ls=fS(x), bol=(usd-x)*cobS*fx;
+      return `<tr class="${Math.abs(x-usd)<passo/2?'hl':''}"><td>${nf2.format(x)}</td><td>${brl2(x*fx+baseS)}</td><td>${brl((x*fx+baseS)*sacas)}</td><td>${sgn(bol)}</td><td>${sgn(lc)}</td><td>${sgn(ls)}</td><td class="l">${lc>=0?(ls<0?pill('good','✅ Hedge segurou'):x<usd?pill('good','✅ Hedge vantajoso'):pill('neu','⚖️ Mercado subiu — custo do seguro')):pill('bad','🔴 Prejuízo mesmo c/ hedge')}</td></tr>`; }).join('');
+    lineChart($('chSj'),{xs:PX.map(x=>'US$ '+nf2.format(x)),series:[{name:'Com hedge',data:PX.map(fC),color:'var(--s1)',fmt:brl},{name:'Sem hedge',data:PX.map(fS),color:'var(--s2)',fmt:brl}],refLines:[{y:0,color:'var(--bad)'}],yFmt:kfmt});
+    // câmbio: soja no preço travado, dólar variando
+    const fxLin=[0.85,0.9,0.95,1,1.05,1.1,1.15].map(k=>fx*k);
+    const semCx=f=>(usd*f+baseS)*sacas-custoTot, comCx=f=>semCx(f)+(fx-f)*usd*cobS;
+    $('tSjFx').tBodies[0].innerHTML=fxLin.map(f=>`<tr class="${Math.abs(f-fx)<1e-9?'hl':''}"><td>R$ ${nf2.format(f)} (${f>fx?'+':''}${nf0.format((f/fx-1)*100)}%)</td><td>${sgn(semCx(f))}</td><td>${sgn(comCx(f))}</td></tr>`).join('');
+  }
+
   // hedge do milho (produtor vendido em CCM)
   {
     const C=ROWS.CCM, area=Math.max(0,val('mi_area')), prod=Math.max(0,val('mi_prod')), sacas=area*prod, pctT=Math.min(100,Math.max(0,val('mi_pct')))/100;
@@ -1954,6 +2161,8 @@ let rw=0; addEventListener('resize',()=>{clearTimeout(rw); rw=setTimeout(calc,15
 const h=location.hash.slice(1); show(tabs.some(t=>t.dataset.tab===h)?h:'painel',false);
 
 $('cs_finan').addEventListener('change',()=>calc());
+$('sj_cx').addEventListener('change',()=>calc());
+$('es_par').addEventListener('input',()=>{ touched.add('es_par'); calc(); });
 /* trava escalonada: caminho do mercado até a 3ª trava */
 document.addEventListener('click',e=>{
   const b=e.target.closest('[data-esc]'); if(!b) return;
@@ -2010,14 +2219,18 @@ function doCache(){
   const c=store.get('bb_cotacoes'), hoje=iso(new Date());
   if(!c||!c.data||!c.data.BGI) return false;
   const f=rows=>(rows||[]).filter(r=>r.venc>=hoje&&r.preco!=null);
-  ROWS={BGI:f(c.data.BGI),CCM:f(c.data.CCM)}; STAMP=c.stamp; return ROWS.BGI.length>0;
+  ROWS={BGI:f(c.data.BGI),CCM:f(c.data.CCM),SJC:f(c.data.SJC),DOL:f(c.data.DOL)}; STAMP=c.stamp; return ROWS.BGI.length>0;
 }
 async function buscar(){
   try{
     const [b,c]=await Promise.all(['BGI','CCM'].map(k=>fetch(B3+k,{cache:'no-store'}).then(r=>{ if(!r.ok) throw new Error('HTTP '+r.status); return r.json(); })));
     const nb=parseB3(b), nc=parseB3(c);
     if(!nb.length) throw new Error('sem contratos BGI');
-    ROWS={BGI:nb,CCM:nc}; STAMP=(b.Msg&&b.Msg.dtTm)||new Date().toISOString(); ONLINE=true;
+    ROWS={BGI:nb,CCM:nc,SJC:ROWS.SJC||[],DOL:ROWS.DOL||[]}; STAMP=(b.Msg&&b.Msg.dtTm)||new Date().toISOString(); ONLINE=true;
+    // soja e dólar: opcionais — se falharem, a aba da soja usa os valores digitados
+    const ex=await Promise.allSettled(['SJC','DOL'].map(k=>fetch(B3+k,{cache:'no-store'}).then(r=>{ if(!r.ok) throw new Error('HTTP '+r.status); return r.json(); })));
+    if(ex[0].status==='fulfilled') ROWS.SJC=parseB3(ex[0].value);
+    if(ex[1].status==='fulfilled') ROWS.DOL=parseB3(ex[1].value);
     store.set('bb_cotacoes',{data:ROWS,stamp:STAMP});
   }catch(e){ ONLINE=false; if(!ROWS.BGI.length) doCache(); }
   escolher();
