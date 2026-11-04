@@ -614,6 +614,42 @@ textarea#cepeaTxt{width:100%;min-height:110px;margin-top:10px;font:14px/1.5 ui-m
     <div class="note">Perfil conservador: 75–100% · Moderado: 50–75% · Arrojado: 25–50% — nunca 0% com margem apertada.</div>
   </div>
 
+  <div class="section" id="escalonada">
+    <h2>🪜 Trava escalonada — 25%, 50% e o restante</h2>
+    <p class="lead">Em vez de travar o lote inteiro num dia só, trave em partes: uma parte hoje, outra no meio do ciclo e o restante perto do abate. Escolha os percentuais, quando travar cada parte e o preço que o futuro teria em cada data — o preço de hoje vem da B3.</p>
+    <div class="card">
+      <div class="tbl-wrap" style="border:0">
+        <table id="tEsc">
+          <thead><tr><th class="l">Etapa</th><th>% do lote</th><th>Daqui a (meses)</th><th>Preço do futuro (R$/@)</th><th>Contratos</th><th class="l">Quando</th><th>Travado acumulado</th></tr></thead>
+          <tbody>
+            <tr><td class="l">1ª trava</td><td><input id="es_p1" type="number" step="5" min="0" max="100" value="25" aria-label="Percentual da 1ª trava"></td><td><input id="es_m1" type="number" step="1" min="0" value="0" aria-label="Meses até a 1ª trava"></td><td><input id="es_px1" type="number" step="0.5" min="0" aria-label="Preço da 1ª trava"></td><td id="es_c1"></td><td class="l" id="es_q1"></td><td id="es_a1"></td></tr>
+            <tr><td class="l">2ª trava</td><td><input id="es_p2" type="number" step="5" min="0" max="100" value="50" aria-label="Percentual da 2ª trava"></td><td><input id="es_m2" type="number" step="1" min="0" aria-label="Meses até a 2ª trava"></td><td><input id="es_px2" type="number" step="0.5" min="0" aria-label="Preço da 2ª trava"></td><td id="es_c2"></td><td class="l" id="es_q2"></td><td id="es_a2"></td></tr>
+            <tr><td class="l">3ª trava (restante)</td><td id="es_p3"></td><td><input id="es_m3" type="number" step="1" min="0" aria-label="Meses até a 3ª trava"></td><td><input id="es_px3" type="number" step="0.5" min="0" aria-label="Preço da 3ª trava"></td><td id="es_c3"></td><td class="l" id="es_q3"></td><td id="es_a3"></td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="story" style="margin-top:12px"><b>E se o mercado andar até a última trava?</b></p>
+      <div class="plano-btns" style="margin-top:6px">
+        <button class="btn-q btn-sec" type="button" data-esc="1.10">📈 Subir 10%</button>
+        <button class="btn-q btn-sec" type="button" data-esc="1">➖ Ficar parado</button>
+        <button class="btn-q btn-sec" type="button" data-esc="0.90">📉 Cair 10%</button>
+      </div>
+      <p class="hint" id="es_aviso"></p>
+    </div>
+    <div class="grid g3" style="margin-top:16px">
+      <div class="kpi"><div class="k-lab">Preço médio travado</div><div class="k-val" id="es_pm"></div><div class="k-sub" id="es_pms"></div></div>
+      <div class="kpi"><div class="k-lab">Lucro se o abate for no preço médio</div><div class="k-val" id="es_lm"></div><div class="k-sub">Já descontados custos de bolsa</div></div>
+      <div class="kpi"><div class="k-lab">Caixa máximo na bolsa</div><div class="k-val" id="es_cx"></div><div class="k-sub">Margem + 20% com o lote todo travado</div></div>
+    </div>
+    <div class="card" style="margin-top:16px">
+      <h3>Lucro no abate: escalonar × travar tudo hoje × não travar</h3>
+      <div class="legend"><span><i style="background:var(--s1)"></i>Escalonado</span><span><i style="background:var(--good)"></i>100% hoje</span><span><i style="background:var(--s2)"></i>Sem trava</span></div>
+      <div class="chart" id="chEsc"></div>
+      <div class="tbl-wrap" style="margin-top:12px"><table id="tEscR"><thead><tr><th class="l">Preço no abate</th><th>Escalonado</th><th>100% hoje</th><th>Sem trava</th></tr></thead><tbody></tbody></table></div>
+    </div>
+    <div class="note" id="es_nota"></div>
+  </div>
+
   <div class="section">
     <h2>💰 Margem de garantia por tamanho de operação</h2>
     <p class="lead">Tenha sempre 20% a mais que a margem calculada em caixa — ajustes diários podem exigir depósitos adicionais.</p>
@@ -1210,7 +1246,7 @@ const mtv=id=>{ const v=parseFloat($(id).value); return isFinite(v)&&v>0?v:null;
 const mtBaseMilho=()=>{ const m=mtv('mt_milho'); return m!=null&&B3MS?m-B3MS:0; };
 try{ const sv=JSON.parse(localStorage.getItem('bb_mt')||'{}'); MT_IDS.forEach(id=>{ if(sv[id]!=null) $(id).value=sv[id]; }); }catch(e){}
 /* cenário vindo de um link (?c_cab=100&sistema=pasto…): os valores do link valem como digitados */
-const CENARIO_IDS=/^(r_spot|h_\w+|c_\w+|p_\w+|m_\w+|s_mar|s_out|mt_\w+|ag_\w+|pz_\w+)$/;
+const CENARIO_IDS=/^(r_spot|h_\w+|c_\w+|p_\w+|m_\w+|s_mar|s_out|mt_\w+|ag_\w+|pz_\w+|es_\w+)$/;
 function linkCenario(){
   const q=new URLSearchParams();
   if(ehPasto()) q.set('sistema','pasto');
@@ -1340,6 +1376,38 @@ function calc(){
 
   const qLo=r5(ph*0.75), qHi=r5(ph*1.055);
   $('qtLo').textContent=`Se cair p/ R$ ${qLo}/@`; $('qtHi').textContent=`Se subir p/ R$ ${qHi}/@`;
+  // trava escalonada
+  const ES=(()=>{
+    const ciclo=Math.max(1,Math.round(diasEng()/30.44));
+    const m2a=Math.max(1,Math.floor(ciclo/2)); auto('es_m2',m2a,0); auto('es_m3',Math.max(m2a+1,ciclo-1),0);
+    ['es_px1','es_px2','es_px3'].forEach(id=>auto(id,ph,2));
+    const p1=Math.max(0,val('es_p1'))/100, p2=Math.max(0,val('es_p2'))/100, p3=Math.max(0,1-p1-p2);
+    const px=[val('es_px1'),val('es_px2'),val('es_px3')], ms=[val('es_m1'),val('es_m2'),val('es_m3')];
+    const c1=Math.round(ctr*p1), c2=Math.round(ctr*(p1+p2))-c1, c3=Math.max(0,ctr-c1-c2), cs=[c1,c2,c3];
+    const mesDe=m=>{ const d=new Date(); d.setMonth(d.getMonth()+Math.round(m)); return MESL[d.getMonth()]+'/'+String(d.getFullYear()).slice(2); };
+    let acc=0; cs.forEach((c,i)=>{ acc+=c; $('es_c'+(i+1)).textContent=c; $('es_q'+(i+1)).textContent=ms[i]<=0?'hoje':mesDe(ms[i]); $('es_a'+(i+1)).textContent=ctr?pct(acc/ctr).replace(',0',''):'—'; });
+    $('es_p3').textContent=pct(p3).replace(',0','');
+    const avisos=[];
+    if(p1+p2>1) avisos.push('⚠️ A 1ª e a 2ª trava somam mais de 100% do lote — reduza os percentuais.');
+    if(!(ms[0]<=ms[1]&&ms[1]<=ms[2])) avisos.push('⚠️ As datas estão fora de ordem: a 1ª trava deve vir antes da 2ª, e a 2ª antes da 3ª.');
+    if(ms[2]*30.44>diasEng()) avisos.push('⚠️ A 3ª trava está depois do abate previsto.');
+    if(ctr<3) avisos.push(`Com ${ctr} contrato(s) no lote não dá para dividir em três partes iguais aos percentuais: o arredondamento muda a divisão.`);
+    $('es_aviso').textContent=avisos.join(' ');
+    const pm=ctr?cs.reduce((a,c,i)=>a+c*px[i],0)/ctr:ph;
+    const fEsc=P=>(P+base)*arrLote+liq(cs.reduce((a,c,i)=>a+c*330*(px[i]-P),0),ctr)-custo;
+    const fTudo=P=>(P+base)*arrLote+liq(ctr*330*(ph-P),ctr)-custo;
+    const fSem=P=>(P+base)*arrLote-custo;
+    $('es_pm').textContent=brl2(pm); $('es_pms').innerHTML=`${sgn(pm-ph,brl2)}/@ em relação a travar tudo hoje (${brl2(ph)})`;
+    $('es_lm').innerHTML=sgn(fEsc(pm)); $('es_cx').textContent=brl(ctr*mpc*1.2);
+    const PX=range(c5-60,c5+50,5);
+    lineChart($('chEsc'),{xs:PX.map(x=>'R$ '+x),series:[{name:'Escalonado',data:PX.map(fEsc),color:'var(--s1)',fmt:brl},{name:'100% hoje',data:PX.map(fTudo),color:'var(--good)',fmt:brl},{name:'Sem trava',data:PX.map(fSem),color:'var(--s2)',fmt:brl}],yFmt:kfmt});
+    $('tEscR').tBodies[0].innerHTML=[[r5(ph*0.85),'queda de 15%'],[r5(ph),'preço de hoje'],[r5(ph*1.10),'alta de 10%']].map(([P,t])=>`<tr><td class="l">R$ ${P}/@ <span style="color:var(--text2)">(${t})</span></td><td>${sgn(fEsc(P))}</td><td>${sgn(fTudo(P))}</td><td>${sgn(fSem(P))}</td></tr>`).join('');
+    const sub=px[2]>ph+0.5, caiu=px[2]<ph-0.5;
+    $('es_nota').innerHTML=`<b>Leitura:</b> escalonar fica no meio do caminho — protege ${pct(p1).replace(',0','')} do lote desde hoje e evita apostar tudo num dia só. `+
+      (sub?`Neste cenário o futuro subiu até as travas seguintes, então o preço médio (${brl2(pm)}) ficou acima de travar tudo hoje.`:caiu?`Neste cenário o futuro caiu até as travas seguintes, então o preço médio (${brl2(pm)}) ficou abaixo de travar tudo hoje — é o preço de ter deixado parte do lote solta.`:`Com o mercado parado, o preço médio é igual ao de travar tudo hoje.`)+
+      ` Não dá para saber hoje o preço das próximas travas: use os botões para ver os dois lados.`;
+    return {cs,ms,px,mesDe};
+  })();
   $('tQuanto').tBodies[0].innerHTML=[0,.25,.5,.75,1].map(c=>{
     const f=x=>(x+base)*arrLote-custo+c*(ph-x)*arrLote;
     return `<tr><td>${pct(c).replace(',0','')}</td><td>${sgn(f(qLo))}</td><td>${sgn(f(ph))}</td><td>${sgn(f(qHi))}</td></tr>`;}).join('');
@@ -1471,7 +1539,7 @@ function calc(){
       `PREÇO`,`• Cotação atual: ${brl2(spot)}/@`+(SEL.spot?` (${SEL.spot.symb})`:''),`• Futuro para o abate: ${brl2(ph)}/@ (${tk})`];
     if(mtBoi!=null) L.push(`• Base da praça MT: ${base>=0?'+':'−'}${brl2(Math.abs(base))}/@ → físico esperado ${brl2(phF)}/@`);
     L.push('',`DECISÃO`,`• ${vt}`,`• Folga sobre o custo: ${folga>=0?'':'−'}${brl2(Math.abs(folga))}/@`,`• Lucro travado: ${brl(lucHL)} (${brl(lCabH)} por cabeça), já descontados ${brl(custosC)} de custos de bolsa`,`• Se o boi cair, o ganho na bolsa paga IR de ${nf0.format(irR*100)}% (DARF até o fim do mês seguinte)`,
-      `• Contratos a vender: ${ctrC} ${tk} (330 @ cada)`,`• Escalonado: ${meio} agora, o restante perto do abate`,'',
+      `• Contratos a vender: ${ctrC} ${tk} (330 @ cada)`,`• Escalonado: ${ES.cs.map((c,i)=>`${c} ${ES.ms[i]<=0?'agora':'em '+ES.mesDe(ES.ms[i])}`).join(', ')} (25/50/restante, aba Hedge)`,'',
       `CAIXA`,`• Margem de garantia: ${brl(margC)} · com reserva de 20%: ${brl(margC*1.2)}`,'',
       `FRASE PARA A CORRETORA`,`“Quero VENDER ${ctrC} contratos de boi gordo ${tk}, vencimento ${venc}, a ${brl2(ph)} por arroba, para hedge de produção.”`,'',
       `⚠️ Simulação educativa — confirme margem, custos e impostos com sua corretora.`,`Abra este cenário: ${linkCenario()}`);
@@ -1586,6 +1654,14 @@ document.addEventListener('input',e=>{ if(e.target.matches('input')) calc(); });
 let rw=0; addEventListener('resize',()=>{clearTimeout(rw); rw=setTimeout(calc,150);});
 const h=location.hash.slice(1); show(tabs.some(t=>t.dataset.tab===h)?h:'painel',false);
 
+/* trava escalonada: caminho do mercado até a 3ª trava */
+document.addEventListener('click',e=>{
+  const b=e.target.closest('[data-esc]'); if(!b) return;
+  const k=parseFloat(b.dataset.esc), ph=val('h_preco'), m1=val('es_m1'), m3=Math.max(m1+1,val('es_m3')), m2=val('es_m2');
+  const fr=m=>Math.min(1,Math.max(0,(m-m1)/(m3-m1)));
+  [['es_px1',0],['es_px2',fr(m2)],['es_px3',1]].forEach(([id,f])=>{ $(id).value=String(+(ph*(1+(k-1)*f)).toFixed(2)); touched.add(id); });
+  calc();
+});
 /* link do cenário e modo telão */
 $('linkCopiar').addEventListener('click',async()=>{
   const u=linkCenario();
@@ -1695,7 +1771,7 @@ document.addEventListener('input',e=>{
   if(k==='c_dias'||k==='p_meses'||k==='h_venc'||k==='m_venc') escolher();
   else if(['r_spot','h_preco','c_milho','m_fut'].includes(k)) painelCotacao();
 },true);
-const PRECO=/^(r_spot|h_preco|h_venc|m_venc|c_magro|c_venda|c_milho|m_fut|h_custo|h_cmin|s_mar|s_out|d\d+|br\d+|bf\d+)$/;
+const PRECO=/^(es_px\d|r_spot|h_preco|h_venc|m_venc|c_magro|c_venda|c_milho|m_fut|h_custo|h_cmin|s_mar|s_out|d\d+|br\d+|bf\d+)$/;
 $('s_out_r').addEventListener('input',e=>{ $('s_out').value=e.target.value; touched.add('s_out'); calc(); });
 $('planoCopiar').addEventListener('click',async()=>{
   const t=$('plano').textContent;
