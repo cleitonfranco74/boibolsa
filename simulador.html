@@ -58,7 +58,7 @@ nav{max-width:1180px;margin:0 auto;display:flex;align-items:center;justify-conte
 .hero h1{font-size:clamp(36px,5.4vw,60px);line-height:1.02;font-weight:800;max-width:760px;margin-bottom:16px}
 .hero p{color:#c5cfca;max-width:640px;font-size:16px}
 .hero p b{color:#f2d88a}
-.mods{max-width:1180px;margin:0 auto;padding:10px 32px 48px;display:grid;grid-template-columns:repeat(7,1fr);gap:12px}
+.mods{max-width:1180px;margin:0 auto;padding:10px 32px 48px;display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
 .mod{display:flex;flex-direction:column;gap:6px;text-align:left;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.12);border-radius:12px;
   padding:16px;color:#f2f5f3;cursor:pointer;font:inherit;transition:background .15s,border-color .15s}
 .mod:hover{background:rgba(255,255,255,.08);border-color:rgba(255,255,255,.25)}
@@ -103,6 +103,7 @@ h3{font-size:17px;font-weight:700;margin-bottom:12px;color:var(--text)}
 .g2{grid-template-columns:repeat(2,minmax(0,1fr))}
 .g3{grid-template-columns:repeat(3,minmax(0,1fr))}
 @media(max-width:860px){.g2,.g3{grid-template-columns:1fr}}
+.grid>*{min-width:0}
 
 .card{background:var(--bg2);border:1px solid var(--border);border-radius:var(--r);padding:22px;box-shadow:var(--shadow)}
 
@@ -309,6 +310,7 @@ textarea#cepeaTxt{width:100%;min-height:110px;margin-top:10px;font:14px/1.5 ui-m
   <button class="mod" data-go="hedge"><b>🎯 Hedge BGI</b><span>Cenários, quanto travar e margem de garantia.</span><i>Abrir →</i></button>
   <button class="mod" data-go="estrategias"><b>🛡️ Futuro × Put</b><span>Trava de preço ou seguro de preço.</span><i>Abrir →</i></button>
   <button class="mod" data-go="confinamento"><b>🐄 Confinamento</b><span>Confinamento ou boi a pasto: custos, ROI e trava do milho.</span><i>Abrir →</i></button>
+  <button class="mod" data-go="custos"><b>🧮 Custos</b><span>COE, COT e CT: o custo do lote em três níveis.</span><i>Abrir →</i></button>
   <button class="mod" data-go="mercado"><b>📊 Mercado</b><span>CEPEA, previsão e risco de base.</span><i>Abrir →</i></button>
   <button class="mod" data-go="aprenda"><b>🎓 Aprenda</b><span>Passo a passo, mitos e exercícios.</span><i>Abrir →</i></button>
 </div>
@@ -321,6 +323,7 @@ textarea#cepeaTxt{width:100%;min-height:110px;margin-top:10px;font:14px/1.5 ui-m
     <button class="tab" role="tab" data-tab="hedge" aria-selected="false"><b>🎯 Hedge BGI</b><small>Boi gordo · B3</small></button>
     <button class="tab" role="tab" data-tab="estrategias" aria-selected="false"><b>🛡️ Futuro × Put</b><small>Trava · Seguro</small></button>
     <button class="tab" role="tab" data-tab="confinamento" aria-selected="false"><b>🐄 Confinamento</b><small>Confinamento · Pasto</small></button>
+    <button class="tab" role="tab" data-tab="custos" aria-selected="false"><b>🧮 Custos</b><small>COE · COT · CT</small></button>
     <button class="tab" role="tab" data-tab="mercado" aria-selected="false"><b>📊 Mercado</b><small>CEPEA · Base MT</small></button>
     <button class="tab" role="tab" data-tab="aprenda" aria-selected="false"><b>🎓 Aprenda</b><small>Passo a passo · Exercícios</small></button>
   </div>
@@ -942,6 +945,90 @@ textarea#cepeaTxt{width:100%;min-height:110px;margin-top:10px;font:14px/1.5 ui-m
   <div data-fb-util="Confinamento"></div>
 </section>
 
+<!-- ═══════════════ CUSTOS ═══════════════ -->
+<section class="panel" id="custos">
+  <div class="banner b-ink">
+    <span class="ico">🧮</span><span class="tag">COE · COT · CT</span>
+    <h2>Custos de produção</h2>
+    <div class="sub">O custo do lote em três níveis</div>
+    <p>Quanto sai do bolso no ciclo, quanto custa manter a estrutura de pé e quanto deveria render o capital empatado. <em>Cada nível responde a uma pergunta diferente</em> — e a bolsa precisa cobrir pelo menos o primeiro para valer a pena travar.</p>
+  </div>
+  <div class="section">
+    <h2>Os três níveis de custo</h2>
+    <div class="grid g3">
+      <div class="card story"><h3>COE — Custo Operacional Efetivo</h3><p>Tudo o que <b>sai do bolso</b> no ciclo: reposição, alimentação, sanidade, mão de obra contratada, manutenção, combustível, frete, impostos sobre a venda, custos de bolsa e juros do custeio financiado.</p></div>
+      <div class="card story"><h3>COT — Custo Operacional Total</h3><p><b>COE + depreciação</b> (máquinas, benfeitorias, cercas, pastagens) <b>+ mão de obra familiar</b> (o que você pagaria a alguém pelo seu trabalho). Não sai do bolso hoje, mas um dia a máquina e a cerca precisam ser repostas.</p></div>
+      <div class="card story"><h3>CT — Custo Total</h3><p><b>COT + remuneração do capital</b> (o que o dinheiro do gado e da estrutura renderia aplicado) <b>+ remuneração da terra</b> (arrendamento ou o que a terra renderia arrendada). É o custo econômico completo.</p></div>
+    </div>
+  </div>
+  <div class="section">
+    <h2>Itens do custo — R$ por cabeça no ciclo</h2>
+    <p class="lead">Os campos já vêm com os números do lote (aba Confinamento ou pasto e aba Hedge). Preencha os que faltam com os números da sua fazenda; deixe zero o que não se aplica.</p>
+    <div class="grid g3">
+      <div class="card">
+        <h3>COE — desembolsos</h3>
+        <div class="fields">
+          <div class="field"><label for="cs_rep">Reposição — compra dos animais</label><input id="cs_rep" type="number" step="1" min="0" value="0"></div>
+          <div class="field"><label for="cs_ali">Alimentação (dieta, sal, suplemento ou pasto)</label><input id="cs_ali" type="number" step="1" min="0" value="0"></div>
+          <div class="field"><label for="cs_san">Sanidade (vacinas, medicamentos)</label><input id="cs_san" type="number" step="1" min="0" value="0"></div>
+          <div class="field"><label for="cs_mo">Mão de obra contratada</label><input id="cs_mo" type="number" step="1" min="0" value="0"></div>
+          <div class="field"><label for="cs_man">Manutenção de máquinas, benfeitorias e pastagens</label><input id="cs_man" type="number" step="1" min="0" value="0"></div>
+          <div class="field"><label for="cs_comb">Combustível e energia</label><input id="cs_comb" type="number" step="1" min="0" value="0"></div>
+          <div class="field"><label for="cs_frete">Frete e comercialização</label><input id="cs_frete" type="number" step="1" min="0" value="0"></div>
+          <div class="field"><label for="cs_adm">Assistência técnica, administração e outros</label><input id="cs_adm" type="number" step="1" min="0" value="0"></div>
+          <div class="field"><label for="cs_fun">Impostos sobre a venda (% da receita)</label><input id="cs_fun" type="number" step="0.1" min="0" value="1.5"></div>
+          <div class="field"><label for="cs_bolsa">Custos de bolsa (corretagem, emolumentos)</label><input id="cs_bolsa" type="number" step="0.01" min="0" value="0"></div>
+        </div>
+        <label class="story" style="display:flex;gap:8px;align-items:center;margin-top:12px"><input type="checkbox" id="cs_finan"> O custeio é financiado (os juros saem do bolso)</label>
+        <p class="hint">Impostos: para pessoa física, a contribuição sobre a venda da produção rural costuma ser de 1,5% (confirme com o contador). Juros: se o custeio for financiado, entram no COE; se o dinheiro é seu, entram no CT como remuneração do capital de giro.</p>
+      </div>
+      <div class="card">
+        <h3>COT — + depreciação e família</h3>
+        <div class="fields">
+          <div class="field"><label for="cs_dep">Depreciação (máquinas, benfeitorias, cercas, pastagens)</label><input id="cs_dep" type="number" step="1" min="0" value="0"></div>
+          <div class="field"><label for="cs_mof">Mão de obra familiar / pró-labore</label><input id="cs_mof" type="number" step="1" min="0" value="0"></div>
+        </div>
+        <p class="hint">Mão de obra familiar: o que você pagaria a alguém para fazer o trabalho que você e a família fazem, dividido pelas cabeças do lote.</p>
+        <h3 style="margin-top:18px">CT — + capital e terra</h3>
+        <div class="fields">
+          <div class="field"><label for="cs_kf">Capital fixo usado no lote — máquinas, benfeitorias (R$, total)</label><input id="cs_kf" type="number" step="1000" min="0" value="0"></div>
+          <div class="field"><label for="cs_tx">Taxa de remuneração do capital (% ao ano)</label><input id="cs_tx" type="number" step="0.5" min="0" value="6"></div>
+          <div class="field"><label for="cs_terra">Remuneração da terra (R$/cab/mês)</label><input id="cs_terra" type="number" step="1" min="0" value="0"></div>
+        </div>
+        <p class="hint">Capital de giro (reposição + custeio) é remunerado à taxa do custo financeiro da aba Confinamento. Capital fixo e terra: use a taxa real que o dinheiro renderia aplicado e o valor de arrendamento da região. A pasto, se o arrendamento já está no custo do pasto, deixe a terra em zero para não contar duas vezes.</p>
+      </div>
+      <div>
+        <div class="card" style="margin-bottom:16px">
+          <h3>Resultado do lote</h3>
+          <div class="kv"><span>Receita bruta</span><b id="cs_rb"></b></div>
+          <div class="kv"><span>COE</span><b id="cs_coe"></b></div>
+          <div class="kv"><span>COT</span><b id="cs_cot"></b></div>
+          <div class="kv"><span>CT</span><b id="cs_ct"></b></div>
+          <div class="kv total"><span>Margem bruta (receita − COE)</span><b id="cs_mb"></b></div>
+          <div class="kv total"><span>Margem líquida (receita − COT)</span><b id="cs_ml"></b></div>
+          <div class="kv total"><span>Lucro (receita − CT)</span><b id="cs_lu"></b></div>
+        </div>
+        <p class="hint" id="cs_fonte"></p>
+      </div>
+    </div>
+  </div>
+  <div class="section">
+    <h2>🪜 A bolsa cobre qual nível de custo?</h2>
+    <div class="grid g2">
+      <div class="card">
+        <div class="legend"><span><i style="background:var(--s1)"></i>Custo por arroba</span><span><i class="dash" style="color:var(--good)"></i>Preço esperado na venda: <b id="cs_pr"></b></span></div>
+        <div id="cs_graf"></div>
+      </div>
+      <div>
+        <div class="verdict" id="cs_v"><div class="v-title" id="cs_vt"></div><div class="v-sub" id="cs_vs"></div></div>
+        <div class="tbl-wrap" style="margin-top:16px"><table id="tCus"><thead><tr><th class="l">Nível</th><th>Por cabeça</th><th>Por arroba</th><th>% do CT</th><th>Preço de equilíbrio</th></tr></thead><tbody></tbody></table></div>
+      </div>
+    </div>
+    <div class="note" id="cs_nota"></div>
+  </div>
+  <div data-fb-util="Custos"></div>
+</section>
+
 <!-- ═══════════════ MERCADO ═══════════════ -->
 <section class="panel" id="mercado">
   <div class="banner b-wine">
@@ -1246,11 +1333,11 @@ const mtv=id=>{ const v=parseFloat($(id).value); return isFinite(v)&&v>0?v:null;
 const mtBaseMilho=()=>{ const m=mtv('mt_milho'); return m!=null&&B3MS?m-B3MS:0; };
 try{ const sv=JSON.parse(localStorage.getItem('bb_mt')||'{}'); MT_IDS.forEach(id=>{ if(sv[id]!=null) $(id).value=sv[id]; }); }catch(e){}
 /* cenário vindo de um link (?c_cab=100&sistema=pasto…): os valores do link valem como digitados */
-const CENARIO_IDS=/^(r_spot|h_\w+|c_\w+|p_\w+|m_\w+|s_mar|s_out|mt_\w+|ag_\w+|pz_\w+|es_\w+)$/;
+const CENARIO_IDS=/^(r_spot|h_\w+|c_\w+|p_\w+|m_\w+|s_mar|s_out|mt_\w+|ag_\w+|pz_\w+|es_\w+|cs_\w+)$/;
 function linkCenario(){
   const q=new URLSearchParams();
   if(ehPasto()) q.set('sistema','pasto');
-  document.querySelectorAll('main input[id]').forEach(i=>{ if(!CENARIO_IDS.test(i.id)||i.type==='range') return;
+  document.querySelectorAll('main input[id]').forEach(i=>{ if(!CENARIO_IDS.test(i.id)||i.type==='range'||i.type==='checkbox') return;
     if(touched.has(i.id)||(i.id.startsWith('mt_')&&i.value!=='')) q.set(i.id,i.value); });
   const qs=q.toString(); return location.origin+location.pathname+(qs?'?'+qs:'');
 }
@@ -1560,6 +1647,40 @@ function calc(){
     const rE=val('c_rendE')/100, pvMag=val('c_magro')*rE/15, agL=pv>0?(pvMag/pv-1)*100:0;
     $('ag_lote').innerHTML=`No lote deste simulador, o boi magro sai a ${brl2(val('c_magro'))}/@ (${brl2(pvMag)}/kg vivo, a ${nf0.format(rE*100)}% de rendimento na compra): ${agL>=0?`ágio de <b>${pc(agL)}</b>`:`deságio de <b>${pc(-agL)}</b>`} sobre o boi gordo. Para ver se a reposição fecha a conta, olhe o custo por arroba e a folga do lote acima.`;
   }
+  // custos COE · COT · CT (por cabeça no ciclo)
+  {
+    const fin=val('c_fin')/100, finan=$('cs_finan').checked, mesesC=CO.meses;
+    auto('cs_rep',CO.cCompra,2); auto('cs_ali',CO.cDieta,2); auto('cs_san',val('c_san'),2); auto('cs_mo',val('c_mo'),2);
+    auto('cs_dep',val('c_dep'),2); auto('cs_bolsa',cc>0?ctrC*custoCtr/cc:0,2);
+    const rbC=phF*aS, imp=rbC*Math.max(0,val('cs_fun'))/100, juros=CO.cFin;
+    const coe=val('cs_rep')+val('cs_ali')+val('cs_san')+val('cs_mo')+val('cs_man')+val('cs_comb')+val('cs_frete')+val('cs_adm')+imp+val('cs_bolsa')+(finan?juros:0);
+    const cot=coe+val('cs_dep')+val('cs_mof');
+    const kf=cc>0?val('cs_kf')/cc*val('cs_tx')/100*mesesC/12:0, terra=val('cs_terra')*mesesC;
+    const ct=cot+(finan?0:juros)+kf+terra;
+    const L=x=>x*cc, A=x=>aS>0?x/aS:0;
+    $('cs_rb').textContent=brl(L(rbC)); $('cs_coe').textContent=brl(L(coe)); $('cs_cot').textContent=brl(L(cot)); $('cs_ct').textContent=brl(L(ct));
+    $('cs_mb').innerHTML=sgn(L(rbC-coe)); $('cs_ml').innerHTML=sgn(L(rbC-cot)); $('cs_lu').innerHTML=sgn(L(rbC-ct));
+    $('cs_fonte').textContent=`Lote de ${nf0.format(cc)} cabeças, ${nf2.format(aS)} @ por cabeça (${nf0.format(totArr)} @), ${ehPasto()?nf0.format(mesesC)+' meses a pasto':nf0.format(mesesC*30)+' dias de confinamento'}. Receita = ${brl2(phF)}/@ (futuro${mtBoi!=null?' + base MT':''}) × arrobas.`;
+    const niveis=[['COE',coe],['COT',cot],['CT',ct]];
+    $('tCus').tBodies[0].innerHTML=niveis.map(([n,v])=>`<tr><td class="l"><b>${n}</b></td><td>${brl(v)}</td><td>${brl2(A(v))}</td><td>${ct>0?pct(v/ct).replace(',0',''):'—'}</td><td>${brl2(A(v))}/@</td></tr>`).join('');
+    const [pe1,pe2,pe3]=niveis.map(n=>A(n[1]));
+    let cls,tit,sub;
+    if(phF>=pe3){cls='good';tit='🟢 Cobre o Custo Total';sub=`O preço esperado (${brl2(phF)}/@) paga tudo, inclusive a remuneração do capital e da terra: há lucro econômico de ${brl2(phF-pe3)}/@.`;}
+    else if(phF>=pe2){cls='warn';tit='🟡 Cobre o COT, mas não o CT';sub=`Paga as contas, a depreciação e o trabalho da família, mas remunera o capital e a terra abaixo do esperado (faltam ${brl2(pe3-phF)}/@ para o CT). Sustentável no médio prazo, rendendo menos que uma aplicação.`;}
+    else if(phF>=pe1){cls='warn';tit='🟠 Cobre só o COE';sub=`Paga os desembolsos do ciclo, mas não repõe máquinas e benfeitorias nem paga o trabalho da família (faltam ${brl2(pe2-phF)}/@ para o COT). No longo prazo, a fazenda se descapitaliza.`;}
+    else {cls='bad';tit='🔴 Não cobre nem o COE';sub=`O preço esperado não paga nem o que sai do bolso no ciclo (faltam ${brl2(pe1-phF)}/@). Travar aqui é travar prejuízo de caixa — reveja reposição, alimentação e prazo.`;}
+    $('cs_v').className='verdict '+cls; $('cs_vt').textContent=tit; $('cs_vs').textContent=sub;
+    // gráfico de barras: custo por arroba nos três níveis × preço esperado
+    const W=560,H=240,m={t:16,r:16,b:34,l:66}, iw=W-m.l-m.r, ih=H-m.t-m.b, mx=Math.max(pe3,phF)*1.12||1, Y=v=>m.t+ih-v/mx*ih, bw=iw/3*0.5;
+    let g=`<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="Custo por arroba em COE, COT e CT comparado ao preço esperado" style="width:100%;height:auto">`;
+    [0,.25,.5,.75,1].forEach(f=>{ const v=mx*f; g+=`<line x1="${m.l}" x2="${W-m.r}" y1="${Y(v)}" y2="${Y(v)}" stroke="#e4eae7"/><text x="${m.l-8}" y="${Y(v)+4}" text-anchor="end" font-size="11" fill="#4d5e57">R$ ${nf0.format(v)}</text>`; });
+    niveis.forEach(([n,v],i)=>{ const x=m.l+iw/3*i+(iw/3-bw)/2, y=Y(A(v)); g+=`<rect x="${x}" y="${y}" width="${bw}" height="${m.t+ih-y}" rx="4" fill="#3987e5" opacity="${0.55+0.2*i}"/><text x="${x+bw/2}" y="${y-6}" text-anchor="middle" font-size="12" font-weight="700" fill="#12241c">${brl2(A(v))}</text><text x="${x+bw/2}" y="${H-12}" text-anchor="middle" font-size="12" font-weight="700" fill="#12241c">${n}</text>`; });
+    g+=`<line x1="${m.l}" x2="${W-m.r}" y1="${Y(phF)}" y2="${Y(phF)}" stroke="#1d7a4b" stroke-width="2" stroke-dasharray="6 4"/></svg>`;
+    $('cs_graf').innerHTML=g; $('cs_pr').textContent=brl2(phF)+'/@';
+    $('cs_nota').innerHTML=`<b>Como ler:</b> margem bruta positiva (receita > COE) paga as contas do ciclo; margem líquida positiva (receita > COT) mantém a estrutura de pé; lucro positivo (receita > CT) remunera também o capital e a terra. O custo por arroba usado no veredito do Painel (${brl2(cArr)}/@) inclui reposição, alimentação, sanidade, mão de obra, depreciação e juros — fica entre o COT e o CT desta aba.`;
+    Object.assign(CTX,{coeA:pe1,cotA:pe2,ctA:pe3});
+  }
+
   // prazo, liquidez e rolagem
   {
     const B=ROWS.BGI, dd=diasEng(), abISO=new Date(Date.now()+dd*864e5).toISOString().slice(0,10);
@@ -1654,6 +1775,7 @@ document.addEventListener('input',e=>{ if(e.target.matches('input')) calc(); });
 let rw=0; addEventListener('resize',()=>{clearTimeout(rw); rw=setTimeout(calc,150);});
 const h=location.hash.slice(1); show(tabs.some(t=>t.dataset.tab===h)?h:'painel',false);
 
+$('cs_finan').addEventListener('change',()=>calc());
 /* trava escalonada: caminho do mercado até a 3ª trava */
 document.addEventListener('click',e=>{
   const b=e.target.closest('[data-esc]'); if(!b) return;
