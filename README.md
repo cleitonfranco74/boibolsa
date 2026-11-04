@@ -11,7 +11,7 @@ Kit de gestão e risco no mercado futuro do boi gordo, em versão web interativa
 - **Comece aqui** — a história de Seu João e Seu Pedro (mesmo lote, um travou e o outro não), com controle deslizante do preço no abate, gráfico do bolso de cada um e a moral da história
 - **Hedge BGI** — cenários de preço no abate, ponto de equilíbrio, quanto travar, margem de garantia e diário de ajustes
 - **Futuro × Put** — trava de preço vs. seguro de preço, comprado × vendido
-- **Confinamento ou boi a pasto** — custos, ROI, trava de milho CCM e sensibilidade (no confinamento); meses de engorda e custo de pasto e suplementação por cabeça/mês (a pasto)
+- **Confinamento ou boi a pasto** — custos, ROI, trava de milho CCM e sensibilidade (no confinamento); meses de engorda e custo de pasto e suplementação por cabeça/mês (a pasto), e a calculadora **📊 ágio do bezerro em relação ao boi gordo**, passo a passo
 - **Mercado** — histórico CEPEA, previsão (Holt-Winters + ARIMA), taxa de conversão milho × boi e risco de base MT × B3
 - **Aprenda** — passo a passo, mitos e verdades, dicionário do pecuarista e exercícios
 

@@ -791,6 +791,44 @@ textarea#cepeaTxt{width:100%;min-height:110px;margin-top:10px;font:14px/1.5 ui-m
     </div>
   </div>
 
+  <div class="section" id="agio">
+    <h2>📊 Como calcular o ágio do bezerro em relação ao boi gordo?</h2>
+    <p class="lead">O ágio é o percentual que estamos pagando <b>a mais pelo kg de peso vivo do bezerro</b> em comparação ao kg de peso vivo equivalente do boi gordo. Mude os campos amarelos e acompanhe a conta passo a passo.</p>
+    <div class="grid g2">
+      <div class="card">
+        <h3>🐂 1. O exemplo</h3>
+        <div class="fields">
+          <div class="field"><label for="ag_kg">Peso do bezerro (kg)</label><input id="ag_kg" type="number" step="1" min="1" value="210"></div>
+          <div class="field"><label for="ag_pkg">Preço do bezerro (R$/kg vivo)</label><input id="ag_pkg" type="number" step="0.1" min="0" value="16"></div>
+          <div class="field"><label for="ag_boi">Boi gordo (R$/@)</label><input id="ag_boi" type="number" step="0.5" min="0" value="340"></div>
+          <div class="field"><label for="ag_rend">Rendimento de carcaça (%)</label><input id="ag_rend" type="number" step="0.5" min="1" value="50"></div>
+        </div>
+        <div class="kv" style="margin-top:10px"><span>Valor total do bezerro</span><b id="ag_tot"></b></div>
+        <p class="hint">O boi gordo vem preenchido com a cotação atual da @ na B3 (ou com o preço de MT, se você digitou no Painel). Digite outro valor para usar o da sua praça.</p>
+      </div>
+      <div class="card">
+        <h3>📌 2. Converter o boi gordo para kg vivo</h3>
+        <p class="story">Uma arroba corresponde a <b>15 kg de carcaça</b>. Com rendimento de <b id="ag_r1"></b>, são precisos <b id="ag_kgarr"></b> de peso vivo para produzir uma arroba de carcaça.</p>
+        <p class="story" style="margin-top:6px"><b id="ag_conta1"></b></p>
+        <h3 style="margin-top:16px">📌 3. Calcular o ágio</h3>
+        <p class="story"><b>Ágio (%) = [(preço/kg do bezerro ÷ preço/kg vivo do boi gordo) − 1] × 100</b></p>
+        <p class="story" style="margin-top:6px" id="ag_conta2"></p>
+        <div class="verdict good" style="margin-top:12px"><div class="v-title" id="ag_res"></div></div>
+      </div>
+    </div>
+    <div class="grid g2" style="margin-top:16px">
+      <div class="card story">
+        <h3>📈 4. O que isso significa?</h3>
+        <p id="ag_sig"></p>
+        <p style="margin-top:10px" id="ag_lote"></p>
+      </div>
+      <div class="note warn" style="margin-top:0">
+        <p><b>⚠️ Atenção!</b> Um ágio elevado não significa necessariamente que a reposição está cara ou que a operação será inviável. É necessário avaliar o <b>ganho de peso</b>, o <b>custo de produção</b>, o <b>tempo de permanência</b> e o <b>preço esperado de venda</b>.</p>
+        <p style="margin-top:8px">💡 O ágio mostra a relação de preços entre reposição e boi gordo, mas não determina sozinho a rentabilidade da atividade. Quanto maior o ágio, maior tende a ser a exigência de eficiência produtiva e econômica para obter uma boa margem na recria e engorda.</p>
+      </div>
+    </div>
+  </div>
+
   <div class="section so-conf">
     <h2>🌽 Trava do milho — contratos CCM/B3</h2>
     <p class="lead">Hedge de compra (comprado) do insumo do confinamento. A necessidade de milho vem dos parâmetros do lote acima.</p>
@@ -1080,6 +1118,7 @@ const DIC=[["HEDGE","É vender o boi antes de engordar. Você combina hoje o pre
 ["LIQUIDEZ / BOOK","É o movimento no leilão: tem gente comprando e vendendo, ou o salão está vazio?","Vencimento sem movimento = difícil entrar e sair no preço justo. Outubro é o mais movimentado."],
 ["MESA DE OPERAÇÕES","É o balcão da corretora no telefone — o assessor que fala a sua língua.","Para o pecuarista, é o caminho mais seguro que a tela do computador."],
 ["TICKER (BGIV26)","É o nome de batismo do contrato: BGI (boi gordo) + V (outubro) + 26 (2026).","É isso que você fala na mesa ou digita na tela para achar o contrato certo."],
+["ÁGIO DA REPOSIÇÃO","É o “a mais” que se paga pelo kg do bezerro ou do garrote em relação ao kg vivo do boi gordo — o animal jovem custa mais por quilo porque ainda vai ganhar peso.","Ágio (%) = [(R$/kg do bezerro ÷ R$/kg vivo do boi gordo) − 1] × 100. Ágio alto pede mais eficiência (ganho de peso, custo, tempo). Calcule na aba Confinamento."],
 ["ALAVANCAGEM","É vender mais boi do que tem no pasto. Aí não é seguro — é aposta.","O ÚNICO jeito de o hedge virar risco de verdade. Trave só o que você produz."]];
 $('dic').innerHTML=DIC.map(d=>`<details><summary>${d[0]}</summary><div class="body"><p>🐄 <b style="color:var(--text)">É como se fosse…</b> ${d[1]}</p><p>✅ <b style="color:var(--text)">Na prática:</b> ${d[2]}</p></div></details>`).join('');
 
@@ -1136,7 +1175,7 @@ const mtv=id=>{ const v=parseFloat($(id).value); return isFinite(v)&&v>0?v:null;
 const mtBaseMilho=()=>{ const m=mtv('mt_milho'); return m!=null&&B3MS?m-B3MS:0; };
 try{ const sv=JSON.parse(localStorage.getItem('bb_mt')||'{}'); MT_IDS.forEach(id=>{ if(sv[id]!=null) $(id).value=sv[id]; }); }catch(e){}
 /* cenário vindo de um link (?c_cab=100&sistema=pasto…): os valores do link valem como digitados */
-const CENARIO_IDS=/^(r_spot|h_\w+|c_\w+|p_\w+|m_\w+|s_mar|s_out|mt_\w+)$/;
+const CENARIO_IDS=/^(r_spot|h_\w+|c_\w+|p_\w+|m_\w+|s_mar|s_out|mt_\w+|ag_\w+)$/;
 function linkCenario(){
   const q=new URLSearchParams();
   if(ehPasto()) q.set('sistema','pasto');
@@ -1405,6 +1444,19 @@ function calc(){
   }
   Object.assign(CTX,{cArr,totArr,ph,phF,base,lCab:lCabH,bm,milho,venda,margC,folga,ctr,cob,arrLote,margem,ctrC,spot,mtBoi,cc,mesA:mesFull(venc),venc});
   refreshAjuda();
+  // ágio do bezerro
+  auto('ag_boi',mtBoi!=null?mtBoi:spot,2);
+  { const kg=val('ag_kg'), pkg=val('ag_pkg'), boiA=val('ag_boi'), rA=val('ag_rend')/100, kgArr=rA>0?15/rA:0, pv=kgArr>0?boiA/kgArr:0, ag=pv>0?(pkg/pv-1)*100:0;
+    const pc=v=>nf2.format(v)+'%';
+    $('ag_tot').textContent=brl2(kg*pkg);
+    $('ag_r1').textContent=nf1.format(rA*100).replace(',0','')+'%'; $('ag_kgarr').textContent=nf1.format(kgArr).replace(',0','')+' kg';
+    $('ag_conta1').textContent=`${brl2(boiA)} ÷ ${nf1.format(kgArr).replace(',0','')} kg = ${brl2(pv)}/kg vivo`;
+    $('ag_conta2').textContent=`Ágio = [(${nf2.format(pkg)} ÷ ${nf2.format(pv)}) − 1] × 100`;
+    $('ag_res').textContent=ag>=0?`✅ ÁGIO = ${pc(ag)}`:`✅ DESÁGIO = ${pc(-ag)}`;
+    $('ag_sig').textContent=ag>=0?`Significa que estamos pagando aproximadamente ${pc(ag)} a mais pelo kg vivo do bezerro em relação ao valor equivalente do boi gordo (${brl2(pkg)} contra ${brl2(pv)} por kg).`:`Significa que o kg vivo do bezerro está ${pc(-ag)} mais barato que o valor equivalente do boi gordo (deságio).`;
+    const rE=val('c_rendE')/100, pvMag=val('c_magro')*rE/15, agL=pv>0?(pvMag/pv-1)*100:0;
+    $('ag_lote').innerHTML=`No lote deste simulador, o boi magro sai a ${brl2(val('c_magro'))}/@ (${brl2(pvMag)}/kg vivo, a ${nf0.format(rE*100)}% de rendimento na compra): ${agL>=0?`ágio de <b>${pc(agL)}</b>`:`deságio de <b>${pc(-agL)}</b>`} sobre o boi gordo. Para ver se a reposição fecha a conta, olhe o custo por arroba e a folga do lote acima.`;
+  }
   $('mtO1').innerHTML=mtBoi!=null?`${sgn(base,brl2)}/@ <span style="color:var(--text2);font-weight:400">(${brl2(mtBoi)} − ${brl2(spot)})</span>`:'— usando B3';
   $('mtO2').textContent=`${brl2(phF)}/@`+(mtBoi!=null?` (futuro ${brl2(ph)} + base)`:' (= futuro B3)');
   $('mtO3').innerHTML=mtMil!=null&&B3MS?`${sgn(mbase,brl2)}/sc <span style="color:var(--text2);font-weight:400">(${brl2(mtMil)} − ${brl2(B3MS)})</span>`:'— usando B3';
